@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gindi Innovations | Interior Design</title>
+  <meta name="description" content="Gindi Innovations is an interior design studio. Interior design, fit-out, 3D visualization, lighting, furniture and styling, and design consultation.">
+  <meta name="theme-color" content="#111318">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Gindi Innovations | Interior Design">
+  <meta property="og:description" content="Your space. Thoughtfully designed.">
+  <meta property="og:image" content="assets/img/hero-1400.jpg">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Manrope:wght@400;500;600&display=swap">
+
+  <link rel="preload" as="image" type="image/webp"
+        imagesrcset="assets/img/hero-800.webp 800w, assets/img/hero-1400.webp 1400w, assets/img/hero-2000.webp 2000w"
+        imagesizes="100vw" fetchpriority="high">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <script src="assets/js/config.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Header -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home" aria-label="Gindi Innovations, back to top" data-brand>
+        <span class="wordmark" aria-hidden="true">
+          <span class="wordmark-main">GINDI</span>
+          <span class="wordmark-sub">INNOVATIONS</span>
+        </span>
+      </a>
+
+      <nav class="primary-nav" aria-label="Main">
+        <ul class="nav-list">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <a class="btn btn-primary header-cta" href="#contact">Start Your Project</a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <span class="menu-toggle-bars" aria-hidden="true"></span>
+        <span class="sr-only">Menu</span>
+      </button>
+    </div>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+      <nav class="container" aria-label="Mobile">
+        <ul class="mobile-nav-list">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary btn-block" href="#contact">Start Your Project</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <picture class="hero-media">
+        <source type="image/webp"
+                srcset="assets/img/hero-800.webp 800w, assets/img/hero-1400.webp 1400w, assets/img/hero-2000.webp 2000w"
+                sizes="100vw">
+        <img src="assets/img/hero-1400.jpg" width="1400" height="738"
+             alt="Contemporary living room with timber accents, a linen sofa, leather ottomans and warm afternoon light"
+             fetchpriority="high" decoding="async">
+      </picture>
+      <div class="hero-overlay" aria-hidden="true"></div>
+
+      <div class="container hero-content">
+        <p class="eyebrow">Interior Design Studio</p>
+        <h1 class="hero-title" id="hero-title">
+          Your Space.<br>
+          <em>Thoughtfully Designed.</em>
+        </h1>
+        <p class="hero-text">Interior design that brings your vision, lifestyle, and everyday needs together.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#services">Explore Our Services</a>
+          <a class="btn btn-ghost" href="#contact">Start Your Project</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services -->
+    <section class="section services" id="services" aria-labelledby="services-title">
+      <div class="container">
+        <header class="section-head section-head-center reveal">
+          <p class="eyebrow">Our Services</p>
+          <h2 class="section-title" id="services-title">How Can We Help You?</h2>
+          <p class="section-lead">Choose a service to explore what we can create together.</p>
+        </header>
+
+        <ul class="service-grid" id="service-grid" role="list">
+          <!-- Tiles are generated from assets/js/config.js -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="section projects" id="projects" aria-labelledby="projects-title">
+      <div class="container">
+        <header class="section-head projects-head reveal">
+          <div>
+            <p class="eyebrow">Selected Projects</p>
+            <h2 class="section-title" id="projects-title">Spaces With Character</h2>
+          </div>
+          <p class="section-lead projects-note" id="projects-note" hidden>
+            Inspiration images shown for now. These are not completed Gindi Innovations projects.
+          </p>
+        </header>
+
+        <ul class="project-grid" id="project-grid" role="list">
+          <!-- Projects are generated from assets/js/config.js -->
+        </ul>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section contact" id="contact" aria-labelledby="contact-title">
+      <div class="container contact-inner">
+        <div class="contact-intro reveal">
+          <p class="eyebrow">Enquiries</p>
+          <h2 class="section-title" id="contact-title">Let’s Talk About Your Space.</h2>
+          <p class="section-lead">Tell us a little about your project and how we can help. We’ll get back to you to talk it through.</p>
+
+          <ul class="contact-list" id="contact-list" role="list">
+            <!-- Configured contact details are added here -->
+          </ul>
+
+          <a class="btn btn-whatsapp" id="whatsapp-link" href="#" target="_blank" rel="noopener" hidden>
+            <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.4L3.5 20.5l1.5-4.3A8.5 8.5 0 1 1 20.5 11.6Z"/>
+              <path d="M9 8.6c.2-.5.4-.5.7-.5h.5c.2 0 .4 0 .5.4l.7 1.6c.1.2 0 .4-.1.6l-.5.6c-.1.1-.2.3 0 .5.5.9 1.3 1.7 2.3 2.2.2.1.4.1.5 0l.6-.7c.2-.2.4-.2.6-.1l1.5.7c.3.1.3.3.3.5 0 .5-.2 1.1-.8 1.4-.6.4-1.5.5-2.7 0-1.8-.7-3.3-2.2-4.1-3.8-.6-1.2-.4-2.2 0-2.8Z"/>
+            </svg>
+            <span>Chat on WhatsApp</span>
+          </a>
+        </div>
+
+        <div class="form-card reveal">
+          <form class="enquiry-form" id="enquiry-form" novalidate>
+            <div class="field">
+              <label for="f-name">Name <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="100" aria-describedby="f-name-error">
+              <p class="field-error" id="f-name-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="f-phone">Phone number <span class="req" aria-hidden="true">*</span></label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30" aria-describedby="f-phone-hint f-phone-error">
+              <p class="field-hint" id="f-phone-hint">Include your country code if you’re outside our area.</p>
+              <p class="field-error" id="f-phone-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="f-service">Service required <span class="req" aria-hidden="true">*</span></label>
+              <div class="select-wrap">
+                <select id="f-service" name="service" required aria-describedby="f-service-error">
+                  <option value="">Select a service</option>
+                  <!-- Options are generated from assets/js/config.js -->
+                </select>
+              </div>
+              <p class="field-error" id="f-service-error"></p>
+            </div>
+
+            <div class="field">
+              <label for="f-message">Short project description <span class="req" aria-hidden="true">*</span></label>
+              <textarea id="f-message" name="message" rows="4" required maxlength="1500" aria-describedby="f-message-error" placeholder="For example: a two-bedroom apartment, living and dining areas, moving in this spring."></textarea>
+              <p class="field-error" id="f-message-error"></p>
+            </div>
+
+            <!-- Spam trap: real visitors never see or fill this -->
+            <div class="hp" aria-hidden="true">
+              <label for="f-company">Leave this empty</label>
+              <input id="f-company" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+            </div>
+
+            <p class="form-required-note"><span aria-hidden="true">*</span> All fields are required.</p>
+
+            <button class="btn btn-primary btn-block" type="submit" id="submit-btn">
+              <span class="btn-label">Send Enquiry</span>
+            </button>
+
+            <div class="form-status" id="form-status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="brand brand-footer" href="#home" aria-label="Gindi Innovations, back to top" data-brand>
+        <span class="wordmark" aria-hidden="true">
+          <span class="wordmark-main">GINDI</span>
+          <span class="wordmark-sub">INNOVATIONS</span>
+        </span>
+      </a>
+
+      <nav aria-label="Footer">
+        <ul class="footer-nav">
+          <li><a href="#services">Services</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <ul class="footer-social" id="footer-social" role="list" aria-label="Social links">
+        <!-- Configured social links are added here -->
+      </ul>
+
+      <p class="copyright">© <span id="year">2026</span> Gindi Innovations. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Service detail panel -->
+  <dialog class="service-panel" id="service-panel" aria-labelledby="panel-title">
+    <div class="panel-inner">
+      <div class="panel-head">
+        <span class="panel-icon" id="panel-icon" aria-hidden="true"></span>
+        <p class="panel-eyebrow" id="panel-eyebrow"></p>
+        <h2 class="panel-title" id="panel-title"></h2>
+        <button class="icon-btn panel-close" type="button" data-close aria-label="Close">
+          <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </div>
+      <div class="panel-body">
+        <p class="panel-text" id="panel-text"></p>
+        <h3 class="panel-subtitle">What’s included</h3>
+        <ul class="deliverables" id="panel-deliverables" role="list"></ul>
+        <div class="panel-actions">
+          <button class="btn btn-primary" type="button" id="panel-discuss">Discuss This Service</button>
+          <button class="btn btn-text" type="button" data-close>Back to services</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Project lightbox -->
+  <dialog class="lightbox" id="lightbox" aria-label="Project image viewer">
+    <div class="lightbox-inner">
+      <button class="icon-btn lightbox-close" type="button" data-close aria-label="Close image viewer">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <figure class="lightbox-figure">
+        <img id="lightbox-img" alt="" decoding="async">
+        <figcaption id="lightbox-caption"></figcaption>
+      </figure>
+      <button class="icon-btn lightbox-nav lightbox-prev" type="button" id="lightbox-prev" aria-label="Previous image">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <button class="icon-btn lightbox-nav lightbox-next" type="button" id="lightbox-next" aria-label="Next image">
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </dialog>
+</body>
+</html>
