@@ -10,6 +10,7 @@ assets/js/config.js     ← Services, projects, contact details, form destinatio
 assets/js/main.js       Behaviour (menus, service panels, lightbox, form)
 assets/css/styles.css   Styles — colours and fonts are at the top in :root
 assets/img/             Hero, project and favicon images
+tools/wire-calculator.html  Wire calculator (Arabic, self-contained page)
 ```
 
 ## Editing content
@@ -20,6 +21,9 @@ Everything you are likely to change lives in **`assets/js/config.js`**.
   tile), `details` and three `deliverables` (shown in the panel), and an `icon`
   (`design`, `fitout`, `visualization`, `lighting`, `furniture`, `consultation`).
   The enquiry form's "Service required" list is built from the same entries.
+- **Tools** — edit `tools`. Each one appears as a full-width card under the
+  service tiles and links to its own page (for example the wire calculator in
+  `tools/`). Tools are not listed in the enquiry form.
 - **Contact details** — fill in `contact`. Anything left empty or still in
   `[SQUARE BRACKETS]` is hidden from the page, including the WhatsApp button.
   The WhatsApp message is pre-filled with the selected service (and name and

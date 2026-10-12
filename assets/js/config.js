@@ -116,6 +116,21 @@ window.GINDI_CONFIG = {
     },
   ],
 
+  // Online tools, shown as full-width cards under the service tiles.
+  // Each opens its own page; they are not listed in the enquiry form.
+  tools: [
+    {
+      icon: 'wire',
+      label: 'Online tool · in Arabic',
+      name: 'Wire Calculator',
+      summary:
+        'Estimate how many rolls of electrical wire an apartment fit-out needs, and compare it with your electrician’s quote.',
+      linkText: 'Open calculator',
+      url: 'tools/wire-calculator.html',
+      lang: 'ar',
+    },
+  ],
+
   // Project images. Set placeholder: false once these are real company work.
   // Each image needs three widths: <base>-600.webp, <base>-1000.webp, <base>-1800.webp.
   projects: [

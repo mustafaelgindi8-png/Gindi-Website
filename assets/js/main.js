@@ -43,6 +43,7 @@
     lighting: '<path d="M12 2.5v4.5"/><path d="M4.5 15a7.5 7.5 0 0 1 15 0Z"/><path d="M10 18a2 2 0 0 0 4 0"/><path d="M12 21.5v0"/>',
     furniture: '<path d="M5.5 11V7.5a3 3 0 0 1 3-3h7a3 3 0 0 1 3 3V11"/><path d="M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><path d="M6 18v2M18 18v2"/>',
     consultation: '<path d="M3.5 4.5h11v8H8l-4.5 3.5Z"/><path d="M17.5 8.5h3v8.5L17 14.5h-6.5v-2"/>',
+    wire: '<path d="M9 3v4M15 3v4"/><path d="M6 7h12v3a6 6 0 0 1-12 0Z"/><path d="M12 16v2a3 3 0 0 0 3 3h3"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     expand: '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>',
     phone: '<path d="M5 4h3.5l1.7 4.3-2.2 1.4a11 11 0 0 0 6.3 6.3l1.4-2.2L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/>',
@@ -151,6 +152,19 @@
         '<span class="service-more" aria-hidden="true">View details <span class="service-arrow">' + icon('arrow', 16) + '</span></span>' +
       '</button>' +
     '</li>';
+  }).join('') + (cfg.tools || []).map(function (t, i) {
+    return '<li class="reveal service-tool">' +
+      '<a class="service-tile service-tile-tool" href="' + esc(t.url) + '"' + (t.lang ? ' hreflang="' + esc(t.lang) + '"' : '') +
+        ' aria-labelledby="tool-name-' + i + '" aria-describedby="tool-label-' + i + ' tool-sum-' + i + '">' +
+        '<span class="service-icon">' + icon(t.icon, 30) + '</span>' +
+        '<span class="tool-body">' +
+          (t.label ? '<span class="tool-label" id="tool-label-' + i + '">' + esc(t.label) + '</span>' : '') +
+          '<span class="service-name" id="tool-name-' + i + '">' + esc(t.name) + '</span>' +
+          '<span class="service-summary" id="tool-sum-' + i + '">' + esc(t.summary) + '</span>' +
+        '</span>' +
+        '<span class="service-more" aria-hidden="true">' + esc(t.linkText || 'Open') + ' <span class="service-arrow">' + icon('arrow', 16) + '</span></span>' +
+      '</a>' +
+    '</li>';
   }).join('');
 
   services.forEach(function (s) {
@@ -189,7 +203,7 @@
   }
 
   grid.addEventListener('click', function (e) {
-    var tile = e.target.closest('.service-tile');
+    var tile = e.target.closest('button.service-tile');
     if (tile) openService(Number(tile.dataset.index), tile);
   });
 

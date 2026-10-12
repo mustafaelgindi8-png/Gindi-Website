@@ -590,6 +590,34 @@ button { cursor: pointer; }
 .service-tile:hover .service-arrow,
 .service-tile:focus-visible .service-arrow { transform: translateX(4px); border-color: var(--gold); }
 
+/* Tool card: full-width row under the service tiles */
+.service-tool { grid-column: 1 / -1; }
+
+.service-tile-tool {
+  flex-direction: row;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  min-height: 0;
+  text-decoration: none;
+  border-style: dashed;
+}
+.service-tile-tool:hover,
+.service-tile-tool:focus-visible { border-style: solid; }
+.service-tile-tool .service-icon { flex-shrink: 0; }
+.service-tile-tool .service-more { margin: 0 0 0 auto; flex-shrink: 0; }
+
+.tool-body { flex: 1; min-width: 0; }
+
+.tool-label {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--gold);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
 @media (max-width: 960px) {
   .service-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .service-tile { min-height: 270px; }
@@ -604,6 +632,9 @@ button { cursor: pointer; }
   .service-name { font-size: 1.3rem; }
   .service-summary { font-size: 0.875rem; }
   .service-more { margin-top: 1rem; font-size: 0; gap: 0; }
+  .service-tile-tool { flex-wrap: wrap; align-items: flex-start; }
+  .service-tile-tool .tool-body { flex-basis: calc(100% - 64px); }
+  .service-tile-tool .service-more { margin: 0; font-size: 0.75rem; gap: 0.6rem; }
 }
 
 @media (max-width: 359px) {
