@@ -139,6 +139,16 @@ window.GINDI_CONFIG = {
       url: 'tools/brick-calculator.html',
       lang: 'ar',
     },
+    {
+      icon: 'paint',
+      label: 'Online tool · in Arabic',
+      name: 'Paint Calculator',
+      summary:
+        'Work out the sealer, putty, primer and paint an apartment needs, from sealer to final coat, with packs to buy and cost.',
+      linkText: 'Open calculator',
+      url: 'tools/paint-calculator.html',
+      lang: 'ar',
+    },
   ],
 
   // Project images. Set placeholder: false once these are real company work.
