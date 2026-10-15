@@ -129,6 +129,16 @@ window.GINDI_CONFIG = {
       url: 'tools/wire-calculator.html',
       lang: 'ar',
     },
+    {
+      icon: 'brick',
+      label: 'Online tool · in Arabic',
+      name: 'Brick Calculator',
+      summary:
+        'Work out how many bricks your walls need and what they will cost, for the brick type and size you choose.',
+      linkText: 'Open calculator',
+      url: 'tools/brick-calculator.html',
+      lang: 'ar',
+    },
   ],
 
   // Project images. Set placeholder: false once these are real company work.
