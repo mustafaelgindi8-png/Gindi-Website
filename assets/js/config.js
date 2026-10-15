@@ -144,7 +144,7 @@ window.GINDI_CONFIG = {
       label: 'Online tool · in Arabic',
       name: 'Paint Calculator',
       summary:
-        'Work out the sealer, putty, primer and paint an apartment needs, from sealer to final coat, with packs to buy and cost.',
+        'Work out the sealer, putty, primer and paint an apartment needs, from sealer to final coat, with GLC or Jotun finishes, packs to buy and cost.',
       linkText: 'Open calculator',
       url: 'tools/paint-calculator.html',
       lang: 'ar',
