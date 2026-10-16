@@ -344,8 +344,9 @@
   var num = function(el){ var v = parseFloat(el.value); return isFinite(v) && v >= 0 ? v : null; };
   var up = function(x){ return Math.ceil(x - 1e-9); }; // ROUNDUP(x,0) for x >= 0
   var idx = function(name){ for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i][0] === name) return i; return 0; };
-  var CATS = ["sealer", "putty", "sand", "base", "finish"]; // each stage lists only its own kind of product (PRODUCTS[i][5])
-  var optsFor = function(brand, cat){ return PRODUCTS.map(function(p, i){ return (!brand || brandOf(p) === brand) && p[5] === cat ? '<option value="' + i + '">' + p[0] + "</option>" : ""; }).join(""); };
+  // each stage lists only its own kind of product (PRODUCTS[i][5]); the base coat also offers GLC finishes such as 7070
+  var CATS = [["sealer"], ["putty"], ["sand"], ["base", "finish"], ["finish"]];
+  var optsFor = function(brand, cats){ return PRODUCTS.map(function(p, i){ return (!brand || brandOf(p) === brand) && cats.indexOf(p[5]) >= 0 ? '<option value="' + i + '">' + p[0] + "</option>" : ""; }).join(""); };
   var FIN = STAGES.length - 1; // the finish coat gets a GLC / Jotun picker
 
   var box = $("stages");
@@ -356,7 +357,7 @@
       '<div class="head"><div><b>' + (i + 1) + ". " + s[0] + '</b><small id="m' + i + '">0 م²</small></div>' +
       '<div class="tot" id="g' + i + '">—</div></div>' +
       (i === FIN ? '<div class="field" style="margin-bottom:8px"><label for="brand">الشركة</label><select id="brand"><option>GLC</option><option>Jotun</option></select></div>' : "") +
-      '<div class="field"><label for="p' + i + '">الخامة</label><select class="prod" id="p' + i + '">' + optsFor(i === FIN ? "GLC" : "", CATS[i]) + '</select></div>' +
+      '<div class="field"><label for="p' + i + '">الخامة</label><select class="prod" id="p' + i + '">' + optsFor(i === FIN || i === 3 ? "GLC" : "", CATS[i]) + '</select></div>' +
       '<div class="rate" id="r' + i + '"></div>' +
       '<div class="f">' +
         '<div><label for="c' + i + '">عدد الأوجه</label><select id="c' + i + '">' + [0, 1, 2, 3, 4].map(function(n){ return "<option" + (n === s[2] ? " selected" : "") + ">" + n + "</option>"; }).join("") + '</select></div>' +
@@ -368,7 +369,7 @@
   });
   $("brand").addEventListener("change", function(){
     var b = $("brand").value, sel = $("p" + FIN);
-    sel.innerHTML = optsFor(b, "finish"); sel.value = idx(BRANDS[b]);
+    sel.innerHTML = optsFor(b, CATS[FIN]); sel.value = idx(BRANDS[b]);
   });
 
   function calc(){
