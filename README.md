@@ -12,6 +12,9 @@ assets/css/styles.css   Styles — colours and fonts are at the top in :root
 assets/img/             Hero, project and favicon images
 tools/wire-calculator.html  Wire calculator (Arabic, self-contained page)
 tools/brick-calculator.html Brick calculator (Arabic, self-contained page)
+tools/paint-calculator.html Paint calculator (Arabic, self-contained page)
+excel/                  Excel versions of the calculators (brick, paint, plaster, wire)
+excel/_build/           Python (openpyxl) scripts that generate those Excel files
 ```
 
 ## Editing content
