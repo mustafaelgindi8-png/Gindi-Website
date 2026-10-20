@@ -149,6 +149,26 @@ window.GINDI_CONFIG = {
       url: 'tools/paint-calculator.html',
       lang: 'ar',
     },
+    {
+      icon: 'plaster',
+      label: 'Online tool · in Arabic',
+      name: 'Plaster Calculator',
+      summary:
+        'Work out the cement bags and sand to buy for plastering and the spatter coat, waste included.',
+      linkText: 'Open calculator',
+      url: 'tools/plaster-calculator.html',
+      lang: 'ar',
+    },
+    {
+      icon: 'tile',
+      label: 'Online tool · in Arabic',
+      name: 'Ceramic & Tile Calculator',
+      summary:
+        'Work out the floor, wall and skirting areas, cartons to buy, adhesive and cost, and check your supplier’s order.',
+      linkText: 'Open calculator',
+      url: 'tools/ceramic-calculator.html',
+      lang: 'ar',
+    },
   ],
 
   // Project images. Set placeholder: false once these are real company work.

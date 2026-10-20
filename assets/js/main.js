@@ -46,6 +46,8 @@
     wire: '<path d="M9 3v4M15 3v4"/><path d="M6 7h12v3a6 6 0 0 1-12 0Z"/><path d="M12 16v2a3 3 0 0 0 3 3h3"/>',
     brick: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 9.7h18M3 14.3h18M9 5v4.7M15 5v4.7M6 9.7v4.6M12 9.7v4.6M18 9.7v4.6M9 14.3V19M15 14.3V19"/>',
     paint: '<path d="M5 9h14l-1.5 11a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1Z"/><path d="M4 9h16M8 9V6.5a4 4 0 0 1 8 0V9"/><path d="M12 13.5v3"/>',
+    plaster: '<path d="M4 15.5 13.5 6l4.5 4.5L8.5 20H4Z"/><path d="M15.75 8.25 19 5"/><path d="M4 20h16"/>',
+    tile: '<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M12 3v18M3 12h18"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
     expand: '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>',
     phone: '<path d="M5 4h3.5l1.7 4.3-2.2 1.4a11 11 0 0 0 6.3 6.3l1.4-2.2L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1Z"/>',
