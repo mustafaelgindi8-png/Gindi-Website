@@ -144,9 +144,29 @@ window.GINDI_CONFIG = {
       label: 'Online tool · in Arabic',
       name: 'Paint Calculator',
       summary:
-        'Work out the sealer, putty, primer and paint an apartment needs, from sealer to final coat, with packs to buy and cost.',
+        'Work out the sealer, putty, primer and paint an apartment needs, from sealer to final coat, with GLC or Jotun finishes, packs to buy and cost.',
       linkText: 'Open calculator',
       url: 'tools/paint-calculator.html',
+      lang: 'ar',
+    },
+    {
+      icon: 'plaster',
+      label: 'Online tool · in Arabic',
+      name: 'Plaster Calculator',
+      summary:
+        'Work out the cement bags and sand to buy for plastering and the spatter coat, waste included.',
+      linkText: 'Open calculator',
+      url: 'tools/plaster-calculator.html',
+      lang: 'ar',
+    },
+    {
+      icon: 'tile',
+      label: 'Online tool · in Arabic',
+      name: 'Ceramic & Tile Calculator',
+      summary:
+        'Work out the floor, wall and skirting areas, cartons to buy, adhesive and cost, and check your supplier’s order.',
+      linkText: 'Open calculator',
+      url: 'tools/ceramic-calculator.html',
       lang: 'ar',
     },
   ],
