@@ -28,6 +28,7 @@
   .hint{margin:8px 0 12px;color:var(--muted);font-size:13px}
   .field label{display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
   input[type=number],select{width:100%;min-width:0;font:inherit;font-weight:700;color:var(--input-fg);background:var(--input-bg);border:1.5px solid var(--input-bd);border-radius:8px;padding:8px;text-align:center;-moz-appearance:textfield}
+  input.linked{background:var(--green-bg);color:var(--green-fg);border-color:var(--green-bg);cursor:default}
   input:focus,select:focus{outline:none;border-color:var(--orange);box-shadow:0 0 0 3px rgba(245,166,35,.25)}
   input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
@@ -121,7 +122,7 @@
 
   <section class="card">
     <h2>١ — مدخلات كل مرحلة</h2>
-    <p class="hint">الخانات الصفرا بخط أزرق مدخلات تقدر تغيّرها، والنتيجة بتتحسب لوحدها وانت بتكتب. المساحة = صافي مسطح الحوائط والأسقف اللي هتتنفذ، مش مساحة الشقة على الأرض.</p>
+    <p class="hint">الخانات الصفرا بخط أزرق مدخلات تقدر تغيّرها، والنتيجة بتتحسب لوحدها وانت بتكتب. المساحة = صافي مسطح الحوائط والأسقف اللي هتتنفذ، مش مساحة الشقة على الأرض، وهي والهالك بيتكتبوا مرة واحدة في المحارة والطرطشة بتاخدهم تلقائي.</p>
     <div id="stages"></div>
     <p class="note">سُمك المحارة مش شامل الطرطشة، والطبقتين بيتحسبوا منفصلين. سُمك الطرطشة = متوسط سُمك مكافئ موزع على المساحة، مش ارتفاع الحبيبات. نسب الخلط بالحجم مش بالوزن، وقيم الطرطشة الافتراضية مثال وتتعدّل حسب التنفيذ.</p>
   </section>
@@ -154,12 +155,12 @@
     <h2>منطق الحسبة</h2>
     <dl>
       <dt>حجم المونة</dt><dd>المساحة × السُمك بالمم ÷ 1000 (م³).</dd>
-      <dt>الخامات الجافة</dt><dd>حجم المونة × معامل التحويل (1.33)، لأن المونة المبلولة بتنكمش عن الخامات الجافة.</dd>
+      <dt>الخامات الجافة</dt><dd>حجم المونة × معامل التحويل (1.27)، لأن المونة المبلولة بتنكمش عن الخامات الجافة. المعامل مش شامل هالك.</dd>
       <dt>الأسمنت</dt><dd>الخامات الجافة × أجزاء الأسمنت ÷ مجموع الأجزاء، وبعدين × كثافة الأسمنت السائب عشان يبقى كجم.</dd>
       <dt>الرمل</dt><dd>الخامات الجافة × أجزاء الرمل ÷ مجموع الأجزاء (م³).</dd>
-      <dt>الهالك</dt><dd>بيتضاف مرة واحدة بس على الأسمنت والرمل.</dd>
+      <dt>الهالك</dt><dd>10% افتراضيًا، خانة واحدة للمرحلتين، وبيتضاف مرة واحدة بس على الأسمنت والرمل.</dd>
       <dt>الشراء</dt><dd>الشكاير = إجمالي الأسمنت ÷ وزن الشيكارة متقرّب لأعلى. الرمل = الإجمالي متقرّب لأعلى لأقرب خطوة تقريب. التقريب على الإجمالي بس.</dd>
-      <dt>معدل الفرد</dt><dd>المساحة ÷ عدد الشكاير قبل التقريب (م² لكل شيكارة مع حصتها من الرمل).</dd>
+      <dt>معدل الفرد</dt><dd>مساحة المرحلة ÷ شكايرها قبل التقريب (م² لكل شيكارة مع حصتها من الرمل)، لكل مرحلة لوحدها لأن الطرطشة والمحارة على نفس الحيطان.</dd>
     </dl>
   </section>
 
@@ -172,8 +173,8 @@
   // Same logic as Eng_Mostafa_Elgindi_Plaster_Calculator.xlsx (sheet «الحسبة»)
   // [key, name, area m², thickness mm, cement parts, sand parts, waste %, dry factor]
   var STAGES = [
-    ["p", "المحارة", 300, 20, 1, 4, 10, 1.33],
-    ["t", "الطرطشة", 300, 3, 1, 2, 10, 1.33]
+    ["p", "المحارة", 300, 20, 1, 4, 10, 1.27],
+    ["t", "الطرطشة", 300, 3, 1, 2, 10, 1.27]
   ];
   var FIELDS = [
     ["a", "المساحة (م²)"], ["th", "السُمك (مم)"], ["c", "أجزاء الأسمنت"],
@@ -188,12 +189,17 @@
     return '<div class="item"><div class="head"><div><b>' + st[1] + '</b><small id="' + st[0] + 'm">0 م³ مونة</small></div>' +
       '<div class="tot" id="' + st[0] + 'g">0 شيكارة</div></div><div class="f">' +
       FIELDS.map(function(f, k){
-        return '<div><label for="' + st[0] + f[0] + '">' + f[1] + '</label><input type="number" min="0" inputmode="decimal" id="' + st[0] + f[0] + '" value="' + st[k + 2] + '"></div>';
+        // spatter shares the plaster's area and waste
+        var linked = st[0] === "t" && (f[0] === "a" || f[0] === "w");
+        return '<div><label for="' + st[0] + f[0] + '">' + f[1] + (linked ? ' = المحارة' : '') + '</label><input type="number" min="0" inputmode="decimal" id="' + st[0] + f[0] + '" value="' + st[k + 2] + '"' +
+          (linked ? ' class="linked" readonly tabindex="-1" title="نفس قيمة المحارة"' : '') + '></div>';
       }).join("") + '</div></div>';
   }).join("");
 
   function calc(){
     var bag = num($("bag")), dens = num($("dens")) || 0, step = num($("step"));
+    $("ta").value = num($("pa")) || 0;
+    $("tw").value = num($("pw")) || 0;
     var S = STAGES.map(function(st){
       var k = st[0], g = function(f){ return num($(k + f)) || 0; };
       var a = g("a"), th = g("th"), c = g("c"), s = g("s"), w = g("w") / 100, f = g("f");
@@ -204,8 +210,8 @@
       $(k + "g").textContent = fmt(bags, 2) + " شيكارة";
       return {name: st[1], a: a, th: th, c: c, s: s, w: w, f: f, mortar: mortar, dry: dry, kg: kg, bags: bags, sand: sand};
     });
-    var kg = 0, bags = 0, sand = 0, area = 0;
-    S.forEach(function(x){ kg += x.kg; bags += x.bags; sand += x.sand; area += x.a; });
+    var kg = 0, bags = 0, sand = 0;
+    S.forEach(function(x){ kg += x.kg; bags += x.bags; sand += x.sand; });
     var buyBags = up(bags), buySand = step ? up(sand / step) * step : sand;
 
     $("kBags").textContent = fmt(buyBags);
@@ -217,12 +223,14 @@
     $("cmp").innerHTML = S.map(function(x){
       return "<div>" + x.name + "</div><div>" + fmt(x.bags, 2) + " شيكارة · " + fmt(x.sand, 2) + " م³ رمل</div>";
     }).join("") + "<div>الشكاير قبل التقريب</div><div>" + fmt(bags, 2) + " شيكارة</div>" +
-      "<div>معدل فرد الشيكارة</div><div>" + (bags ? fmt(area / bags, 2) + " م²/شيكارة" : "—") + "</div>";
+      S.map(function(x){
+        return "<div>معدل فرد شيكارة " + x.name + "</div><div>" + (x.bags ? fmt(x.a / x.bags, 2) + " م²/شيكارة" : "—") + "</div>";
+      }).join("");
 
-    buildReport(S, kg, bags, sand, buyBags, buySand, bag, dens, step, area);
+    buildReport(S, kg, bags, sand, buyBags, buySand, bag, dens, step);
   }
 
-  function buildReport(S, kg, bags, sand, buyBags, buySand, bag, dens, step, area){
+  function buildReport(S, kg, bags, sand, buyBags, buySand, bag, dens, step){
     var d = new Date(), date = d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
     var row = function(label, f, unit, dg){
       return "<tr><td class='l'>" + label + "</td>" + S.map(function(x){ return "<td>" + fmt(f(x), dg) + "</td>"; }).join("") +
@@ -253,7 +261,7 @@
       row("الرمل شامل الهالك", function(x){ return x.sand; }, "م³", 2) +
       "</tbody></table>" +
       "<p class='r-note'>الشراء: " + fmt(bags, 2) + " شيكارة متقرّبة لأعلى = " + fmt(buyBags) + " شيكارة، و" + fmt(sand, 2) + " م³ رمل متقرّب لأعلى = " + fmt(buySand, 2) + " م³." +
-      (bags ? " معدل الفرد " + fmt(area / bags, 2) + " م²/شيكارة." : "") + "</p>" +
+      S.map(function(x){ return x.bags ? " معدل فرد شيكارة " + x.name + " " + fmt(x.a / x.bags, 2) + " م²." : ""; }).join("") + "</p>" +
       "<p class='r-warn'>الحسبة تقديرية وبتتغير حسب استواء الحيطان ونوع الرمل وطريقة الخلط والتنفيذ، ولازم يعتمدها مهندس مدني مختص.</p>" +
       "<p class='r-foot'>إعداد: Eng/ Mostafa Elgindi | Gindi Innovations</p>";
   }
