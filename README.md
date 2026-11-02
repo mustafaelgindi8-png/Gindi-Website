@@ -17,6 +17,7 @@ tools/plaster-calculator.html Plaster cement & sand calculator (Arabic, self-con
 tools/ceramic-calculator.html Ceramic & tile calculator (Arabic, self-contained page)
 excel/                  Excel versions of the calculators (brick, ceramic, paint, plaster, wire)
 excel/_build/           Python (openpyxl) scripts that generate those Excel files
+facebook-agent/         AI assistant for the Facebook Page (Messenger + comments), see its README
 ```
 
 ## Editing content

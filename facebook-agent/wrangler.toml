@@ -1,0 +1,30 @@
+name = "gindi-facebook-agent"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Conversation history, pauses and leads. Create it once with:
+#   npx wrangler kv namespace create STORE
+# then paste the id it prints below.
+[[kv_namespaces]]
+binding = "STORE"
+id = "PASTE_KV_NAMESPACE_ID_HERE"
+
+[vars]
+# Model and how hard it thinks. "low" is fast and cheap for chat.
+CLAUDE_MODEL = "claude-opus-5-5"
+CLAUDE_EFFORT = "low"
+# Hours the agent stays quiet after a person replies from the Page inbox
+# or after it hands a conversation to the team.
+HANDOFF_PAUSE_HOURS = "12"
+# Set to "false" to stop answering post comments.
+REPLY_TO_COMMENTS = "true"
+GRAPH_API_VERSION = "v24.0"
+
+# Secrets — set each with `npx wrangler secret put NAME` (never put them in this file):
+#   ANTHROPIC_API_KEY      Claude API key
+#   FB_PAGE_ACCESS_TOKEN   Page access token (long-lived)
+#   FB_APP_SECRET          Meta app secret, used to check webhook signatures
+#   FB_VERIFY_TOKEN        Any random string; you type the same one in the Meta dashboard
+#   ADMIN_KEY              (optional) password for GET /leads
+#   NOTIFY_WEBHOOK_URL     (optional) URL that receives new leads and handoff alerts

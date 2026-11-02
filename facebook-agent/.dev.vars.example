@@ -1,0 +1,7 @@
+# Copy to .dev.vars for `npm run dev` (local testing only; never commit .dev.vars)
+ANTHROPIC_API_KEY=
+FB_PAGE_ACCESS_TOKEN=
+FB_APP_SECRET=
+FB_VERIFY_TOKEN=
+ADMIN_KEY=
+NOTIFY_WEBHOOK_URL=
