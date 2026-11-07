@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=block" rel="stylesheet">
 <style>
   /*
-   * SAGA brand template (same colours, type and layout as the SAGA price list).
-   * Fields still to fill are wrapped in <span class="fill">…</span>.
+   * SAGA brand: teal / lime / cream, Hanken Grotesk, SAGA wordmark + icon.
+   * Images come from prepare-assets.py; render.js prints this page to PDF.
    */
   :root {
     --teal: #014D53;
@@ -16,95 +16,99 @@
     --lime: #EBEEA5;
     --cream: #EAEBD8;
     --paper: #F6F6EE;
+    --ivory: #F7F7EC;
     --charcoal: #414042;
-    --muted: #7A7A73;
-    --copper: #9A5B3C;
+    --muted: #66665F;
     --rule: rgba(1, 77, 83, .16);
+    --on-teal: rgba(234, 235, 216, .84);
   }
   @page { size: A4; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { background: #fff; }
   body {
     font-family: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif;
-    color: var(--charcoal);
+    font-size: 9pt; color: var(--charcoal);
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
-    font-feature-settings: "tnum" 1;
   }
+  a { color: inherit; text-decoration: none; }
+  .num { font-feature-settings: "tnum" 1, "lnum" 1; }
   .page {
     width: 210mm; height: 297mm; position: relative; overflow: hidden;
     background: var(--paper); page-break-after: always; break-after: page;
   }
   .page:last-child { page-break-after: auto; break-after: auto; }
 
-  /* Logos are single-colour files tinted with the current text colour. */
+  /* Single-colour logo files, tinted with the current text colour */
   .wordmark, .sym { display: block; background: currentColor; -webkit-mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: left center; }
   .wordmark { -webkit-mask-image: url(assets/saga-wordmark.svg); aspect-ratio: 908 / 136; }
   .sym { -webkit-mask-image: url(assets/saga-icon.png); aspect-ratio: 180 / 150; }
 
-  .eyebrow { font-size: 7.2pt; font-weight: 700; letter-spacing: .32em; text-transform: uppercase; }
-  .fill { background: #fff3a8; color: var(--charcoal); padding: 0 1.6mm; border-radius: .8mm; font-weight: 700; }
+  .eyebrow { display: block; font-size: 6.6pt; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; }
 
-  /* ---------- Page 1 ---------- */
-  .hero {
-    position: relative; height: 128mm; background: var(--teal); color: var(--cream);
-    padding: 16mm 18mm 0;
+  /* ================= Page 1 ================= */
+  .hero { display: grid; grid-template-columns: 105mm 105mm; height: 139mm; }
+  .hero-panel {
+    background: var(--teal); color: var(--cream);
+    padding: 15mm 12mm 12mm 18mm; display: flex; flex-direction: column; justify-content: space-between;
   }
-  .brandbar { display: flex; align-items: center; justify-content: space-between; }
-  .brand { display: flex; align-items: center; gap: 5mm; color: var(--lime); }
-  .brand .sym { width: 13mm; }
-  .brand .wordmark { width: 46mm; }
-  .brand .tag { font-size: 6.4pt; letter-spacing: .3em; font-weight: 600; margin-top: 2.2mm; color: var(--lime); opacity: .9; }
-  .doc-type {
-    border: .35mm solid rgba(235,238,165,.55); color: var(--lime); border-radius: 20mm;
-    padding: 2.2mm 5mm; font-size: 7.4pt; font-weight: 700; letter-spacing: .28em;
+  .lockup { display: flex; align-items: center; gap: 4.5mm; color: var(--lime); }
+  .lockup .sym { width: 12mm; }
+  .lockup .wordmark { width: 42mm; }
+  .lockup .tag { margin-top: 2mm; font-size: 5.9pt; letter-spacing: .3em; font-weight: 600; }
+  .pill {
+    display: inline-block; border: .35mm solid rgba(235, 238, 165, .55); color: var(--lime); border-radius: 20mm;
+    padding: 1.7mm 4.2mm; font-size: 6.6pt; font-weight: 700; letter-spacing: .28em;
   }
-  .hero h1 {
-    margin-top: 13mm; font-size: 34pt; line-height: .98; font-weight: 800; letter-spacing: -.02em; color: #F7F7EC;
-    max-width: 100mm;
-  }
+  .hero h1 { margin-top: 6mm; font-size: 31pt; line-height: .98; font-weight: 800; letter-spacing: -.02em; color: var(--ivory); }
   .hero h1 em { font-style: normal; color: var(--lime); }
-  .hero .lede { margin-top: 6mm; max-width: 84mm; font-size: 10pt; line-height: 1.5; color: rgba(234,235,216,.82); }
-  .hero-car {
-    position: absolute; right: 18mm; top: 33mm; width: 66mm; height: 84mm; object-fit: cover; object-position: 45% 62%;
-    border-radius: 4mm; border: .4mm solid rgba(235,238,165,.45);
+  .hero .lede { margin-top: 6mm; max-width: 70mm; font-size: 9.3pt; line-height: 1.5; color: var(--on-teal); }
+  .ref .eyebrow { color: var(--lime); opacity: .85; font-size: 6pt; }
+  .ref div { margin-top: 1.2mm; font-size: 8.6pt; font-weight: 500; color: var(--ivory); letter-spacing: .04em; }
+  .hero-photo { position: relative; overflow: hidden; }
+  .hero-photo img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transform: scale(1.12); transform-origin: 50% 60%; display: block;
   }
-  .meta-strip { position: absolute; left: 18mm; bottom: 12mm; display: flex; gap: 7mm; }
-  .meta-strip div { font-size: 8.4pt; color: #F7F7EC; font-weight: 500; }
-  .meta-strip span { display: block; font-size: 6.4pt; letter-spacing: .24em; font-weight: 700; color: var(--lime); opacity: .85; margin-bottom: 1.2mm; text-transform: uppercase; }
 
   .p1-body { padding: 10mm 18mm 0; }
-  .to-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10mm; padding-bottom: 7mm; border-bottom: .3mm solid var(--rule); }
-  .letter { max-width: 150mm; font-size: 10pt; line-height: 1.55; color: var(--charcoal); }
+  .offer-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12mm; }
+  .offer-head .eyebrow { color: var(--teal); }
+  .offer-head h2 { margin-top: 2mm; font-size: 20pt; font-weight: 800; color: var(--teal); letter-spacing: -.015em; line-height: 1.05; }
+  .offer-head .intro { max-width: 82mm; font-size: 8.6pt; line-height: 1.55; }
 
-  .prices { margin-top: 8mm; }
-  .prices h2, .sec-title { font-size: 17pt; font-weight: 800; color: var(--teal); letter-spacing: -.01em; margin-bottom: 1.5mm; }
-  .sub { font-size: 8.6pt; color: var(--muted); margin-bottom: 5mm; }
-  table { width: 100%; border-collapse: separate; border-spacing: 0; }
-  thead th {
-    font-size: 6.8pt; letter-spacing: .24em; text-transform: uppercase; font-weight: 700; color: var(--teal);
-    text-align: right; padding: 0 5mm 2.6mm; border-bottom: .5mm solid var(--teal);
+  .offer-card { margin-top: 5.5mm; background: #fff; border: .3mm solid var(--rule); border-radius: 4mm; overflow: hidden; }
+  .oc-main { display: grid; grid-template-columns: 1fr 68mm; }
+  .oc-model { padding: 6.5mm 7mm 6mm; }
+  .oc-model .eyebrow, .oc-price .eyebrow { color: var(--muted); }
+  .model { margin-top: 2mm; font-size: 23pt; font-weight: 800; color: var(--teal); letter-spacing: -.02em; line-height: 1; }
+  .model span { font-weight: 300; }
+  .model-tag { margin-top: 2mm; font-size: 8.6pt; color: var(--muted); }
+  .attrs { margin-top: 5.5mm; display: flex; gap: 9mm; }
+  .attrs dt { font-size: 6pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--muted); }
+  .attrs dd { margin-top: 1.2mm; font-size: 10pt; font-weight: 600; color: var(--charcoal); white-space: nowrap; }
+  .swatch {
+    display: inline-block; width: 3.2mm; height: 3.2mm; border-radius: 50%; margin-right: 1.6mm; vertical-align: -.45mm;
+    background: linear-gradient(135deg, #3a2a52 0%, #6a4f8f 48%, #7c7559 100%);
   }
-  thead th:first-child { text-align: left; padding-left: 0; }
-  tbody td { padding: 4.5mm 5mm; text-align: right; vertical-align: middle; font-size: 9.4pt; }
-  tbody td:first-child { text-align: left; }
-  .line-name { font-size: 12.5pt; font-weight: 700; }
-  .line-desc { font-size: 7.8pt; margin-top: .8mm; }
-  .price { font-size: 15pt; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
-  .price .cur { font-size: 7.4pt; font-weight: 600; letter-spacing: .1em; margin-right: 1.4mm; }
-  tr.top td { background: var(--teal); color: #F7F7EC; }
-  tr.top td:first-child { padding-left: 5mm; border-radius: 3mm 0 0 3mm; }
-  tr.top td:last-child { border-radius: 0 3mm 3mm 0; }
-  tr.top .line-name, tr.top .price { color: var(--lime); }
-  tr.top .line-desc, tr.top .price .cur { color: rgba(234,235,216,.7); }
-  .swatch { display: inline-block; width: 2.6mm; height: 2.6mm; border-radius: 50%; margin-right: 1.4mm; vertical-align: -.3mm; background: linear-gradient(135deg, #2b0f4d, #8a3fd1 55%, #3d6b4f); border: .25mm solid rgba(235,238,165,.6); }
+  .oc-price { padding: 6.5mm 7mm 6mm; border-left: .3mm solid var(--rule); }
+  .big-price { margin-top: 2.4mm; display: flex; align-items: baseline; gap: 2mm; color: var(--teal); }
+  .big-price .cur { font-size: 8.6pt; font-weight: 700; letter-spacing: .14em; color: var(--muted); }
+  .big-price b { font-size: 37pt; font-weight: 300; letter-spacing: -.03em; line-height: 1; }
+  .price-sub { margin-top: 2.4mm; font-size: 7.8pt; color: var(--muted); }
+  .oc-total { background: var(--lime); color: var(--teal); padding: 4mm 7mm; display: flex; justify-content: space-between; align-items: center; }
+  .oc-total .words { display: block; margin-top: 1.1mm; font-size: 8pt; color: rgba(1, 77, 83, .8); }
+  .oc-total .total { font-size: 17pt; font-weight: 800; letter-spacing: -.01em; }
+  .oc-total .total .cur { font-size: 7.8pt; font-weight: 700; letter-spacing: .14em; margin-right: 1.6mm; }
+  .note { margin-top: 2.6mm; font-size: 7.6pt; color: var(--muted); }
 
-  .total-row { display: flex; justify-content: flex-end; align-items: baseline; gap: 6mm; margin-top: 4mm; padding: 0 5mm; }
-  .total-row .eyebrow { color: var(--teal); }
-  .total-row .price { font-size: 19pt; color: var(--teal); }
-  .total-row .price .cur { color: var(--muted); }
-  .table-note { margin-top: 3mm; font-size: 7.8pt; color: var(--muted); text-align: right; padding: 0 5mm; }
+  .figures { margin-top: 8mm; display: grid; grid-template-columns: repeat(4, 1fr); border-top: .5mm solid var(--teal); }
+  .fig { padding: 4mm 4mm 0; border-left: .3mm solid var(--rule); }
+  .fig:first-child { border-left: 0; padding-left: 0; }
+  .fig .v { color: var(--teal); white-space: nowrap; }
+  .fig .v b { font-size: 25pt; font-weight: 300; letter-spacing: -.03em; line-height: 1; }
+  .fig .v small { font-size: 8.6pt; font-weight: 700; margin-left: 1mm; }
+  .fig .l { margin-top: 1.8mm; font-size: 7.8pt; line-height: 1.35; color: var(--muted); }
 
-  .p1-tiles { margin-top: 9mm; }
   .footer {
     position: absolute; left: 18mm; right: 18mm; bottom: 9mm; display: flex; justify-content: space-between; align-items: center;
     font-size: 7.2pt; color: var(--muted); border-top: .3mm solid var(--rule); padding-top: 3.4mm;
@@ -112,47 +116,63 @@
   .footer .sym { width: 6mm; color: var(--teal); }
   .footer b { color: var(--teal); font-weight: 700; }
 
-  /* ---------- Page 2 ---------- */
-  .p2 { padding: 11mm 18mm 0; }
-  .p2-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 9mm; }
-  .p2-head .wordmark { width: 30mm; color: var(--teal); }
-  .p2-head .eyebrow { color: var(--muted); }
-  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 5mm; }
-  .card { background: #fff; border-radius: 4mm; padding: 5.5mm 5mm 5mm; border: .3mm solid var(--rule); }
-  .card.top { background: var(--teal); border-color: var(--teal); color: var(--cream); }
-  .card h3 { font-size: 11.5pt; font-weight: 800; color: var(--teal); letter-spacing: -.01em; padding-bottom: 2.6mm; border-bottom: .3mm solid var(--rule); margin-bottom: 3mm; }
-  .card.top h3 { color: var(--lime); border-color: rgba(235,238,165,.25); }
-  .card ul { list-style: none; }
-  .card li { position: relative; padding-left: 4.2mm; font-size: 8.8pt; line-height: 1.35; margin-bottom: 2.4mm; }
-  .card li::before { content: ""; position: absolute; left: 0; top: 1.7mm; width: 1.7mm; height: 1.7mm; border-radius: 50%; background: var(--teal); }
-  .card.top li::before { background: var(--lime); }
+  /* ================= Page 2 ================= */
+  .p2 { padding: 12mm 18mm 0; }
+  .p2-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 4mm; border-bottom: .3mm solid var(--rule); }
+  .p2-head .wordmark { width: 28mm; color: var(--teal); }
+  .p2-head .right { display: flex; align-items: center; gap: 6mm; color: var(--muted); }
+  .p2-head .pg { font-size: 7.2pt; }
 
-  .terms { margin-top: 10mm; }
-  .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3.4mm; margin-top: 4.5mm; }
-  .tile { background: var(--lime); border-radius: 4mm; padding: 4mm 4.4mm 3.8mm; color: var(--teal); }
-  .tile .big { font-size: 22pt; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
-  .tile .big small { font-size: 10pt; font-weight: 700; letter-spacing: 0; margin-left: .8mm; }
-  .tile .lbl { margin-top: 2.6mm; font-size: 8.2pt; font-weight: 600; line-height: 1.3; }
-  .conds { margin-top: 5.5mm; display: grid; grid-template-columns: 1fr 1fr; gap: 2.4mm 8mm; font-size: 8.6pt; line-height: 1.45; }
-  .conds div { padding-left: 4mm; position: relative; }
-  .conds div::before { content: "—"; position: absolute; left: 0; color: var(--teal); font-weight: 700; }
+  .sec-head { margin-top: 7mm; }
+  .sec-head h2 { font-size: 20pt; font-weight: 800; color: var(--teal); letter-spacing: -.015em; line-height: 1.05; }
+  .sec-head p { margin-top: 1.6mm; font-size: 8.6pt; line-height: 1.5; color: var(--muted); }
 
-  .sign { margin-top: 12mm; display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
+  .spec-grid { margin-top: 5mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+  .spec figure { height: 34mm; border-radius: 3mm; overflow: hidden; background: var(--cream); }
+  .spec figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .spec h3 {
+    margin-top: 4mm; padding-bottom: 2.2mm; border-bottom: .5mm solid var(--teal);
+    display: flex; align-items: baseline; gap: 2.4mm; font-size: 11.5pt; font-weight: 800; color: var(--teal); letter-spacing: -.01em;
+  }
+  .spec h3 .no { font-size: 6.6pt; font-weight: 700; letter-spacing: .2em; color: var(--muted); }
+  .spec ul { list-style: none; }
+  .spec li { position: relative; padding: 1.55mm 0 1.55mm 4mm; border-bottom: .25mm solid var(--rule); font-size: 8.4pt; line-height: 1.3; }
+  .spec li::before { content: ""; position: absolute; left: .2mm; top: 2.85mm; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--teal); }
+
+  .journey { margin-top: 8mm; background: var(--cream); border-radius: 4mm; padding: 6mm 7mm; }
+  .journey .eyebrow { color: var(--teal); }
+  .steps { list-style: none; margin-top: 5mm; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 5mm; position: relative; }
+  .steps::before {
+    content: ""; position: absolute; top: 1.42mm; left: 1.6mm; right: calc((100% - 15mm) / 4 - 1.6mm);
+    height: .35mm; background: rgba(1, 77, 83, .35);
+  }
+  .steps li { position: relative; padding-top: 6mm; }
+  .steps .node { position: absolute; top: 0; left: 0; width: 3.2mm; height: 3.2mm; border-radius: 50%; background: var(--lime); border: .55mm solid var(--teal); }
+  .steps .no { display: block; font-size: 6.2pt; font-weight: 700; letter-spacing: .22em; color: var(--muted); }
+  .steps b { display: block; margin-top: 1.1mm; font-size: 16pt; font-weight: 800; color: var(--teal); letter-spacing: -.02em; line-height: 1.05; }
+  .steps p { margin-top: 1.4mm; font-size: 8pt; line-height: 1.35; }
+
+  .terms { margin-top: 4mm; font-size: 7.8pt; line-height: 1.5; color: var(--muted); }
+
+  .sign { margin-top: 9mm; display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
   .sign .box { border-top: .45mm solid var(--teal); padding-top: 3mm; }
   .sign .eyebrow { color: var(--teal); }
-  .sign .who { margin-top: 1.6mm; font-size: 9pt; font-weight: 600; color: var(--charcoal); }
-  .sign .line { margin-top: 14mm; border-bottom: .3mm dashed rgba(65,64,66,.35); }
+  .sign .who { margin-top: 1.6mm; font-size: 9pt; font-weight: 600; }
+  .sign .line { margin-top: 10mm; border-bottom: .3mm dashed rgba(65, 64, 66, .35); }
   .sign .cap { margin-top: 1.6mm; font-size: 7pt; color: var(--muted); display: flex; justify-content: space-between; }
 
   .closing {
-    position: absolute; left: 0; right: 0; bottom: 0; height: 21mm; background: var(--teal); color: var(--lime);
-    display: flex; align-items: center; justify-content: space-between; padding: 0 18mm;
+    position: absolute; left: 0; right: 0; bottom: 0; height: 31mm; background: var(--teal); color: var(--lime);
+    display: flex; align-items: center; gap: 6mm; padding: 0 18mm;
   }
-  .closing .sym { width: 11mm; }
-  .closing .tagline { font-size: 14pt; font-weight: 700; color: #F7F7EC; letter-spacing: -.01em; }
+  .closing .sym { width: 11mm; flex: none; }
+  .closing .tagline { flex: 1; font-size: 13pt; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; color: var(--ivory); }
   .closing .tagline em { font-style: normal; color: var(--lime); }
-  .closing .web { text-align: right; font-size: 8pt; color: rgba(234,235,216,.85); line-height: 1.6; }
-  .closing .web b { color: var(--lime); font-weight: 700; font-size: 9.4pt; letter-spacing: .02em; }
+  .closing .contact { text-align: right; font-size: 7.6pt; line-height: 1.6; color: var(--on-teal); }
+  .closing .phone { display: block; font-size: 11pt; font-weight: 700; letter-spacing: .02em; color: var(--lime); }
+  .closing .scan { display: block; margin-top: 1mm; font-size: 6pt; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--lime); }
+  .qr { flex: none; display: block; width: 22mm; height: 22mm; padding: 2.2mm; background: var(--ivory); border-radius: 2mm; }
+  .qr img { width: 100%; height: 100%; display: block; }
 </style>
 </head>
 <body>
@@ -160,81 +180,92 @@
 <!-- ================= PAGE 1 ================= -->
 <section class="page">
   <div class="hero">
-    <div class="brandbar">
-      <div class="brand">
+    <div class="hero-panel">
+      <div class="lockup">
         <span class="sym" role="img" aria-label="SAGA"></span>
         <div>
           <span class="wordmark" role="img" aria-label="SAGA"></span>
           <div class="tag">ELECTRIC MOBILITY SOLUTIONS.</div>
         </div>
       </div>
-      <div class="doc-type">PRICE OFFER</div>
+
+      <div>
+        <span class="pill">PRICE OFFER</span>
+        <h1>Move in<br>silence.<br><em>Arrive in<br>style.</em></h1>
+        <p class="lede">The High Line 6&#8209;seater: advanced tech, room for six, and lighting from roof to wheels.</p>
+      </div>
+
+      <div class="ref"><span class="eyebrow">Reference</span><div class="num">SAGA-PO-261107-HL6</div></div>
     </div>
-
-    <h1>Move in silence.<br><em>Arrive in style.</em></h1>
-    <p class="lede">The SAGA High Line 6-seater: advanced tech, room for six, and lighting from roof to wheels.</p>
-
-    <div class="meta-strip">
-      <div><span>Reference</span>SAGA-PO-261107-HL6</div>
-    </div>
-
-    <img class="hero-car" src="assets/highline-6-purple.jpg" alt="SAGA High Line 6-seater in purple">
+    <div class="hero-photo"><img src="assets/highline-6-purple-clean.jpg" alt="SAGA High Line 6-seater in purple"></div>
   </div>
 
   <div class="p1-body">
-    <div class="to-row">
-      <p class="letter">Thank you for your interest in SAGA. Please find below our offer for the SAGA High Line 6&#8209;seater in purple, with full specifications and a 2-year warranty.</p>
+    <div class="offer-head">
+      <div>
+        <span class="eyebrow">Your offer</span>
+        <h2>SAGA High Line,<br>built for six.</h2>
+      </div>
+      <p class="intro">Thank you for your interest in SAGA. Here is our offer for the High Line 6&#8209;seater in purple, with full specifications and a 2&#8209;year warranty.</p>
     </div>
 
-    <div class="prices">
-      <h2>Your offer</h2>
-      <p class="sub">Off-road electric golf cart, High Line, 4 + 2 seating.</p>
-      <table>
-        <thead>
-          <tr><th>Model</th><th>Colour</th><th>Qty</th><th>Unit price</th></tr>
-        </thead>
-        <tbody>
-          <tr class="top">
-            <td><div class="line-name">High Line · 6-Seater</div><div class="line-desc">Advanced tech. Elevated every journey.</div></td>
-            <td><span class="swatch"></span>Purple</td>
-            <td>1</td>
-            <td><span class="price"><span class="cur">EGP</span>660,000</span></td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="total-row"><span class="eyebrow">Total</span><span class="price"><span class="cur">EGP</span>660,000</span></div>
-      <p class="table-note">Price is per unit, in Egyptian Pounds (EGP). Full specifications, warranty and terms on the next page.</p>
-    </div>
+    <section class="offer-card">
+      <div class="oc-main">
+        <div class="oc-model">
+          <span class="eyebrow">Model</span>
+          <div class="model">High Line <span>6&#8209;Seater</span></div>
+          <div class="model-tag">Advanced tech. Elevated every journey.</div>
+          <dl class="attrs">
+            <div><dt>Colour</dt><dd><i class="swatch"></i>Purple</dd></div>
+            <div><dt>Seating</dt><dd class="num">4 + 2</dd></div>
+            <div><dt>Quantity</dt><dd class="num">1</dd></div>
+          </dl>
+        </div>
+        <div class="oc-price">
+          <span class="eyebrow">Unit price</span>
+          <div class="big-price"><span class="cur">EGP</span><b class="num">660,000</b></div>
+          <div class="price-sub">Per unit, in Egyptian Pounds</div>
+        </div>
+      </div>
+      <div class="oc-total">
+        <div><span class="eyebrow">Total · 1 unit</span><span class="words">Six hundred and sixty thousand Egyptian pounds</span></div>
+        <div class="total num"><span class="cur">EGP</span>660,000</div>
+      </div>
+    </section>
+    <p class="note">Full specifications, warranty and terms on the next page.</p>
 
-    <div class="tiles p1-tiles">
-      <div class="tile"><div class="big">6<small>seats</small></div><div class="lbl">4 + 2 seating with rear flip seat</div></div>
-      <div class="tile"><div class="big">150<small>Ah</small></div><div class="lbl">Lithium battery</div></div>
-      <div class="tile"><div class="big">60–80<small>km</small></div><div class="lbl">Range on a full charge</div></div>
-      <div class="tile"><div class="big">2<small>years</small></div><div class="lbl">Warranty against manufacturing defects</div></div>
+    <div class="figures">
+      <div class="fig"><div class="v"><b class="num">6</b><small>seats</small></div><div class="l">4 + 2 seating with rear flip seat</div></div>
+      <div class="fig"><div class="v"><b class="num">150</b><small>Ah</small></div><div class="l">Lithium battery</div></div>
+      <div class="fig"><div class="v"><b class="num">60–80</b><small>km</small></div><div class="l">Range on a full charge</div></div>
+      <div class="fig"><div class="v"><b class="num">2</b><small>years</small></div><div class="l">Warranty against manufacturing defects</div></div>
     </div>
   </div>
 
   <div class="footer">
     <span class="sym" aria-hidden="true"></span>
-    <span><b>SAGA</b> Electric Mobility Solutions · +20 10 8006 6055 · saga-mobility.com</span>
-    <span>01 / 02</span>
+    <span><b>SAGA</b> Electric Mobility Solutions · <a href="tel:+201080066055">+20 10 8006 6055</a> · <a href="https://saga-mobility.com">saga-mobility.com</a></span>
+    <span class="num">01 / 02</span>
   </div>
 </section>
 
 <!-- ================= PAGE 2 ================= -->
 <section class="page">
   <div class="p2">
-    <div class="p2-head">
+    <header class="p2-head">
       <span class="wordmark" role="img" aria-label="SAGA"></span>
-      <span class="eyebrow">Price Offer · High Line 6-Seater</span>
+      <div class="right"><span class="eyebrow">Price offer · High Line 6-seater</span><span class="pg num">02 / 02</span></div>
+    </header>
+
+    <div class="sec-head">
+      <h2>Full specifications</h2>
+      <p>SAGA High Line, 6 seats (4 + 2), purple. Off-road electric golf cart.</p>
     </div>
 
-    <h2 class="sec-title">Full specifications</h2>
-    <p class="sub">SAGA High Line, 6 seats (4 + 2), purple. Off-road electric golf cart.</p>
-
-    <div class="cards">
-      <div class="card">
-        <h3>Tech &amp; comfort</h3>
+    <div class="spec-grid">
+      <article class="spec">
+        <figure><img src="assets/detail-seats.jpg" alt="Two-tone diamond-stitched seats"></figure>
+        <h3><span class="no">01</span>Tech &amp; comfort</h3>
         <ul>
           <li>10" Android screen with Apple CarPlay</li>
           <li>Rear camera</li>
@@ -244,10 +275,11 @@
           <li>Two-tone diamond-stitched seats</li>
           <li>Rear flip seat with grab handle</li>
         </ul>
-      </div>
+      </article>
 
-      <div class="card">
-        <h3>Power &amp; chassis</h3>
+      <article class="spec">
+        <figure><img src="assets/detail-wheel.jpg" alt="All-terrain tyre with wheel ring light"></figure>
+        <h3><span class="no">02</span>Power &amp; chassis</h3>
         <ul>
           <li>150Ah lithium battery</li>
           <li>Range: 60–80 km</li>
@@ -257,10 +289,11 @@
           <li>Front bull bar</li>
           <li>Front cargo basket</li>
         </ul>
-      </div>
+      </article>
 
-      <div class="card top">
-        <h3>Lighting &amp; style</h3>
+      <article class="spec">
+        <figure><img src="assets/detail-lights.jpg" alt="LED headlights with illuminated SAGA badge"></figure>
+        <h3><span class="no">03</span>Lighting &amp; style</h3>
         <ul>
           <li>Purple finish</li>
           <li>LED headlights with illuminated SAGA badge</li>
@@ -270,33 +303,29 @@
           <li>Folding windshield</li>
           <li>Side mirrors</li>
         </ul>
-      </div>
+      </article>
     </div>
 
-    <div class="terms">
-      <h2 class="sec-title">Delivery, warranty &amp; service</h2>
-      <div class="tiles">
-        <div class="tile"><div class="big">2<small>years</small></div><div class="lbl">Warranty against manufacturing defects</div></div>
-        <div class="tile"><div class="big">10<small>days</small></div><div class="lbl">Delivery from order confirmation</div></div>
-        <div class="tile"><div class="big">2<small>visits</small></div><div class="lbl">First maintenance visits free of charge</div></div>
-        <div class="tile"><div class="big">60–80<small>km</small></div><div class="lbl">Range on a full charge</div></div>
-      </div>
-      <div class="conds">
-        <div>Price is per unit, quoted in Egyptian Pounds (EGP).</div>
-        <div>Delivery within 10 days of order confirmation.</div>
-        <div>Warranty covers manufacturing defects for 2 years from delivery. It excludes misuse, accidents and wear parts.</div>
-      </div>
-    </div>
+    <section class="journey">
+      <span class="eyebrow">Delivery, warranty &amp; service</span>
+      <ol class="steps">
+        <li><span class="node"></span><span class="no">01</span><b>Confirm</b><p>Sign this offer, or message us on WhatsApp.</p></li>
+        <li><span class="node"></span><span class="no">02</span><b class="num">10 days</b><p>Delivery from order confirmation.</p></li>
+        <li><span class="node"></span><span class="no">03</span><b class="num">2 visits</b><p>First maintenance visits free of charge.</p></li>
+        <li><span class="node"></span><span class="no">04</span><b class="num">2 years</b><p>Warranty against manufacturing defects.</p></li>
+      </ol>
+    </section>
+    <p class="terms">Price is per unit, quoted in Egyptian Pounds (EGP). The warranty covers manufacturing defects for 2 years from delivery and excludes misuse, accidents and wear parts.</p>
 
     <div class="sign">
       <div class="box">
-        <div class="eyebrow">For SAGA</div>
+        <span class="eyebrow">For SAGA</span>
         <div class="who">SAGA Electric Mobility Solutions</div>
         <div class="line"></div>
         <div class="cap"><span>Signature &amp; stamp</span><span>Date</span></div>
       </div>
       <div class="box">
-        <div class="eyebrow">Accepted by</div>
+        <span class="eyebrow">Accepted by</span>
         <div class="who">Customer</div>
         <div class="line"></div>
         <div class="cap"><span>Signature</span><span>Date</span></div>
@@ -304,11 +333,18 @@
     </div>
   </div>
 
-  <div class="closing">
+  <footer class="closing">
     <span class="sym" aria-hidden="true"></span>
-    <div class="tagline">Advanced tech. <em>Elevated every journey.</em></div>
-    <div class="web"><b>+20 10 8006 6055</b><br>saga-mobility.com · hello@saga-mobility.com</div>
-  </div>
+    <div class="tagline">Advanced tech.<br><em>Elevated every journey.</em></div>
+    <div class="contact">
+      <a class="phone num" href="tel:+201080066055">+20 10 8006 6055</a>
+      <a href="https://saga-mobility.com">saga-mobility.com</a> · <a href="mailto:hello@saga-mobility.com">hello@saga-mobility.com</a>
+      <span class="scan">Scan to chat on WhatsApp</span>
+    </div>
+    <a class="qr" href="https://wa.me/201080066055?text=Hello%20SAGA%2C%20about%20offer%20SAGA-PO-261107-HL6">
+      <img src="assets/whatsapp-qr.svg" alt="QR code to message SAGA on WhatsApp">
+    </a>
+  </footer>
 </section>
 
 </body>
