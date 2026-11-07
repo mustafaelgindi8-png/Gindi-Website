@@ -48,7 +48,6 @@
   .hero {
     position: relative; height: 128mm; background: var(--teal); color: var(--cream);
     padding: 16mm 18mm 0;
-    background-image: radial-gradient(120mm 90mm at 72% 78%, rgba(235,238,165,.13), transparent 70%);
   }
   .brandbar { display: flex; align-items: center; justify-content: space-between; }
   .brand { display: flex; align-items: center; gap: 5mm; color: var(--lime); }
@@ -68,7 +67,6 @@
   .hero-car {
     position: absolute; right: 18mm; top: 33mm; width: 66mm; height: 84mm; object-fit: cover; object-position: 45% 62%;
     border-radius: 4mm; border: .4mm solid rgba(235,238,165,.45);
-    box-shadow: 0 5mm 10mm rgba(0,0,0,.28);
   }
   .meta-strip { position: absolute; left: 18mm; bottom: 12mm; display: flex; gap: 7mm; }
   .meta-strip div { font-size: 8.4pt; color: #F7F7EC; font-weight: 500; }
@@ -76,10 +74,7 @@
 
   .p1-body { padding: 10mm 18mm 0; }
   .to-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10mm; padding-bottom: 7mm; border-bottom: .3mm solid var(--rule); }
-  .to-row .eyebrow { color: var(--teal); margin-bottom: 3mm; }
-  .client { font-size: 15pt; font-weight: 800; color: var(--charcoal); line-height: 1.2; }
-  .client-sub { font-size: 8.4pt; color: var(--muted); margin-top: 1.2mm; }
-  .letter { max-width: 88mm; font-size: 9.2pt; line-height: 1.55; color: var(--charcoal); text-align: right; }
+  .letter { max-width: 150mm; font-size: 10pt; line-height: 1.55; color: var(--charcoal); }
 
   .prices { margin-top: 8mm; }
   .prices h2, .sec-title { font-size: 17pt; font-weight: 800; color: var(--teal); letter-spacing: -.01em; margin-bottom: 1.5mm; }
@@ -181,8 +176,6 @@
 
     <div class="meta-strip">
       <div><span>Reference</span>SAGA-PO-261107-HL6</div>
-      <div><span>Issue date</span>7 November 2026</div>
-      <div><span>Valid until</span>7 December 2026</div>
     </div>
 
     <img class="hero-car" src="assets/highline-6-purple.jpg" alt="SAGA High Line 6-seater in purple">
@@ -190,12 +183,7 @@
 
   <div class="p1-body">
     <div class="to-row">
-      <div>
-        <div class="eyebrow">Prepared for</div>
-        <div class="client"><span class="fill">Customer name</span></div>
-        <div class="client-sub"><span class="fill">Phone</span> · <span class="fill">Address</span></div>
-      </div>
-      <p class="letter">Thank you for your interest in SAGA. Please find below our offer for the SAGA High Line 6-seater in purple, with full specifications and a 2-year warranty.</p>
+      <p class="letter">Thank you for your interest in SAGA. Please find below our offer for the SAGA High Line 6&#8209;seater in purple, with full specifications and a 2-year warranty.</p>
     </div>
 
     <div class="prices">
@@ -210,18 +198,18 @@
             <td><div class="line-name">High Line · 6-Seater</div><div class="line-desc">Advanced tech. Elevated every journey.</div></td>
             <td><span class="swatch"></span>Purple</td>
             <td>1</td>
-            <td><span class="price"><span class="cur">EGP</span>650,000</span></td>
+            <td><span class="price"><span class="cur">EGP</span>660,000</span></td>
           </tr>
         </tbody>
       </table>
-      <div class="total-row"><span class="eyebrow">Total</span><span class="price"><span class="cur">EGP</span>650,000</span></div>
+      <div class="total-row"><span class="eyebrow">Total</span><span class="price"><span class="cur">EGP</span>660,000</span></div>
       <p class="table-note">Price is per unit, in Egyptian Pounds (EGP). Full specifications, warranty and terms on the next page.</p>
     </div>
 
     <div class="tiles p1-tiles">
       <div class="tile"><div class="big">6<small>seats</small></div><div class="lbl">4 + 2 seating with rear flip seat</div></div>
       <div class="tile"><div class="big">150<small>Ah</small></div><div class="lbl">Lithium battery</div></div>
-      <div class="tile"><div class="big">70–80<small>km</small></div><div class="lbl">Range on a full charge</div></div>
+      <div class="tile"><div class="big">60–80<small>km</small></div><div class="lbl">Range on a full charge</div></div>
       <div class="tile"><div class="big">2<small>years</small></div><div class="lbl">Warranty against manufacturing defects</div></div>
     </div>
   </div>
@@ -262,7 +250,7 @@
         <h3>Power &amp; chassis</h3>
         <ul>
           <li>150Ah lithium battery</li>
-          <li>Range: 70–80 km</li>
+          <li>Range: 60–80 km</li>
           <li>Lifted off-road chassis</li>
           <li>Rust-resistant aluminum suspension</li>
           <li>All-terrain tyres on black wheels</li>
@@ -291,11 +279,10 @@
         <div class="tile"><div class="big">2<small>years</small></div><div class="lbl">Warranty against manufacturing defects</div></div>
         <div class="tile"><div class="big">10<small>days</small></div><div class="lbl">Delivery from order confirmation</div></div>
         <div class="tile"><div class="big">3<small>visits</small></div><div class="lbl">First maintenance visits free of charge</div></div>
-        <div class="tile"><div class="big">70–80<small>km</small></div><div class="lbl">Range on a full charge</div></div>
+        <div class="tile"><div class="big">60–80<small>km</small></div><div class="lbl">Range on a full charge</div></div>
       </div>
       <div class="conds">
         <div>Price is per unit, quoted in Egyptian Pounds (EGP).</div>
-        <div>This offer is valid until 7 December 2026.</div>
         <div>Delivery within 10 days of order confirmation.</div>
         <div>Warranty covers manufacturing defects for 2 years from delivery. It excludes misuse, accidents and wear parts.</div>
       </div>
@@ -310,7 +297,7 @@
       </div>
       <div class="box">
         <div class="eyebrow">Accepted by</div>
-        <div class="who"><span class="fill">Customer name</span></div>
+        <div class="who">Customer</div>
         <div class="line"></div>
         <div class="cap"><span>Signature</span><span>Date</span></div>
       </div>
