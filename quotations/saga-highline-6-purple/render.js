@@ -1,4 +1,4 @@
-// Renders quote.html to price-offer.pdf (pass --preview for PNGs of each page).
+// Renders quote.html to SAGA-Price-Offer-High-Line-6-Seater.pdf (pass --preview for PNGs of each page).
 // The SAGA logo files are inlined as data URIs first, because Chromium will not
 // apply CSS masks loaded from local files.
 // Usage: node quotations/saga-highline-6-purple/render.js [--preview]
@@ -23,7 +23,7 @@ const dataUri = (file, type) =>
     const page = await browser.newPage({ viewport: { width: 794, height: 1123 }, deviceScaleFactor: 2 });
     await page.goto('file://' + tmp, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.fonts.ready);
-    await page.pdf({ path: path.join(dir, 'price-offer.pdf'), format: 'A4', printBackground: true, preferCSSPageSize: true });
+    await page.pdf({ path: path.join(dir, 'SAGA-Price-Offer-High-Line-6-Seater.pdf'), format: 'A4', printBackground: true, preferCSSPageSize: true });
     if (process.argv.includes('--preview')) {
       const pages = await page.$$('.page');
       for (let i = 0; i < pages.length; i++) {
