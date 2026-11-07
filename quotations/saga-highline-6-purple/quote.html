@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>عرض سعر – SAGA Highline 6 مقاعد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  /*
+   * Fields still to fill are wrapped in <span class="fill">…</span> and print
+   * highlighted in yellow. Replace the text and delete class="fill".
+   */
+  :root {
+    --purple: #4b1d7a;
+    --purple-2: #7b3fc4;
+    --purple-soft: #f3edfb;
+    --ink: #1d1a24;
+    --muted: #6b6478;
+    --line: #e2dbec;
+    --fill: #fff3a8;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: var(--ink); }
+  body { font-family: 'Cairo', 'DejaVu Sans', sans-serif; font-size: 10.5pt; line-height: 1.5; }
+  .en { font-family: 'Montserrat', 'DejaVu Sans', sans-serif; direction: ltr; unicode-bidi: isolate; }
+  .page {
+    width: 210mm; height: 297mm; position: relative; overflow: hidden;
+    padding: 0 14mm 0; page-break-after: always; display: flex; flex-direction: column;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* Header */
+  .head {
+    margin: 0 -14mm; padding: 9mm 14mm 7mm;
+    background: linear-gradient(120deg, #1a0b2e 0%, var(--purple) 55%, var(--purple-2) 100%);
+    color: #fff; display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { direction: ltr; display: flex; flex-direction: column; align-items: flex-start; }
+  .logo .mark {
+    font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 30pt; letter-spacing: 9pt;
+    line-height: 1; padding: 2.5mm 4mm 2.5mm 6mm; border: 1.6pt solid rgba(255,255,255,.9);
+    border-radius: 2mm; text-shadow: 0 0 8pt rgba(200,170,255,.7);
+  }
+  .logo .tag { font-family: 'Montserrat', sans-serif; font-size: 7pt; letter-spacing: 3.2pt; margin-top: 2mm; opacity: .85; }
+  .doc-title { text-align: left; }
+  .doc-title .ar { font-size: 22pt; font-weight: 800; line-height: 1.2; }
+  .doc-title .en { font-size: 10pt; letter-spacing: 3pt; opacity: .85; font-weight: 700; }
+
+  /* Info strip */
+  .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 6mm; }
+  .box { border: 1px solid var(--line); border-radius: 2.5mm; padding: 3.5mm 4.5mm; }
+  .box h3 { margin: 0 0 1.5mm; font-size: 10pt; color: var(--purple); }
+  .box h3 .en { font-size: 7.5pt; color: var(--muted); font-weight: 500; margin-right: 1.5mm; }
+  .kv { display: grid; grid-template-columns: auto 1fr; column-gap: 3mm; row-gap: .6mm; font-size: 9.5pt; }
+  .kv dt { color: var(--muted); }
+  .kv dd { margin: 0; font-weight: 600; }
+
+  .fill { background: var(--fill); color: var(--ink); padding: 0 2mm; border-radius: 1mm; font-weight: 700; }
+
+  /* Offer */
+  .offer { display: grid; grid-template-columns: 62mm 1fr; gap: 6mm; margin-top: 6mm; flex: 1; min-height: 0; }
+  .photo { border-radius: 3mm; overflow: hidden; border: 1px solid var(--line); height: 100mm; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; object-position: 45% 60%; display: block; }
+  .photo-cap { text-align: center; font-size: 8pt; color: var(--muted); margin-top: 1.5mm; }
+
+  .section-title { display: flex; align-items: baseline; gap: 2mm; margin: 0 0 2.5mm; font-size: 12pt; font-weight: 800; color: var(--purple); }
+  .section-title .en { font-size: 8pt; color: var(--muted); font-weight: 700; letter-spacing: 1pt; }
+
+  table { width: 100%; border-collapse: collapse; }
+  .items th { background: var(--purple); color: #fff; font-weight: 700; font-size: 9pt; padding: 2mm 2.5mm; text-align: right; }
+  .items th:first-child { border-radius: 0 2mm 0 0; }
+  .items th:last-child { border-radius: 2mm 0 0 0; }
+  .items td { padding: 2.5mm; border-bottom: 1px solid var(--line); vertical-align: top; font-size: 9.5pt; }
+  .items td.num, .items th.num { text-align: center; white-space: nowrap; }
+  .item-name { font-weight: 800; font-size: 11pt; }
+  .item-sub { color: var(--muted); font-size: 8.5pt; }
+  .chips { display: flex; flex-wrap: wrap; gap: 1.5mm; margin-top: 1.5mm; }
+  .chip { background: var(--purple-soft); color: var(--purple); border-radius: 10mm; padding: .3mm 2.5mm; font-size: 8pt; font-weight: 700; }
+  .chip.color::before { content: ''; display: inline-block; width: 2.4mm; height: 2.4mm; border-radius: 50%; margin-left: 1.2mm; vertical-align: -.2mm; background: linear-gradient(135deg, #2b0f4d, #8a3fd1 55%, #3d6b4f); }
+
+  .totals { margin-top: 3mm; margin-right: auto; width: 80mm; }
+  .totals td { padding: 1.6mm 2.5mm; font-size: 9.5pt; }
+  .totals td:last-child { text-align: left; font-weight: 700; }
+  .totals tr.grand td { background: var(--purple); color: #fff; font-size: 11.5pt; font-weight: 800; }
+  .totals tr.grand td:first-child { border-radius: 0 2mm 2mm 0; }
+  .totals tr.grand td:last-child { border-radius: 2mm 0 0 2mm; }
+  .words { font-size: 8.5pt; color: var(--muted); margin-top: 1.5mm; text-align: left; }
+
+  .warranty {
+    margin-top: 5mm; display: flex; gap: 4mm; align-items: center; border-radius: 3mm; padding: 3.5mm 4.5mm;
+    background: linear-gradient(120deg, var(--purple-soft), #fff); border: 1px solid #d9c9f0;
+  }
+  .shield {
+    flex: none; width: 15mm; height: 15mm; border-radius: 50%; background: var(--purple); color: #fff;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05;
+  }
+  .shield b { font-size: 15pt; font-family: 'Montserrat', sans-serif; }
+  .shield span { font-size: 6.5pt; }
+  .warranty h4 { margin: 0; font-size: 11.5pt; color: var(--purple); }
+  .warranty p { margin: .5mm 0 0; font-size: 8.8pt; color: var(--ink); }
+
+  .highlights { margin-top: 5mm; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5mm; }
+  .hl { border: 1px solid var(--line); border-radius: 2.5mm; padding: 2.5mm 2mm; text-align: center; }
+  .hl b { display: block; font-size: 12.5pt; color: var(--purple); font-family: 'Montserrat', 'Cairo', sans-serif; direction: ltr; }
+  .hl span { font-size: 7.8pt; color: var(--muted); }
+
+  /* Specs page */
+  .specs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 6mm; }
+  .spec-group { border: 1px solid var(--line); border-radius: 2.5mm; overflow: hidden; break-inside: avoid; }
+  .spec-group h4 { margin: 0; padding: 1.8mm 3.5mm; background: var(--purple-soft); color: var(--purple); font-size: 10pt; display: flex; justify-content: space-between; align-items: baseline; }
+  .spec-group h4 .en { font-size: 7.5pt; color: var(--muted); font-weight: 700; }
+  .spec td { padding: 1.4mm 3.5mm; border-top: 1px solid var(--line); font-size: 8.8pt; vertical-align: top; }
+  .spec tr:first-child td { border-top: 0; }
+  .spec td:first-child { color: var(--muted); width: 42%; }
+  .spec td:last-child { font-weight: 600; }
+
+  .features { columns: 2; column-gap: 6mm; margin: 0; padding: 0; list-style: none; font-size: 8.8pt; }
+  .features li { break-inside: avoid; padding: .7mm 0 .7mm 0; display: flex; gap: 2mm; }
+  .features li::before { content: '✓'; color: var(--purple-2); font-weight: 800; }
+
+  .terms { font-size: 8.6pt; margin: 0; padding-right: 4.5mm; }
+  .terms li { margin-bottom: .6mm; }
+
+  .sign { display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; margin-top: 5mm; font-size: 9pt; }
+  .sign div { border-top: 1px dashed #b7aec6; padding-top: 1.5mm; color: var(--muted); text-align: center; }
+
+  .foot {
+    margin: auto -14mm 0; padding: 4mm 14mm; background: #1a0b2e; color: #fff;
+    display: flex; justify-content: space-between; align-items: center; font-size: 9pt;
+  }
+  .foot .phone { display: flex; align-items: center; gap: 2.5mm; font-weight: 700; font-size: 11pt; }
+  .foot .phone .fill { color: var(--ink); }
+  .foot .phone svg { width: 4.5mm; height: 4.5mm; }
+  .foot .brand { font-family: 'Montserrat', sans-serif; letter-spacing: 4pt; font-weight: 800; }
+  .foot .pg { opacity: .7; font-size: 8pt; }
+</style>
+</head>
+<body>
+
+<!-- ============================ PAGE 1 ============================ -->
+<section class="page">
+  <header class="head">
+    <div class="logo"><div class="mark">SAGA</div><div class="tag">ELECTRIC GOLF CARTS</div></div>
+    <div class="doc-title"><div class="ar">عرض سعر</div><div class="en">PRICE OFFER</div></div>
+  </header>
+
+  <div class="meta">
+    <div class="box">
+      <h3>بيانات العرض <span class="en">Quotation</span></h3>
+      <dl class="kv">
+        <dt>رقم العرض</dt><dd class="en">SAGA-Q-2026-001</dd>
+        <dt>التاريخ</dt><dd class="en">07 / 11 / 2026</dd>
+        <dt>صلاحية العرض</dt><dd>15 يوماً من تاريخه</dd>
+      </dl>
+    </div>
+    <div class="box">
+      <h3>السادة العملاء <span class="en">Customer</span></h3>
+      <dl class="kv">
+        <dt>الاسم</dt><dd><span class="fill">اسم العميل</span></dd>
+        <dt>الهاتف</dt><dd><span class="fill">هاتف العميل</span></dd>
+        <dt>العنوان</dt><dd><span class="fill">العنوان</span></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="offer">
+    <div>
+      <div class="photo"><img src="cart.jpg" alt="SAGA Highline 6-seater golf cart in purple"></div>
+      <div class="photo-cap">SAGA Highline · 6 Seats · Purple</div>
+    </div>
+
+    <div>
+      <h2 class="section-title">تفاصيل العرض <span class="en">OFFER DETAILS</span></h2>
+      <table class="items">
+        <thead>
+          <tr><th>البيان</th><th class="num">الكمية</th><th class="num">سعر الوحدة</th><th class="num">الإجمالي</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="item-name">عربة جولف كهربائية SAGA – فئة Highline</div>
+              <div class="item-sub en">SAGA Electric Golf Cart – Highline, 6 Seats (4 + 2 rear flip seat)</div>
+              <div class="chips">
+                <span class="chip">6 مقاعد</span>
+                <span class="chip">Highline</span>
+                <span class="chip color">بنفسجي Purple</span>
+                <span class="chip">كامل المواصفات</span>
+              </div>
+            </td>
+            <td class="num">1</td>
+            <td class="num"><span class="fill">السعر</span></td>
+            <td class="num"><span class="fill">السعر</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="totals">
+        <tr><td>الإجمالي قبل الضريبة</td><td><span class="fill">—</span></td></tr>
+        <tr><td>ضريبة القيمة المضافة</td><td><span class="fill">—</span></td></tr>
+        <tr class="grand"><td>الإجمالي النهائي</td><td><span class="fill">السعر النهائي</span></td></tr>
+      </table>
+      <div class="words">فقط <span class="fill">المبلغ بالحروف</span> لا غير</div>
+
+      <div class="warranty">
+        <div class="shield"><b>2</b><span>سنة ضمان</span></div>
+        <div>
+          <h4>ضمان سنتين ضد عيوب الصناعة</h4>
+          <p class="en" style="text-align:left">2-Year Warranty against manufacturing defects</p>
+          <p>يشمل الموتور والكنترولر والبطارية والشاسيه والإلكترونيات، طبقاً لشروط الضمان بالصفحة التالية.</p>
+        </div>
+      </div>
+
+      <div class="highlights">
+        <div class="hl"><b>6</b><span>مقاعد</span></div>
+        <div class="hl"><b>5 kW</b><span>موتور AC</span></div>
+        <div class="hl"><b>Lithium</b><span>بطارية ليثيوم</span></div>
+        <div class="hl"><b>LED</b><span>إضاءة كاملة</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <div class="phone">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>
+      <span>للتواصل:</span> <span class="en"><span class="fill">رقم الهاتف</span></span>
+    </div>
+    <div class="brand">SAGA</div>
+    <div class="pg en">1 / 2</div>
+  </footer>
+</section>
+
+<!-- ============================ PAGE 2 ============================ -->
+<section class="page">
+  <header class="head">
+    <div class="logo"><div class="mark">SAGA</div><div class="tag">ELECTRIC GOLF CARTS</div></div>
+    <div class="doc-title"><div class="ar">المواصفات الكاملة</div><div class="en">FULL SPECIFICATIONS</div></div>
+  </header>
+
+  <div class="specs-grid">
+    <div class="spec-group">
+      <h4>الموديل <span class="en">MODEL</span></h4>
+      <table class="spec">
+        <tr><td>الماركة</td><td class="en">SAGA</td></tr>
+        <tr><td>الفئة</td><td>Highline (الفئة الأعلى)</td></tr>
+        <tr><td>عدد المقاعد</td><td>6 (4 أمامي + 2 خلفي قابل للطي)</td></tr>
+        <tr><td>اللون</td><td>بنفسجي متغير اللون (Purple)</td></tr>
+        <tr><td>نوع الشاسيه</td><td>مرفوع Lifted – شاسيه حديد مجلفن</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-group">
+      <h4>الموتور والبطارية <span class="en">POWERTRAIN</span></h4>
+      <table class="spec">
+        <tr><td>الموتور</td><td>AC قدرة 5 كيلووات</td></tr>
+        <tr><td>الكنترولر</td><td>AC كنترولر 400 أمبير</td></tr>
+        <tr><td>البطارية</td><td>ليثيوم LiFePO4 – 48V / 105Ah</td></tr>
+        <tr><td>الشاحن</td><td>شاحن ذكي 220V مدمج</td></tr>
+        <tr><td>زمن الشحن</td><td>6 – 8 ساعات</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-group">
+      <h4>الأداء <span class="en">PERFORMANCE</span></h4>
+      <table class="spec">
+        <tr><td>أقصى سرعة</td><td>40 كم/ساعة</td></tr>
+        <tr><td>المسافة بالشحنة</td><td>60 – 80 كم</td></tr>
+        <tr><td>قدرة صعود المنحدرات</td><td>حتى 25%</td></tr>
+        <tr><td>الحمولة القصوى</td><td>6 أفراد</td></tr>
+      </table>
+    </div>
+
+    <div class="spec-group">
+      <h4>الشاسيه والفرامل <span class="en">CHASSIS</span></h4>
+      <table class="spec">
+        <tr><td>الفرامل</td><td>هيدروليك ديسك على 4 عجلات</td></tr>
+        <tr><td>فرامل الانتظار</td><td>فرامل كهرومغناطيسية أوتوماتيك</td></tr>
+        <tr><td>التعليق الأمامي</td><td>مستقل بمساعدين هيدروليك</td></tr>
+        <tr><td>التعليق الخلفي</td><td>ياي مع مساعدين هيدروليك</td></tr>
+        <tr><td>الإطارات</td><td>كاوتش أوف رود 14 بوصة – جنوط سوداء</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h2 class="section-title" style="margin-top:6mm">التجهيزات الكاملة <span class="en">FULL OPTIONS</span></h2>
+  <ul class="features">
+    <li>فوانيس LED أمامية مع شعار SAGA مضيء</li>
+    <li>فوانيس خلفية LED وإشارات وفلاشر</li>
+    <li>سقف بإضاءة نجوم Starlight</li>
+    <li>إضاءة RGB للعجلات</li>
+    <li>دواسات جانبية مضيئة</li>
+    <li>صدام أمامي حماية (Bull Bar)</li>
+    <li>سلة أمتعة أمامية</li>
+    <li>زجاج أمامي قابل للطي</li>
+    <li>مرايات جانبية</li>
+    <li>كراسي جلد بتصميم كاروهات بلونين</li>
+    <li>مقعد خلفي قابل للطي مع مقبض</li>
+    <li>أحزمة أمان</li>
+    <li>شاشة عدادات رقمية</li>
+    <li>سماعات بلوتوث ومنافذ شحن USB</li>
+    <li>حاملات أكواب</li>
+    <li>كلاكس وجرس رجوع للخلف</li>
+  </ul>
+
+  <h2 class="section-title" style="margin-top:5mm">الشروط والأحكام <span class="en">TERMS</span></h2>
+  <ol class="terms">
+    <li><b>الضمان:</b> سنتان من تاريخ الاستلام ضد عيوب الصناعة فقط. لا يشمل الضمان سوء الاستخدام أو الحوادث أو التعديلات غير المعتمدة أو الأجزاء المستهلكة (الإطارات، تيل الفرامل، اللمبات).</li>
+    <li><b>صلاحية العرض:</b> 15 يوماً من تاريخه، والأسعار قابلة للتغيير بعد انتهاء المدة.</li>
+    <li><b>طريقة الدفع:</b> <span class="fill">مثال: 50% مقدم عند التعاقد والباقي عند الاستلام</span></li>
+    <li><b>التسليم:</b> <span class="fill">مدة التسليم ومكانه</span></li>
+    <li>تُسلَّم العربة مع دليل الاستخدام والشاحن ومفتاحين.</li>
+  </ol>
+
+  <div class="sign">
+    <div>توقيع وختم البائع</div>
+    <div>توقيع العميل بالموافقة</div>
+  </div>
+
+  <footer class="foot">
+    <div class="phone">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1z"/></svg>
+      <span>للتواصل:</span> <span class="en"><span class="fill">رقم الهاتف</span></span>
+    </div>
+    <div class="brand">SAGA</div>
+    <div class="pg en">2 / 2</div>
+  </footer>
+</section>
+
+</body>
+</html>
