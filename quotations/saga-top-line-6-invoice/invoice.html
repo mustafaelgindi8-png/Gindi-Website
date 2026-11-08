@@ -46,7 +46,7 @@
   .eyebrow { display: block; font-size: 6.6pt; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; }
 
   /* ================= Page 1 ================= */
-  .hero { display: grid; grid-template-columns: 105mm 105mm; height: 139mm; }
+  .hero { display: grid; grid-template-columns: 105mm 105mm; height: 136mm; }
   .hero-panel {
     background: var(--teal); color: var(--cream);
     padding: 15mm 12mm 12mm 18mm; display: flex; flex-direction: column; justify-content: space-between;
@@ -102,7 +102,7 @@
   .oc-total .total .cur { font-size: 7.8pt; font-weight: 700; letter-spacing: .14em; margin-right: 1.6mm; }
   .note { margin-top: 2.6mm; font-size: 7.6pt; color: var(--muted); }
 
-  .figures { margin-top: 8mm; display: grid; grid-template-columns: repeat(4, 1fr); border-top: .5mm solid var(--teal); }
+  .figures { margin-top: 8mm; display: grid; grid-template-columns: repeat(5, 1fr); border-top: .5mm solid var(--teal); }
   .fig { padding: 4mm 4mm 0; border-left: .3mm solid var(--rule); }
   .fig:first-child { border-left: 0; padding-left: 0; }
   .fig .v { color: var(--teal); white-space: nowrap; }
@@ -147,9 +147,9 @@
 
   .journey { margin-top: 8mm; background: var(--cream); border-radius: 4mm; padding: 6mm 7mm; }
   .journey .eyebrow { color: var(--teal); }
-  .steps { list-style: none; margin-top: 5mm; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 5mm; position: relative; }
+  .steps { list-style: none; margin-top: 5mm; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0 5mm; position: relative; }
   .steps::before {
-    content: ""; position: absolute; top: 1.42mm; left: 1.6mm; right: calc((100% - 15mm) / 4 - 1.6mm);
+    content: ""; position: absolute; top: 1.42mm; left: 1.6mm; right: calc((100% - 20mm) / 5 - 1.6mm);
     height: .35mm; background: rgba(1, 77, 83, .35);
   }
   .steps li { position: relative; padding-top: 6mm; }
@@ -248,6 +248,7 @@
       <div class="fig"><div class="v"><b class="num">70</b><small>%</small></div><div class="l">Balance of <strong>EGP&nbsp;532,000</strong>, due on delivery</div></div>
       <div class="fig"><div class="v"><b class="num">10</b><small>days</small></div><div class="l">Delivery from order confirmation</div></div>
       <div class="fig"><div class="v"><b class="num">2</b><small>years</small></div><div class="l">Warranty against manufacturing defects</div></div>
+      <div class="fig"><div class="v"><b class="num">5</b><small>years</small></div><div class="l">Warranty on the battery</div></div>
     </div>
   </div>
 
@@ -293,7 +294,7 @@
         <figure><img src="assets/detail-wheel.jpg" alt="14-inch all-terrain tyre with wheel ring light"></figure>
         <h3><span class="no">02</span>Power &amp; chassis</h3>
         <ul>
-          <li>150Ah lithium battery</li>
+          <li>150Ah lithium battery, 5-year warranty</li>
           <li>Range: 60–80 km</li>
           <li class="up">Power steering</li>
           <li class="up">Hydraulic steering, adjustable up &amp; down</li>
@@ -325,9 +326,10 @@
         <li><span class="node"></span><span class="no">02</span><b class="num">10 days</b><p>Delivery from order confirmation.</p></li>
         <li><span class="node"></span><span class="no">03</span><b>Balance</b><p>Pay the 70% balance, <strong>EGP&nbsp;532,000</strong>, on delivery.</p></li>
         <li><span class="node"></span><span class="no">04</span><b class="num">2 years</b><p>Warranty against manufacturing defects, plus 2 free maintenance visits.</p></li>
+        <li><span class="node"></span><span class="no">05</span><b class="num">5 years</b><p>Warranty on the battery.</p></li>
       </ol>
     </section>
-    <p class="terms">All amounts are in Egyptian Pounds (EGP). The warranty covers manufacturing defects for 2 years from delivery and excludes misuse, accidents and wear parts.</p>
+    <p class="terms">All amounts are in Egyptian Pounds (EGP). The cart is warranted against manufacturing defects for 2 years from delivery and the battery for 5 years. The warranty excludes misuse, accidents and wear parts.</p>
 
     <div class="sign">
       <div class="box">
