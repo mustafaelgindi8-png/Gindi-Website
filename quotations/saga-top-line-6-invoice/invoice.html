@@ -7,8 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=block" rel="stylesheet">
 <style>
   /*
-   * SAGA brand: teal / lime / cream, Hanken Grotesk, SAGA wordmark + icon
-   * (same system as the High Line price offer). render.js prints this page to PDF.
+   * Same design as the High Line price offer (../saga-highline-6-purple/quote.html).
+   * Images come from prepare-assets.py; render.js prints this page to PDF.
    */
   :root {
     --teal: #014D53;
@@ -32,119 +32,155 @@
   }
   a { color: inherit; text-decoration: none; }
   .num { font-feature-settings: "tnum" 1, "lnum" 1; }
-  .page { width: 210mm; height: 297mm; position: relative; overflow: hidden; background: var(--paper); }
+  .page {
+    width: 210mm; height: 297mm; position: relative; overflow: hidden;
+    background: var(--paper); page-break-after: always; break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
 
+  /* Single-colour logo files, tinted with the current text colour */
   .wordmark, .sym { display: block; background: currentColor; -webkit-mask-repeat: no-repeat; -webkit-mask-size: contain; -webkit-mask-position: left center; }
   .wordmark { -webkit-mask-image: url(assets/saga-wordmark.svg); aspect-ratio: 908 / 136; }
   .sym { -webkit-mask-image: url(assets/saga-icon.png); aspect-ratio: 180 / 150; }
 
-  .eyebrow { display: block; font-size: 6.6pt; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: var(--teal); }
+  .eyebrow { display: block; font-size: 6.6pt; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; }
 
-  /* ---------- Cover strip ---------- */
-  .hero { display: grid; grid-template-columns: 1fr 70mm; height: 72mm; }
+  /* ================= Page 1 ================= */
+  .hero { display: grid; grid-template-columns: 105mm 105mm; height: 139mm; }
   .hero-panel {
-    background: var(--teal); color: var(--cream); padding: 12mm 12mm 10mm 18mm;
-    display: flex; flex-direction: column; justify-content: space-between;
+    background: var(--teal); color: var(--cream);
+    padding: 15mm 12mm 12mm 18mm; display: flex; flex-direction: column; justify-content: space-between;
   }
-  .lockup { display: flex; align-items: center; gap: 3.8mm; color: var(--lime); }
-  .lockup .sym { width: 10mm; }
-  .lockup .wordmark { width: 34mm; }
-  .lockup .tag { margin-top: 1.6mm; font-size: 5pt; letter-spacing: .3em; font-weight: 600; }
-  .hero h1 { font-size: 30pt; line-height: 1; font-weight: 800; letter-spacing: -.02em; color: var(--ivory); }
-  .hero .sub { margin-top: 1.6mm; font-size: 10pt; font-weight: 600; color: var(--lime); white-space: nowrap; }
-  .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; }
-  .meta { display: grid; gap: 2.4mm; text-align: right; padding-bottom: .6mm; }
-  .meta dt { font-size: 5.8pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--lime); opacity: .85; }
-  .meta dd { margin-top: .8mm; font-size: 8.6pt; font-weight: 500; color: var(--ivory); letter-spacing: .02em; white-space: nowrap; }
-  .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-  .body { padding: 9mm 18mm 0; }
-
-  /* ---------- Order ---------- */
-  table { width: 100%; border-collapse: collapse; }
-  thead th {
-    font-size: 6.2pt; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--muted);
-    text-align: right; padding: 0 0 2.4mm 6mm; border-bottom: .5mm solid var(--teal);
+  .lockup { display: flex; align-items: center; gap: 4.5mm; color: var(--lime); }
+  .lockup .sym { width: 12mm; }
+  .lockup .wordmark { width: 42mm; }
+  .lockup .tag { margin-top: 2mm; font-size: 5.9pt; letter-spacing: .3em; font-weight: 600; }
+  .pill {
+    display: inline-block; border: .35mm solid rgba(235, 238, 165, .55); color: var(--lime); border-radius: 20mm;
+    padding: 1.7mm 4.2mm; font-size: 6.6pt; font-weight: 700; letter-spacing: .28em;
   }
-  thead th:first-child { text-align: left; padding-left: 0; }
-  tbody td { padding: 4mm 0 4mm 6mm; text-align: right; vertical-align: top; font-size: 9.6pt; border-bottom: .3mm solid var(--rule); white-space: nowrap; }
-  tbody td:first-child { text-align: left; padding-left: 0; white-space: normal; }
-  .item { font-size: 14pt; font-weight: 800; color: var(--teal); letter-spacing: -.01em; line-height: 1.1; }
-  .item span { font-weight: 300; }
-  .item-sub { margin-top: 1.4mm; font-size: 8.2pt; color: var(--muted); }
-  td.amount { font-weight: 700; color: var(--teal); }
-
-  .totals-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 10mm; margin-top: 4mm; }
-  .words { max-width: 80mm; font-size: 8pt; color: var(--muted); line-height: 1.45; padding-bottom: 1.2mm; }
-  .words b { display: block; font-size: 6pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--teal); margin-bottom: 1mm; }
-  .totals { width: 84mm; }
-  .totals .row { display: flex; justify-content: space-between; padding: 1.6mm 0; font-size: 9pt; }
-  .totals .grand {
-    margin-top: 1.4mm; padding: 3.2mm 4.5mm; border-radius: 2.5mm; background: var(--teal); color: var(--ivory);
-    align-items: baseline; font-weight: 700;
+  .hero h1 { margin-top: 6mm; font-size: 31pt; line-height: .98; font-weight: 800; letter-spacing: -.02em; color: var(--ivory); }
+  .hero h1 em { font-style: normal; color: var(--lime); }
+  .hero .lede { margin-top: 6mm; max-width: 70mm; font-size: 9.3pt; line-height: 1.5; color: var(--on-teal); }
+  .ref { display: flex; gap: 9mm; }
+  .ref .eyebrow { color: var(--lime); opacity: .85; font-size: 6pt; }
+  .ref .val { margin-top: 1.2mm; font-size: 8.6pt; font-weight: 500; color: var(--ivory); letter-spacing: .04em; white-space: nowrap; }
+  .hero-photo { position: relative; overflow: hidden; }
+  .hero-photo img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    transform: scale(1.12); transform-origin: 50% 60%; display: block;
   }
-  .totals .grand .v { font-size: 16pt; font-weight: 800; color: var(--lime); letter-spacing: -.01em; }
-  .totals .grand .v small { font-size: 7.4pt; font-weight: 700; letter-spacing: .14em; margin-right: 1.6mm; color: var(--on-teal); }
 
-  /* ---------- Payment schedule ---------- */
-  .pay { margin-top: 9mm; }
-  .split { margin-top: 3.4mm; display: flex; border-radius: 3mm; overflow: hidden; }
-  .seg { padding: 3.8mm 4.5mm 4mm; }
-  .seg.down { width: 30%; background: var(--teal); color: var(--ivory); }
-  .seg.bal { width: 70%; background: var(--lime); color: var(--teal); display: flex; justify-content: space-between; align-items: center; gap: 4mm; }
-  .ship { display: flex; align-items: center; gap: 2.4mm; padding: 2.6mm 3.4mm; border-radius: 2.4mm; background: rgba(255, 255, 255, .6); font-size: 7.8pt; line-height: 1.3; }
-  .ship svg { width: 5.4mm; height: 5.4mm; flex: none; }
-  .seg .ship b { display: block; margin: 0; font-size: 8.8pt; font-weight: 800; letter-spacing: 0; line-height: 1.3; }
-  .seg .top { display: flex; align-items: baseline; gap: 2mm; }
-  .seg .pct { font-size: 15pt; font-weight: 300; letter-spacing: -.02em; line-height: 1; }
-  .seg.down .pct { color: var(--lime); }
-  .seg .lbl { font-size: 6.2pt; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; }
-  .seg b { display: block; margin-top: 2.4mm; font-size: 17pt; font-weight: 800; letter-spacing: -.015em; line-height: 1; }
-  .seg b small { font-size: 7.4pt; font-weight: 700; letter-spacing: .14em; margin-right: 1.4mm; opacity: .8; }
-  .due { display: flex; margin-top: 2.2mm; font-size: 8pt; line-height: 1.4; }
-  .due > div { padding: 0 4.5mm; }
-  .due > div:first-child { width: 30%; }
-  .due > div:last-child { width: 70%; }
-  .due b { color: var(--teal); font-weight: 700; }
+  .p1-body { padding: 10mm 18mm 0; }
+  .offer-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 12mm; }
+  .offer-head .eyebrow { color: var(--teal); }
+  .offer-head h2 { margin-top: 2mm; font-size: 20pt; font-weight: 800; color: var(--teal); letter-spacing: -.015em; line-height: 1.05; }
+  .offer-head .intro { max-width: 82mm; font-size: 8.6pt; line-height: 1.55; }
 
-  /* ---------- Includes ---------- */
-  .includes { margin-top: 9mm; }
-  .inc-head { display: flex; justify-content: space-between; align-items: center; gap: 6mm; }
-  .chips { display: flex; gap: 2mm; }
-  .chips span { background: var(--cream); color: var(--teal); border-radius: 10mm; padding: 1mm 3mm; font-size: 7.2pt; font-weight: 700; white-space: nowrap; }
-  .spec-list { margin-top: 3.4mm; columns: 3; column-gap: 7mm; list-style: none; border-top: .5mm solid var(--teal); padding-top: 1.4mm; }
-  .spec-list li {
-    break-inside: avoid; position: relative; padding: 1.35mm 0 1.35mm 3.8mm; border-bottom: .25mm solid var(--rule);
-    font-size: 8pt; line-height: 1.3;
+  .offer-card { margin-top: 5.5mm; background: #fff; border: .3mm solid var(--rule); border-radius: 4mm; overflow: hidden; }
+  .oc-main { display: grid; grid-template-columns: 1fr 68mm; }
+  .oc-model { padding: 6.5mm 7mm 6mm; }
+  .oc-model .eyebrow, .oc-price .eyebrow { color: var(--muted); }
+  .model { margin-top: 2mm; font-size: 23pt; font-weight: 800; color: var(--teal); letter-spacing: -.02em; line-height: 1; }
+  .model span { font-weight: 300; }
+  .model-tag { margin-top: 2mm; font-size: 8.6pt; color: var(--muted); }
+  .attrs { margin-top: 5.5mm; display: flex; gap: 9mm; }
+  .attrs dt { font-size: 6pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--muted); }
+  .attrs dd { margin-top: 1.2mm; font-size: 10pt; font-weight: 600; color: var(--charcoal); white-space: nowrap; }
+  .swatch {
+    display: inline-block; width: 3.2mm; height: 3.2mm; border-radius: 50%; margin-right: 1.6mm; vertical-align: -.45mm;
+    background: linear-gradient(135deg, #3a2a52 0%, #6a4f8f 48%, #7c7559 100%);
   }
-  .spec-list li::before { content: ""; position: absolute; left: .1mm; top: 2.6mm; width: 1.4mm; height: 1.4mm; border-radius: 50%; background: var(--teal); }
+  .oc-price { padding: 6.5mm 7mm 6mm; border-left: .3mm solid var(--rule); }
+  .big-price { margin-top: 2.4mm; display: flex; align-items: baseline; gap: 2mm; color: var(--teal); }
+  .big-price .cur { font-size: 8.6pt; font-weight: 700; letter-spacing: .14em; color: var(--muted); }
+  .big-price b { font-size: 37pt; font-weight: 300; letter-spacing: -.03em; line-height: 1; }
+  .price-sub { margin-top: 2.4mm; font-size: 7.8pt; color: var(--muted); }
+  .oc-total { background: var(--lime); color: var(--teal); padding: 4mm 7mm; display: flex; justify-content: space-between; align-items: center; }
+  .oc-total .words { display: block; margin-top: 1.1mm; font-size: 8pt; color: rgba(1, 77, 83, .8); }
+  .oc-total .total { font-size: 17pt; font-weight: 800; letter-spacing: -.01em; }
+  .oc-total .total .cur { font-size: 7.8pt; font-weight: 700; letter-spacing: .14em; margin-right: 1.6mm; }
+  .note { margin-top: 2.6mm; font-size: 7.6pt; color: var(--muted); }
 
-  /* ---------- Terms + signature ---------- */
-  .foot-row { margin-top: 9mm; display: grid; grid-template-columns: 1fr 74mm; gap: 12mm; align-items: end; }
-  .terms { font-size: 7.8pt; line-height: 1.55; color: var(--muted); }
-  .terms b { color: var(--teal); }
-  .sign { border-top: .45mm solid var(--teal); padding-top: 2.6mm; }
+  .figures { margin-top: 8mm; display: grid; grid-template-columns: repeat(4, 1fr); border-top: .5mm solid var(--teal); }
+  .fig { padding: 4mm 4mm 0; border-left: .3mm solid var(--rule); }
+  .fig:first-child { border-left: 0; padding-left: 0; }
+  .fig .v { color: var(--teal); white-space: nowrap; }
+  .fig .v b { font-size: 25pt; font-weight: 300; letter-spacing: -.03em; line-height: 1; }
+  .fig .v small { font-size: 8.6pt; font-weight: 700; margin-left: 1mm; }
+  .fig .l { margin-top: 1.8mm; font-size: 7.8pt; line-height: 1.35; color: var(--muted); }
+  .fig .l strong, .steps p strong { color: var(--teal); font-weight: 700; }
+
+  .footer {
+    position: absolute; left: 18mm; right: 18mm; bottom: 9mm; display: flex; justify-content: space-between; align-items: center;
+    font-size: 7.2pt; color: var(--muted); border-top: .3mm solid var(--rule); padding-top: 3.4mm;
+  }
+  .footer .sym { width: 6mm; color: var(--teal); }
+  .footer b { color: var(--teal); font-weight: 700; }
+
+  /* ================= Page 2 ================= */
+  .p2 { padding: 12mm 18mm 0; }
+  .p2-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 4mm; border-bottom: .3mm solid var(--rule); }
+  .p2-head .wordmark { width: 28mm; color: var(--teal); }
+  .p2-head .right { display: flex; align-items: center; gap: 6mm; color: var(--muted); }
+  .p2-head .pg { font-size: 7.2pt; }
+
+  .sec-head { margin-top: 7mm; }
+  .sec-head h2 { font-size: 20pt; font-weight: 800; color: var(--teal); letter-spacing: -.015em; line-height: 1.05; }
+  .sec-head p { margin-top: 1.6mm; font-size: 8.6pt; line-height: 1.5; color: var(--muted); }
+
+  .spec-grid { margin-top: 5mm; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
+  .spec figure { height: 34mm; border-radius: 3mm; overflow: hidden; background: var(--cream); }
+  .spec figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .spec h3 {
+    margin-top: 4mm; padding-bottom: 2.2mm; border-bottom: .5mm solid var(--teal);
+    display: flex; align-items: baseline; gap: 2.4mm; font-size: 11.5pt; font-weight: 800; color: var(--teal); letter-spacing: -.01em;
+  }
+  .spec h3 .no { font-size: 6.6pt; font-weight: 700; letter-spacing: .2em; color: var(--muted); }
+  .spec ul { list-style: none; }
+  .spec li { position: relative; padding: 1.55mm 0 1.55mm 4mm; border-bottom: .25mm solid var(--rule); font-size: 8.4pt; line-height: 1.3; }
+  .spec li::before { content: ""; position: absolute; left: .2mm; top: 2.85mm; width: 1.5mm; height: 1.5mm; border-radius: 50%; background: var(--teal); }
+
+  .journey { margin-top: 8mm; background: var(--cream); border-radius: 4mm; padding: 6mm 7mm; }
+  .journey .eyebrow { color: var(--teal); }
+  .steps { list-style: none; margin-top: 5mm; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 5mm; position: relative; }
+  .steps::before {
+    content: ""; position: absolute; top: 1.42mm; left: 1.6mm; right: calc((100% - 15mm) / 4 - 1.6mm);
+    height: .35mm; background: rgba(1, 77, 83, .35);
+  }
+  .steps li { position: relative; padding-top: 6mm; }
+  .steps .node { position: absolute; top: 0; left: 0; width: 3.2mm; height: 3.2mm; border-radius: 50%; background: var(--lime); border: .55mm solid var(--teal); }
+  .steps .no { display: block; font-size: 6.2pt; font-weight: 700; letter-spacing: .22em; color: var(--muted); }
+  .steps b { display: block; margin-top: 1.1mm; font-size: 16pt; font-weight: 800; color: var(--teal); letter-spacing: -.02em; line-height: 1.05; }
+  .steps p { margin-top: 1.4mm; font-size: 8pt; line-height: 1.35; }
+
+  .terms { margin-top: 4mm; font-size: 7.8pt; line-height: 1.5; color: var(--muted); }
+
+  .sign { margin-top: 9mm; display: grid; grid-template-columns: 1fr 1fr; gap: 10mm; }
+  .sign .box { border-top: .45mm solid var(--teal); padding-top: 3mm; }
+  .sign .eyebrow { color: var(--teal); }
+  .sign .who { margin-top: 1.6mm; font-size: 9pt; font-weight: 600; }
   .sign .line { margin-top: 10mm; border-bottom: .3mm dashed rgba(65, 64, 66, .35); }
   .sign .cap { margin-top: 1.6mm; font-size: 7pt; color: var(--muted); display: flex; justify-content: space-between; }
 
-  /* ---------- Closing band ---------- */
   .closing {
-    position: absolute; left: 0; right: 0; bottom: 0; height: 28mm; background: var(--teal); color: var(--lime);
+    position: absolute; left: 0; right: 0; bottom: 0; height: 31mm; background: var(--teal); color: var(--lime);
     display: flex; align-items: center; gap: 6mm; padding: 0 18mm;
   }
-  .closing .sym { width: 10mm; flex: none; }
-  .closing .tagline { flex: 1; font-size: 12.5pt; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; color: var(--ivory); }
+  .closing .sym { width: 11mm; flex: none; }
+  .closing .tagline { flex: 1; font-size: 13pt; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; color: var(--ivory); }
   .closing .tagline em { font-style: normal; color: var(--lime); }
   .closing .contact { text-align: right; font-size: 7.6pt; line-height: 1.6; color: var(--on-teal); }
   .closing .phone { display: block; font-size: 11pt; font-weight: 700; letter-spacing: .02em; color: var(--lime); }
-  .closing .scan { display: block; margin-top: .8mm; font-size: 6pt; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--lime); }
-  .qr { flex: none; display: block; width: 20mm; height: 20mm; padding: 2mm; background: var(--ivory); border-radius: 2mm; }
+  .closing .scan { display: block; margin-top: 1mm; font-size: 6pt; font-weight: 700; letter-spacing: .24em; text-transform: uppercase; color: var(--lime); }
+  .qr { flex: none; display: block; width: 22mm; height: 22mm; padding: 2.2mm; background: var(--ivory); border-radius: 2mm; }
   .qr img { width: 100%; height: 100%; display: block; }
 </style>
 </head>
 <body>
-<section class="page">
 
+<!-- ================= PAGE 1 ================= -->
+<section class="page">
   <div class="hero">
     <div class="hero-panel">
       <div class="lockup">
@@ -154,101 +190,152 @@
           <div class="tag">ELECTRIC MOBILITY SOLUTIONS.</div>
         </div>
       </div>
-      <div class="hero-bottom">
-        <div>
-          <h1>Invoice</h1>
-          <div class="sub">SAGA Top Line · 6&#8209;Seater</div>
-        </div>
-        <dl class="meta">
-          <div><dt>Invoice no.</dt><dd class="num">SAGA-INV-261108-TL6</dd></div>
-          <div><dt>Date</dt><dd class="num">8 November 2026</dd></div>
-        </dl>
+
+      <div>
+        <span class="pill">INVOICE</span>
+        <h1>Move in<br>silence.<br><em>Arrive in<br>style.</em></h1>
+        <p class="lede">The Top Line 6&#8209;seater: the most comfortable &amp; luxurious ride, with Burmester sound and a built-in cooling box.</p>
+      </div>
+
+      <div class="ref">
+        <div><span class="eyebrow">Invoice no.</span><div class="val num">SAGA-INV-261108-TL6</div></div>
+        <div><span class="eyebrow">Date</span><div class="val num">8 November 2026</div></div>
       </div>
     </div>
     <div class="hero-photo"><img src="assets/top-line-6-purple.jpg" alt="SAGA Top Line 6-seater in purple"></div>
   </div>
 
-  <div class="body">
-    <section>
-      <table>
-        <thead><tr><th>Item</th><th>Qty</th><th>Unit price</th><th>Amount</th></tr></thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="item">SAGA Top Line <span>6&#8209;Seater</span></div>
-              <div class="item-sub">Off-road electric golf cart, 4 + 2 seating. The most comfortable &amp; luxurious ride.</div>
-            </td>
-            <td class="num">1</td>
-            <td class="num">EGP 760,000</td>
-            <td class="num amount">EGP 760,000</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="totals-row">
-        <p class="words"><b>Amount in words</b>Seven hundred and sixty thousand Egyptian pounds</p>
-        <div class="totals">
-          <div class="row"><span>Subtotal</span><span class="num">EGP 760,000</span></div>
-          <div class="row grand"><span>Total</span><span class="v num"><small>EGP</small>760,000</span></div>
+  <div class="p1-body">
+    <div class="offer-head">
+      <div>
+        <span class="eyebrow">Your invoice</span>
+        <h2>SAGA Top Line,<br>built for six.</h2>
+      </div>
+      <p class="intro">Thank you for choosing SAGA. This invoice covers your Top Line 6&#8209;seater in purple, with the payment schedule below.</p>
+    </div>
+
+    <section class="offer-card">
+      <div class="oc-main">
+        <div class="oc-model">
+          <span class="eyebrow">Model</span>
+          <div class="model">Top Line <span>6&#8209;Seater</span></div>
+          <div class="model-tag">The most comfortable &amp; luxurious ride.</div>
+          <dl class="attrs">
+            <div><dt>Colour</dt><dd><i class="swatch"></i>Purple</dd></div>
+            <div><dt>Seating</dt><dd class="num">4 + 2</dd></div>
+            <div><dt>Quantity</dt><dd class="num">1</dd></div>
+          </dl>
+        </div>
+        <div class="oc-price">
+          <span class="eyebrow">Unit price</span>
+          <div class="big-price"><span class="cur">EGP</span><b class="num">760,000</b></div>
+          <div class="price-sub">Per unit, in Egyptian Pounds</div>
         </div>
       </div>
-    </section>
-
-    <section class="pay">
-      <span class="eyebrow">Payment schedule</span>
-      <div class="split">
-        <div class="seg down">
-          <div class="top"><span class="pct num">30%</span><span class="lbl">Down payment</span></div>
-          <b class="num"><small>EGP</small>228,000</b>
-        </div>
-        <div class="seg bal">
-          <div>
-            <div class="top"><span class="pct num">70%</span><span class="lbl">Balance on delivery</span></div>
-            <b class="num"><small>EGP</small>532,000</b>
-          </div>
-          <div class="ship">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/>
-            </svg>
-            <div><b>Delivery within 10 days</b>of order confirmation</div>
-          </div>
-        </div>
-      </div>
-      <div class="due">
-        <div><b>Due</b> on order confirmation.</div>
-        <div><b>Due</b> on delivery of the cart.</div>
+      <div class="oc-total">
+        <div><span class="eyebrow">Total · 1 unit</span><span class="words">Seven hundred and sixty thousand Egyptian pounds</span></div>
+        <div class="total num"><span class="cur">EGP</span>760,000</div>
       </div>
     </section>
+    <p class="note">Payment schedule below. Full specifications and terms on the next page.</p>
 
-    <section class="includes">
-      <div class="inc-head">
-        <span class="eyebrow">Your Top Line includes</span>
-        <div class="chips"><span>2-year warranty against manufacturing defects</span><span>2 free maintenance visits</span></div>
-      </div>
-      <ul class="spec-list">
-        <li>Multi-color finish</li>
-        <li>Power steering</li>
-        <li>Hydraulic steering, adjustable up &amp; down</li>
-        <li>10" Android screen with Apple CarPlay</li>
-        <li>Rear camera</li>
-        <li>2 × wireless chargers</li>
-        <li>150Ah lithium battery</li>
-        <li>Range: 60–80 km</li>
-        <li>Burmester speakers</li>
-        <li>Built-in refrigerated cooling box</li>
-        <li>Color-changing ambient lighting in roof, speakers &amp; steps</li>
-        <li>Wheel ring lights</li>
-        <li>Rust-resistant aluminum suspension</li>
-      </ul>
+    <div class="figures">
+      <div class="fig"><div class="v"><b class="num">30</b><small>%</small></div><div class="l">Down payment of <strong>EGP&nbsp;228,000</strong>, due on order confirmation</div></div>
+      <div class="fig"><div class="v"><b class="num">70</b><small>%</small></div><div class="l">Balance of <strong>EGP&nbsp;532,000</strong>, due on delivery</div></div>
+      <div class="fig"><div class="v"><b class="num">10</b><small>days</small></div><div class="l">Delivery from order confirmation</div></div>
+      <div class="fig"><div class="v"><b class="num">2</b><small>years</small></div><div class="l">Warranty against manufacturing defects</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="sym" aria-hidden="true"></span>
+    <span><b>SAGA</b> Electric Mobility Solutions · <a href="tel:+201080066055">+20 10 8006 6055</a> · <a href="https://saga-mobility.com">saga-mobility.com</a></span>
+    <span class="num">01 / 02</span>
+  </div>
+</section>
+
+<!-- ================= PAGE 2 ================= -->
+<section class="page">
+  <div class="p2">
+    <header class="p2-head">
+      <span class="wordmark" role="img" aria-label="SAGA"></span>
+      <div class="right"><span class="eyebrow">Invoice · Top Line 6-seater</span><span class="pg num">02 / 02</span></div>
+    </header>
+
+    <div class="sec-head">
+      <h2>Full specifications</h2>
+      <p>SAGA Top Line, 6 seats (4 + 2), purple. Off-road electric golf cart.</p>
+    </div>
+
+    <div class="spec-grid">
+      <article class="spec">
+        <figure><img src="assets/detail-seats.jpg" alt="Two-tone diamond-stitched seats"></figure>
+        <h3><span class="no">01</span>Tech &amp; comfort</h3>
+        <ul>
+          <li>10" Android screen with Apple CarPlay</li>
+          <li>Rear camera</li>
+          <li>2 × wireless chargers</li>
+          <li>Burmester speakers</li>
+          <li>Built-in refrigerated cooling box</li>
+          <li>Two-tone diamond-stitched seats</li>
+          <li>Rear flip seat with grab handle</li>
+        </ul>
+      </article>
+
+      <article class="spec">
+        <figure><img src="assets/detail-wheel.jpg" alt="All-terrain tyre with wheel ring light"></figure>
+        <h3><span class="no">02</span>Power &amp; chassis</h3>
+        <ul>
+          <li>150Ah lithium battery</li>
+          <li>Range: 60–80 km</li>
+          <li>Power steering</li>
+          <li>Hydraulic steering, adjustable up &amp; down</li>
+          <li>Lifted off-road chassis</li>
+          <li>Rust-resistant aluminum suspension</li>
+          <li>All-terrain tyres on black wheels</li>
+        </ul>
+      </article>
+
+      <article class="spec">
+        <figure><img src="assets/detail-lights.jpg" alt="LED headlights with illuminated SAGA badge"></figure>
+        <h3><span class="no">03</span>Lighting &amp; style</h3>
+        <ul>
+          <li>Multi-color purple finish</li>
+          <li>LED headlights with illuminated SAGA badge</li>
+          <li>Color-changing ambient lighting in roof, speakers &amp; steps</li>
+          <li>Starlight roof lining</li>
+          <li>Wheel ring lights</li>
+          <li>Folding windshield</li>
+          <li>Front bull bar &amp; cargo basket</li>
+        </ul>
+      </article>
+    </div>
+
+    <section class="journey">
+      <span class="eyebrow">Payment, delivery &amp; service</span>
+      <ol class="steps">
+        <li><span class="node"></span><span class="no">01</span><b>Confirm</b><p>Pay the 30% down payment, <strong>EGP&nbsp;228,000</strong>.</p></li>
+        <li><span class="node"></span><span class="no">02</span><b class="num">10 days</b><p>Delivery from order confirmation.</p></li>
+        <li><span class="node"></span><span class="no">03</span><b>Balance</b><p>Pay the 70% balance, <strong>EGP&nbsp;532,000</strong>, on delivery.</p></li>
+        <li><span class="node"></span><span class="no">04</span><b class="num">2 years</b><p>Warranty against manufacturing defects, plus 2 free maintenance visits.</p></li>
+      </ol>
     </section>
+    <p class="terms">All amounts are in Egyptian Pounds (EGP). The warranty covers manufacturing defects for 2 years from delivery and excludes misuse, accidents and wear parts.</p>
 
-    <section class="foot-row">
-      <p class="terms">All amounts are in Egyptian Pounds (EGP). <b>30% down payment</b> due on order confirmation; <b>70% balance</b> due on delivery. Delivery within 10 days of order confirmation.</p>
-      <div class="sign">
+    <div class="sign">
+      <div class="box">
         <span class="eyebrow">For SAGA</span>
+        <div class="who">SAGA Electric Mobility Solutions</div>
         <div class="line"></div>
         <div class="cap"><span>Signature &amp; stamp</span><span>Date</span></div>
       </div>
-    </section>
+      <div class="box">
+        <span class="eyebrow">Accepted by</span>
+        <div class="who">Customer</div>
+        <div class="line"></div>
+        <div class="cap"><span>Signature</span><span>Date</span></div>
+      </div>
+    </div>
   </div>
 
   <footer class="closing">
@@ -263,7 +350,7 @@
       <img src="assets/whatsapp-qr.svg" alt="QR code to message SAGA on WhatsApp">
     </a>
   </footer>
-
 </section>
+
 </body>
 </html>
