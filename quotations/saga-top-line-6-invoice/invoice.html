@@ -41,7 +41,7 @@
   .eyebrow { display: block; font-size: 6.6pt; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: var(--teal); }
 
   /* ---------- Cover strip ---------- */
-  .hero { display: grid; grid-template-columns: 105mm 105mm; height: 68mm; }
+  .hero { display: grid; grid-template-columns: 1fr 70mm; height: 72mm; }
   .hero-panel {
     background: var(--teal); color: var(--cream); padding: 12mm 12mm 10mm 18mm;
     display: flex; flex-direction: column; justify-content: space-between;
@@ -51,10 +51,11 @@
   .lockup .wordmark { width: 34mm; }
   .lockup .tag { margin-top: 1.6mm; font-size: 5pt; letter-spacing: .3em; font-weight: 600; }
   .hero h1 { font-size: 30pt; line-height: 1; font-weight: 800; letter-spacing: -.02em; color: var(--ivory); }
-  .hero .sub { margin-top: 1.6mm; font-size: 10pt; font-weight: 600; color: var(--lime); }
-  .meta { margin-top: 4.6mm; display: flex; gap: 8mm; }
+  .hero .sub { margin-top: 1.6mm; font-size: 10pt; font-weight: 600; color: var(--lime); white-space: nowrap; }
+  .hero-bottom { display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; }
+  .meta { display: grid; gap: 2.4mm; text-align: right; padding-bottom: .6mm; }
   .meta dt { font-size: 5.8pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--lime); opacity: .85; }
-  .meta dd { margin-top: 1mm; font-size: 8.6pt; font-weight: 500; color: var(--ivory); letter-spacing: .02em; }
+  .meta dd { margin-top: .8mm; font-size: 8.6pt; font-weight: 500; color: var(--ivory); letter-spacing: .02em; white-space: nowrap; }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
   .body { padding: 9mm 18mm 0; }
@@ -153,16 +154,18 @@
           <div class="tag">ELECTRIC MOBILITY SOLUTIONS.</div>
         </div>
       </div>
-      <div>
-        <h1>Invoice</h1>
-        <div class="sub">SAGA Top Line · 6&#8209;Seater</div>
+      <div class="hero-bottom">
+        <div>
+          <h1>Invoice</h1>
+          <div class="sub">SAGA Top Line · 6&#8209;Seater</div>
+        </div>
         <dl class="meta">
           <div><dt>Invoice no.</dt><dd class="num">SAGA-INV-261108-TL6</dd></div>
           <div><dt>Date</dt><dd class="num">8 November 2026</dd></div>
         </dl>
       </div>
     </div>
-    <div class="hero-photo"><img src="assets/top-line-6.jpg" alt="SAGA Top Line 6-seater"></div>
+    <div class="hero-photo"><img src="assets/top-line-6-purple.jpg" alt="SAGA Top Line 6-seater in purple"></div>
   </div>
 
   <div class="body">

@@ -1,18 +1,14 @@
 """Prepare the images used by invoice.html.
 
-1. top-line-6.jpg: SAGA's studio render of the Top Line 6-seater (from saga-mobility.com),
-   cropped to the cover panel's shape.
+1. top-line-6-purple.jpg: the purple cart photo, already cleaned of the orange wall letters
+   by ../saga-highline-6-purple/prepare-assets.py, cropped around the cart for the cover panel.
 2. whatsapp-qr.svg: QR code opening a WhatsApp chat with SAGA, invoice number pre-filled.
 
 Needs: pip install pillow segno
-Usage: python3 -I quotations/saga-top-line-6-invoice/prepare-assets.py [path-to-render.png]
-       (without a path, the render is downloaded from saga-mobility.com)
+Usage: python3 -I quotations/saga-top-line-6-invoice/prepare-assets.py
 """
 import os
-import sys
-import tempfile
 import urllib.parse
-import urllib.request
 
 import segno
 from PIL import Image
@@ -20,19 +16,19 @@ from PIL import Image
 HERE = os.path.dirname(os.path.abspath(__file__))
 A = lambda name: os.path.join(HERE, 'assets', name)
 
-RENDER_URL = 'https://www.saga-mobility.com/renders/TOP-LINE_4%2B2_6-seater_front-34.png'
+PHOTO = os.path.join(HERE, '..', 'saga-highline-6-purple', 'assets', 'highline-6-purple-clean.jpg')
 WHATSAPP = '201080066055'
 INVOICE = 'SAGA-INV-261108-TL6'
-PANEL_RATIO = 105 / 68          # cover photo panel, width / height in mm
+PANEL_W, PANEL_H = 70, 72        # cover photo panel in mm (keep in step with .hero in invoice.html)
 
 
-def cover_photo(src):
-    im = Image.open(src).convert('RGB')                 # 2400 x 1792 studio render
-    w, h = im.size
-    ch = round(w / PANEL_RATIO)
-    top = min(max(0, round(h * 0.084)), h - ch)          # keep the roof and the wheels in frame
-    im = im.crop((0, top, w, top + ch)).resize((1600, round(1600 / PANEL_RATIO)), Image.LANCZOS)
-    im.save(A('top-line-6.jpg'), quality=90)
+def cover_photo():
+    im = Image.open(PHOTO).convert('RGB')                  # 961 x 1280; cart spans x 125-850, y 325-1090
+    ch = 900                                                 # a little headroom above the roof
+    cw = round(ch * PANEL_W / PANEL_H)
+    cx, cy = 487, 707                                        # centre of the cart
+    box = (cx - cw // 2, cy - ch // 2, cx - cw // 2 + cw, cy - ch // 2 + ch)
+    im.crop(box).save(A('top-line-6-purple.jpg'), quality=92)
 
 
 def whatsapp_qr():
@@ -43,13 +39,5 @@ def whatsapp_qr():
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        cover_photo(sys.argv[1])
-    else:
-        with tempfile.TemporaryDirectory() as tmp:
-            path = os.path.join(tmp, 'render.png')
-            req = urllib.request.Request(RENDER_URL, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=60) as r, open(path, 'wb') as f:
-                f.write(r.read())
-            cover_photo(path)
+    cover_photo()
     print('QR ->', whatsapp_qr())
