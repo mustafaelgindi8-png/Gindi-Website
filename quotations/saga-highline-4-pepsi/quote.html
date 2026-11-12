@@ -181,15 +181,15 @@
   .form-ref { display: grid; gap: 1.6mm; text-align: right; }
   .form-ref dt { font-size: 6pt; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--muted); }
   .form-ref dd { margin-top: .5mm; font-size: 8.6pt; font-weight: 600; color: var(--teal); white-space: nowrap; }
-  .fsec { margin-top: 5mm; }
+  .fsec { margin-top: 6mm; }
   .fsec > .eyebrow { color: var(--teal); }
   .fields { margin-top: 1.2mm; display: grid; grid-template-columns: 1fr 1fr; gap: 0 10mm; }
-  .field { display: flex; align-items: flex-end; gap: 3mm; height: 8.5mm; }
+  .field { display: flex; align-items: flex-end; gap: 3mm; height: 10mm; }
   .field label, .pl { font-size: 6.2pt; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap; padding-bottom: .9mm; }
   .field label { color: var(--muted); }
   .field .blank { flex: 1; height: 100%; border-bottom: .3mm solid rgba(65, 64, 66, .5); }
   .pay-card { margin-top: 2.4mm; background: #fff; border: .3mm solid var(--rule); border-radius: 3mm; padding: .6mm 5mm; }
-  .prow { display: grid; grid-template-columns: 34mm 1fr; align-items: end; gap: 3mm; min-height: 9mm; padding: 1.2mm 0; border-bottom: .25mm solid var(--rule); font-size: 8.4pt; }
+  .prow { display: grid; grid-template-columns: 34mm 1fr; align-items: end; gap: 3mm; min-height: 10.2mm; padding: 1.2mm 0; border-bottom: .25mm solid var(--rule); font-size: 8.4pt; }
   .prow:last-child { border-bottom: 0; }
   .pl { color: var(--teal); }
   .pv { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 1.4mm; line-height: 1; padding-bottom: .5mm; }
@@ -206,7 +206,9 @@
   .tbl th { background: var(--cream); color: var(--teal); font-size: 5.6pt; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; text-align: left; padding: 1.9mm 2.2mm; white-space: nowrap; }
   .tbl td { height: 6.5mm; border-top: .25mm solid var(--rule); border-left: .25mm solid var(--rule); padding: 0 2.2mm; }
   .tbl td:first-child { border-left: 0; font-size: 7.6pt; font-weight: 700; color: var(--teal); }
-  .sign.compact { margin-top: 7mm; }
+  .sched.single { grid-template-columns: 1fr; }
+  .sched.single td { height: 12mm; }
+  .sign.compact { position: absolute; left: 18mm; right: 18mm; bottom: 26mm; margin: 0; }
   .sign.compact .line { margin-top: 9mm; }
 </style>
 </head>
@@ -426,44 +428,17 @@
 
     <section class="fsec">
       <span class="eyebrow">Installment schedule</span>
-      <div class="sched">
+      <div class="sched single">
         <div class="tbl">
           <table>
-            <colgroup><col style="width:9mm"><col style="width:23mm"><col style="width:25mm"><col></colgroup>
-            <thead><tr><th>No.</th><th>Due date</th><th>Amount (EGP)</th><th>Paid · signature</th></tr></thead>
+            <colgroup><col style="width:24%"><col style="width:26%"><col style="width:22%"><col></colgroup>
+            <thead><tr><th>Due date</th><th>Amount (EGP)</th><th>Paid on</th><th>Signature</th></tr></thead>
             <tbody>
-            <tr><td class="num">1</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">2</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">3</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">4</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">5</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">6</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">7</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">8</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">9</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">10</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">11</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">12</td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="tbl">
-          <table>
-            <colgroup><col style="width:9mm"><col style="width:23mm"><col style="width:25mm"><col></colgroup>
-            <thead><tr><th>No.</th><th>Due date</th><th>Amount (EGP)</th><th>Paid · signature</th></tr></thead>
-            <tbody>
-            <tr><td class="num">13</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">14</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">15</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">16</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">17</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">18</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">19</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">20</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">21</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">22</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">23</td><td></td><td></td><td></td></tr>
-            <tr><td class="num">24</td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td></tr>
+              <tr><td></td><td></td><td></td><td></td></tr>
             </tbody>
           </table>
         </div>
