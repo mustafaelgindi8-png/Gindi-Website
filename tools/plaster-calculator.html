@@ -122,7 +122,13 @@
 
   <section class="card">
     <h2>١ — مدخلات كل مرحلة</h2>
-    <p class="hint">الخانات الصفرا بخط أزرق مدخلات تقدر تغيّرها، والنتيجة بتتحسب لوحدها وانت بتكتب. المساحة = صافي مسطح الحوائط والأسقف اللي هتتنفذ، مش مساحة الشقة على الأرض، وهي والهالك بيتكتبوا مرة واحدة في المحارة والطرطشة بتاخدهم تلقائي.</p>
+    <p class="hint">الخانات الصفرا بخط أزرق مدخلات تقدر تغيّرها، والنتيجة بتتحسب لوحدها وانت بتكتب. اكتب مساحة الشقة على الأرض بس، والحسبة بتضربها في المعامل وتطلع صافي مساحة التنفيذ (مسطح الحوائط والأسقف) تلقائي. المساحة والهالك بيتكتبوا مرة واحدة في المحارة والطرطشة بتاخدهم تلقائي.</p>
+    <div class="grid3">
+      <div class="field"><label for="apt">مساحة الشقة (م²)</label><input type="number" id="apt" min="0" inputmode="decimal" value="100"></div>
+      <div class="field"><label for="afac">معامل التحويل لمسطح المحارة</label><input type="number" id="afac" min="0" step="0.1" inputmode="decimal" value="3"></div>
+      <div class="field"><label for="net">صافي مساحة التنفيذ (م²)</label><input type="number" id="net" class="linked" readonly tabindex="-1" title="مساحة الشقة × المعامل" value="300"></div>
+    </div>
+    <p class="note">مسطح الحوائط والأسقف ≈ 3 أضعاف مساحة الشقة تقريبًا. زوّد المعامل لو الشقة أوضها كتير أو السقف عالي، وقلّله لو مفتوحة.</p>
     <div id="stages"></div>
     <p class="note">سُمك المحارة مش شامل الطرطشة، والطبقتين بيتحسبوا منفصلين. سُمك الطرطشة = متوسط سُمك مكافئ موزع على المساحة، مش ارتفاع الحبيبات. نسب الخلط بالحجم مش بالوزن، وقيم الطرطشة الافتراضية مثال وتتعدّل حسب التنفيذ.</p>
   </section>
@@ -154,7 +160,8 @@
   <section class="card">
     <h2>منطق الحسبة</h2>
     <dl>
-      <dt>حجم المونة</dt><dd>المساحة × السُمك بالمم ÷ 1000 (م³).</dd>
+      <dt>صافي المساحة</dt><dd>مساحة الشقة × معامل التحويل (3 افتراضيًا) = صافي مسطح الحوائط والأسقف (م²).</dd>
+      <dt>حجم المونة</dt><dd>صافي المساحة × السُمك بالمم ÷ 1000 (م³).</dd>
       <dt>الخامات الجافة</dt><dd>حجم المونة × معامل التحويل (1.27)، لأن المونة المبلولة بتنكمش عن الخامات الجافة. المعامل مش شامل هالك.</dd>
       <dt>الأسمنت</dt><dd>الخامات الجافة × أجزاء الأسمنت ÷ مجموع الأجزاء، وبعدين × كثافة الأسمنت السائب عشان يبقى كجم.</dd>
       <dt>الرمل</dt><dd>الخامات الجافة × أجزاء الرمل ÷ مجموع الأجزاء (م³).</dd>
@@ -190,15 +197,21 @@
       '<div class="tot" id="' + st[0] + 'g">0 شيكارة</div></div><div class="f">' +
       FIELDS.map(function(f, k){
         // spatter shares the plaster's area and waste
-        var linked = st[0] === "t" && (f[0] === "a" || f[0] === "w");
-        return '<div><label for="' + st[0] + f[0] + '">' + f[1] + (linked ? ' = المحارة' : '') + '</label><input type="number" min="0" inputmode="decimal" id="' + st[0] + f[0] + '" value="' + st[k + 2] + '"' +
-          (linked ? ' class="linked" readonly tabindex="-1" title="نفس قيمة المحارة"' : '') + '></div>';
+        // and the plaster's area = apartment area × factor
+        var linked = (st[0] === "t" && (f[0] === "a" || f[0] === "w")) || (st[0] === "p" && f[0] === "a");
+        var lnote = st[0] === "p" ? ' = الشقة × المعامل' : ' = المحارة';
+        return '<div><label for="' + st[0] + f[0] + '">' + f[1] + (linked ? lnote : '') + '</label><input type="number" min="0" inputmode="decimal" id="' + st[0] + f[0] + '" value="' + st[k + 2] + '"' +
+          (linked ? ' class="linked" readonly tabindex="-1" title="' + (st[0] === "p" ? "مساحة الشقة × المعامل" : "نفس قيمة المحارة") + '"' : '') + '></div>';
       }).join("") + '</div></div>';
   }).join("");
 
   function calc(){
     var bag = num($("bag")), dens = num($("dens")) || 0, step = num($("step"));
-    $("ta").value = num($("pa")) || 0;
+    var netA = (num($("apt")) || 0) * (num($("afac")) || 0);
+    netA = Math.round(netA * 1e6) / 1e6;
+    $("net").value = netA;
+    $("pa").value = netA;
+    $("ta").value = netA;
     $("tw").value = num($("pw")) || 0;
     var S = STAGES.map(function(st){
       var k = st[0], g = function(f){ return num($(k + f)) || 0; };
@@ -245,6 +258,7 @@
       "<div class='r-kpis'><div><b>" + fmt(buyBags) + "</b><span>شيكارة أسمنت للشراء</span></div>" +
       "<div><b>" + fmt(buySand, 2) + "</b><span>م³ رمل للشراء</span></div>" +
       "<div><b>" + fmt(kg, 2) + "</b><span>كجم أسمنت شامل الهالك</span></div></div>" +
+      "<p class='r-note'>مساحة الشقة " + fmt(num($("apt")) || 0, 2) + " م² × " + fmt(num($("afac")) || 0, 2) + " = " + fmt(S[0].a, 2) + " م² صافي مساحة التنفيذ</p>" +
       "<p class='r-note'>وزن الشيكارة " + fmt(bag || 0, 2) + " كجم · كثافة الأسمنت " + fmt(dens) + " كجم/م³ · تقريب الرمل " + fmt(step || 0, 2) + " م³</p>" +
       "<h2>المدخلات</h2><table><thead><tr><th>المدخل</th>" + S.map(function(x){ return "<th>" + x.name + "</th>"; }).join("") + "<th>الوحدة</th></tr></thead><tbody>" +
       inRow("المساحة", function(x){ return fmt(x.a, 2); }, "م²") +
