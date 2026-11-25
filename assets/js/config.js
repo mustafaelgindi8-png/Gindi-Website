@@ -120,6 +120,15 @@ window.GINDI_CONFIG = {
   // Each opens its own page; they are not listed in the enquiry form.
   tools: [
     {
+      icon: 'app',
+      label: 'App · Arabic & English',
+      name: 'Gindi Studio App',
+      summary:
+        'For our clients and team: follow your project’s progress, payments and site updates, and install it on your phone.',
+      linkText: 'Open the app',
+      url: 'app/',
+    },
+    {
       icon: 'wire',
       label: 'Online tool · in Arabic',
       name: 'Wire Calculator',
