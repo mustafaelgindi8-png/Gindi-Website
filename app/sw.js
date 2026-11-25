@@ -1,6 +1,7 @@
 // Gindi Studio service worker: keeps the app working offline.
 // Bump VERSION whenever you change files in app/ so phones pick up the update.
-const VERSION = 'gindi-studio-v4';
+const VERSION = 'gindi-studio-v5';
+const XLSX_JS = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
 const SHELL = [
   './',
@@ -45,8 +46,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Fonts and the pinned Supabase library never change: cache first.
-  const cacheable = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com' || req.url === SUPABASE_JS;
+  // Fonts and the pinned libraries never change: cache first (the Excel library is cached on first export).
+  const cacheable = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com' || req.url === SUPABASE_JS || req.url === XLSX_JS;
   if (!cacheable) return; // Supabase API calls always go to the network.
   event.respondWith(
     caches.open(VERSION).then((cache) =>

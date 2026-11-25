@@ -115,6 +115,15 @@ const L={
   err_code:['الكود غير صحيح','That code is not valid'], err_login:['البريد أو كلمة المرور غير صحيحة','Wrong email or password'], err_exists:['هذا البريد مسجل بالفعل. سجّل الدخول.','This email is already registered. Sign in instead.'], err_confirm:['أكّد بريدك أولًا من الرابط الذي أرسلناه','Confirm your email first using the link we sent'],
   err_generic:['حدث خطأ: {m}','Something went wrong: {m}'], err_denied:['ليست لديك صلاحية لهذا الإجراء','You don\'t have permission to do that'], passShort:['كلمة المرور 6 أحرف على الأقل','Password must be at least 6 characters'],
   wait:['لحظة…','One moment…'],
+  exportX:['تصدير Excel','Export to Excel'], exportT:['تصدير البيانات','Export data'], allProjects:['كل المشروعات','All projects'], fromD:['من تاريخ','From'], toD:['إلى تاريخ','To'],
+  periodHint:['اترك التاريخين فارغين لتصدير كل الفترات. الملخص وكشوف الحساب وميزانية البنود تشمل كل الفترات دائمًا.','Leave both dates empty to export everything. The summary, statements and item budgets always cover all dates.'],
+  exportBtn:['تصدير الملف','Export file'], preparing:['جارٍ تجهيز أداة التصدير…','Getting the export ready…'], exported:['تم تجهيز الملف','File ready'], exportFail:['تعذّر تحميل أداة التصدير. تحقق من الإنترنت وحاول مرة أخرى.','Couldn\'t load the export tool. Check your internet and try again.'],
+  exportIncludes:['يشمل الملف:','The file includes:'],
+  sh_info:['معلومات','Info'], sh_summary:['ملخص المشروعات','Project summary'], sh_statement:['كشوف الحساب','Statements'], sh_exp:['المصروفات','Expenses'], sh_pay:['دفعات العملاء','Client payments'], sh_items:['ميزانية البنود','Item budgets'],
+  sh_cust:['العهد','Custody'], sh_custmov:['حركات العهد','Custody movements'], sh_tre:['الخزينة','Treasury'], sh_tremov:['حركات الخزينة','Treasury movements'], sh_tasks:['المهام والملاحظات','Tasks & snags'],
+  c_status:['الحالة','Status'], c_type:['النوع','Type'], c_details:['التفاصيل','Details'], c_in:['وارد','In'], c_out:['منصرف','Out'], c_used:['نسبة الصرف %','% used'], c_hasRcpt:['إيصال مرفق','Receipt attached'], yes:['نعم','Yes'], no:['لا','No'],
+  c_area:['المساحة م²','Area m²'], c_progress:['الإنجاز %','Progress %'], c_location:['الموقع','Location'], c_feeModel:['طريقة الأتعاب','Fee method'], c_amount:['المبلغ','Amount'], k_exp:['مصروف','Expense'],
+  exportedBy:['صدّر بواسطة','Exported by'], exportedAt:['تاريخ التصدير','Exported on'], period:['الفترة','Period'], allTime:['كل الفترات','All dates'], scope:['النطاق','Scope'], currency:['العملة','Currency'],
   otherItem:['+ بند آخر (اكتب اسمه)','+ Other item (type its name)'], itemNameLbl:['اسم البند','Item name'], needItemName:['اكتب اسم البند','Enter the item name'],
   addItemRow:['+ إضافة بند آخر','+ Add another item'], customItems:['بنود أخرى من اختيارك','Your own items'], editItems:['تعديل البنود والميزانيات','Edit items & budgets'], noBudget:['بدون ميزانية','No budget'], demoBadge:['تجريبي','Demo'],
 };
@@ -140,6 +149,7 @@ const IC={
   copy:I('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>'),
   up:I('<path d="M4 17l6-6 4 4 6-7"/>'),
   swap:I('<path d="M7 7h12l-3-3M17 17H5l3 3"/>'),
+  download:I('<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 19h16"/>'),
 };
 
 // ---------- backend ----------
@@ -453,7 +463,7 @@ function vHome(){
   const totT=D.accounts.reduce((s,a)=>s+accBal(a),0);
   const cust=siteEngs().reduce((s,e)=>s+engStats(e).bal,0);
   const mgr=S.role==='manager';
-  return `${head(greet(),live()?esc(LV.company?.name||''):t('homeSub'),mgr?`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button>`:`<button class="btn" data-act="m-task">${IC.plus}${t('addTask')}</button>`)}
+  return `${head(greet(),live()?esc(LV.company?.name||''):t('homeSub'),(mgr?`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button>`:`<button class="btn" data-act="m-task">${IC.plus}${t('addTask')}</button>`)+`<button class="btn ghost" data-act="m-export">${IC.download}${t('exportX')}</button>`)}
   <div class="kpis">
     ${mgr?`<div class="kpi"><span class="l">${t('k_treasury')}</span><span class="v">${money(totT)}</span><span class="s">${t('across',{n:D.accounts.length})}</span></div>`:''}
     <div class="kpi${pend.length?' warn':''}"><span class="l">${t('k_pending')}</span><span class="v">${money(sum(pend))}</span><span class="s">${t('items_n',{n:pend.length})}</span></div>
@@ -468,13 +478,13 @@ function vHome(){
 }
 function vProjects(){
   const list=myProjects();
-  return `${head(t('t_projects'),t('projSub',{n:list.length}),S.role==='manager'?`<button class="btn" data-act="m-project">${IC.plus}${t('newProject')}</button>`:'')}${list.length?`<div class="grid three">${list.map(projCard).join('')}</div>`:noProjects()}`;
+  return `${head(t('t_projects'),t('projSub',{n:list.length}),(S.role==='manager'?`<button class="btn" data-act="m-project">${IC.plus}${t('newProject')}</button>`:'')+(['manager','office'].includes(S.role)&&list.length?`<button class="btn ghost" data-act="m-export">${IC.download}${t('exportX')}</button>`:''))}${list.length?`<div class="grid three">${list.map(projCard).join('')}</div>`:noProjects()}`;
 }
 function vProject(){
   const p=P(S.pid);if(!p){S.view='projects';return vProjects()}
   const tabs=['overview','budget','tasks','statement'];
   return `<div><button class="back" data-act="nav" data-view="projects">${t('backTo')}</button></div>
-  ${head(X(p.name),[X(p.client),X(p.loc),p.area?`${n(p.area)} ${t('m2')}`:''].filter(Boolean).join(' · '),['site','office','manager'].includes(S.role)?`<button class="btn ghost" data-act="m-prog" data-id="${p.id}">${IC.up}${t('updProg')}</button>`:'')}
+  ${head(X(p.name),[X(p.client),X(p.loc),p.area?`${n(p.area)} ${t('m2')}`:''].filter(Boolean).join(' · '),(['site','office','manager'].includes(S.role)?`<button class="btn ghost" data-act="m-prog" data-id="${p.id}">${IC.up}${t('updProg')}</button>`:'')+(['manager','office'].includes(S.role)?`<button class="btn ghost" data-act="m-export" data-id="${p.id}">${IC.download}${t('exportX')}</button>`:''))}
   <div class="seg" role="group">${tabs.map(k=>`<button data-act="ptab" data-tab="${k}" aria-pressed="${S.ptab===k}">${t('pt_'+k)}</button>`).join('')}</div>
   ${({overview:pOverview,budget:pBudget,tasks:pTasks,statement:pStatement})[S.ptab](p)}`;
 }
@@ -586,7 +596,7 @@ function vTreasury(){
   const movs=D.tx.filter(x=>x.acc&&(x.kind!=='exp'||x.status==='approved')).sort((a,b)=>a.date<b.date?1:-1).slice(0,20);
   const sign=x=>x.kind==='pay'||x.kind==='ret'?1:-1;
   const label=x=>x.kind==='pay'?`${t('clientPay')} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='exp'?`${esc(itemName(x.item))} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='give'?`${t('k_give')} · ${esc(person(x.eng))}`:`${t('k_ret')} · ${esc(person(x.eng))}`;
-  return `${head(t('t_treasury'),t('treasurySub'),`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button><button class="btn ghost" data-act="m-exp">${t('directExp')}</button>`)}
+  return `${head(t('t_treasury'),t('treasurySub'),`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button><button class="btn ghost" data-act="m-exp">${t('directExp')}</button><button class="btn ghost" data-act="m-export">${IC.download}${t('exportX')}</button>`)}
   <div class="hero"><span class="l">${t('totalBal')}</span><span class="big">${money(tot)}</span></div>
   <div class="grid three">${D.accounts.map(a=>`<button class="kpi" style="text-align:start;cursor:${live()?'pointer':'default'}" ${live()?`data-act="m-acc" data-id="${a.id}"`:''}><span class="l">${t('ty_'+a.type)}</span><span class="t" style="font-weight:800">${esc(accName(a.id))}</span><span class="v">${money(accBal(a))}</span></button>`).join('')}</div>
   <section class="sec"><h2>${t('movements')}</h2>${movs.length?`<div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${label(x)}</div><div class="m">${esc(accName(x.acc))} · ${fdate(x.date)}</div></div><span class="amt" style="color:var(--${sign(x)>0?'ok':'ink'})">${sign(x)>0?'+':'−'}${money(x.amount)}</span></div>`).join('')}</div>`:`<div class="panel empty">${t('noMoves')}</div>`}</section>`;
@@ -612,7 +622,7 @@ function vSite(){
     ${has?`<div class="btns"><button class="btn" data-act="m-exp">${IC.plus}${t('logExp')}</button><button class="btn ghost" data-act="m-prog">${IC.up}${t('updProg')}</button></div>`:''}</div>
   ${has?'':noProjects()}
   <section class="sec"><h2>${t('myTasks')}</h2>${taskRows(tasks)}</section>
-  <section class="sec"><h2>${t('myExp')}</h2>${expList(mine,false)}</section>
+  <section class="sec"><h2>${t('myExp')}<button class="btn ghost sm" data-act="m-export">${IC.download}${t('exportX')}</button></h2>${expList(mine,false)}</section>
   ${demoNote()}`;
 }
 function vClient(){
@@ -636,7 +646,7 @@ function vClient(){
 function vClientStatement(){
   const p=clientProject();
   if(!p)return `${head(t('stmtTitle'),'')}${noProjects()}`;
-  return `${head(t('stmtTitle'),X(p.name),'')}${balGrid(p,true)}<div class="head"><div></div>${shareBtns(p,true)}</div>${stmtRows(p,true)}`;
+  return `${head(t('stmtTitle'),X(p.name),`<button class="btn ghost" data-act="m-export">${IC.download}${t('exportX')}</button>`)}${balGrid(p,true)}<div class="head"><div></div>${shareBtns(p,true)}</div>${stmtRows(p,true)}`;
 }
 
 // ---------- account & team (live) ----------
@@ -785,6 +795,164 @@ function mMember(id){
 function mAcc(id){const a=D.accounts.find(x=>x.id===id);if(!a)return;
   modal(t('editAcc'),`<form data-form="acc" data-id="${id}"><div class="f"><label for="acName">${t('accName')}</label><input id="acName" name="name" type="text" maxlength="60" required value="${esc(a.name||accName(id))}"></div><div class="f"><label for="acOpen">${t('opening')}</label><input id="acOpen" name="opening" type="number" step="any" inputmode="decimal" value="${a.open}"></div>${actions(t('save'))}</form>`)}
 
+// ---------- Excel export ----------
+const XLSX_URL='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+let xlsxP=null;
+function loadXLSX(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(!xlsxP)xlsxP=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=XLSX_URL;sc.onload=()=>res(window.XLSX);sc.onerror=()=>{xlsxP=null;sc.remove();rej(new Error('xlsx'))};document.head.appendChild(sc)});
+  return xlsxP;
+}
+function exportSheets(){
+  const r=S.role;
+  if(r==='client')return ['sh_statement','sh_pay','sh_exp','sh_items','sh_tasks'];
+  if(r==='site')return ['sh_exp','sh_cust','sh_custmov','sh_tasks'];
+  if(r==='office')return ['sh_summary','sh_statement','sh_exp','sh_pay','sh_items','sh_tasks'];
+  return ['sh_summary','sh_statement','sh_exp','sh_pay','sh_items','sh_cust','sh_custmov','sh_tre','sh_tremov','sh_tasks'];
+}
+function mExport(pid){
+  const many=['manager','office'].includes(S.role);
+  modal(t('exportT'),`<form data-form="export">
+    ${many?`<div class="f"><label for="xScope">${t('scope')}</label><select id="xScope" name="pid">${opt('',t('allProjects'),!pid)}${projOpts(D.projects,pid)}</select></div>`:''}
+    <div class="f2"><div class="f"><label for="xFrom">${t('fromD')}</label><input id="xFrom" name="from" type="date"></div><div class="f"><label for="xTo">${t('toD')}</label><input id="xTo" name="to" type="date"></div></div>
+    <div class="hint">${t('periodHint')}</div>
+    <div class="hint">${t('exportIncludes')} ${exportSheets().map(k=>t(k)).join('، ')}</div>
+    <div class="btns"><button class="btn" type="submit" id="xGo" disabled>${t('preparing')}</button><button class="btn ghost" type="button" data-act="close">${t('cancel')}</button></div></form>`);
+  loadXLSX().then(()=>{const b=$('xGo');if(b){b.disabled=false;b.textContent=t('exportBtn')}})
+    .catch(()=>{const b=$('xGo');if(b)b.textContent=t('exportFail')});
+}
+function buildWorkbook(X,{pid,from,to}){
+  const role=S.role,client=role==='client',site=role==='site',mgr=role==='manager';
+  const inRange=d=>(!from||d>=from)&&(!to||d<=to);
+  const projs=client?[clientProject()].filter(Boolean):pid?D.projects.filter(p=>p.id===pid):myProjects();
+  const ids=new Set(projs.map(p=>p.id));
+  const pn=id=>P(id)?tx(P(id).name):'';
+  const showFee=p=>!client||p.showFee;
+  const wb=X.utils.book_new();wb.Workbook={Views:[{RTL:S.lang==='ar'}]};
+  const fmt=(ws,rows,cols)=>{
+    ws['!cols']=cols.map((h,i)=>({wch:Math.min(48,Math.max(10,String(h).length+2,...rows.map(r=>r[i]==null?0:String(typeof r[i]==='number'?nf.format(r[i]):r[i]).length+2)))}));
+    const rg=X.utils.decode_range(ws['!ref']||'A1');
+    for(let R=0;R<=rg.e.r;R++)for(let C=0;C<=rg.e.c;C++){const c=ws[X.utils.encode_cell({r:R,c:C})];if(c&&c.t==='n'&&Math.abs(c.v)>=1000)c.z='#,##0'}
+  };
+  const add=(key,cols,rows,total)=>{
+    const aoa=[cols,...rows];if(total)aoa.push(total);
+    const ws=X.utils.aoa_to_sheet(aoa);fmt(ws,aoa,cols);
+    if(rows.length)ws['!autofilter']={ref:X.utils.encode_range({s:{r:0,c:0},e:{r:rows.length,c:cols.length-1}})};
+    X.utils.book_append_sheet(wb,ws,t(key).slice(0,31));
+  };
+  const sumCol=(rows,i)=>rows.reduce((a,r)=>a+(typeof r[i]==='number'?r[i]:0),0);
+  const totalRow=(cols,rows,numIdx)=>cols.map((_,i)=>i===0?t('totals'):numIdx.includes(i)?sumCol(rows,i):'');
+  const sheets=exportSheets();
+  // info
+  const info=[[t('company'),live()?(LV.company?.name||''):'Gindi Studio (demo)'],[t('exportedBy'),person(ME[role])+' — '+t('r_'+role)],[t('exportedAt'),todayISO()],
+    [t('scope'),pid||client?projs.map(p=>tx(p.name)).join('، '):t('allProjects')],[t('period'),from||to?`${from||'…'} → ${to||'…'}`:t('allTime')],[t('currency'),t('egp')]];
+  const wsI=X.utils.aoa_to_sheet(info);wsI['!cols']=[{wch:18},{wch:50}];X.utils.book_append_sheet(wb,wsI,t('sh_info').slice(0,31));
+  // project summary
+  if(sheets.includes('sh_summary')){
+    const cols=[t('e_project'),t('client'),t('c_location'),t('c_area'),t('c_progress'),t('budget'),t('spent'),t('pendingShort'),t('paid'),t('c_feeModel'),t('fee'),t('balance')];
+    const rows=projs.map(p=>[tx(p.name),tx(p.client),tx(p.loc),p.area||'',p.progress,budgetP(p),spent(p),pendingP(p),paidP(p),p.fee.type==='pct'?t('feeExplainPct',{v:p.fee.v}):t('feeExplainFixed',{v:plain(p.fee.v)}),Math.round(feeP(p)),Math.round(balP(p))]);
+    add('sh_summary',cols,rows,totalRow(cols,rows,[5,6,7,8,10,11]));
+  }
+  // statements (all dates, running balance per project)
+  if(sheets.includes('sh_statement')){
+    const cols=[t('e_project'),t('date'),t('desc'),t('debit'),t('credit'),t('runBal')];const rows=[];
+    projs.forEach(p=>{let run=0;
+      D.tx.filter(x=>x.project===p.id&&(x.kind==='pay'||(x.kind==='exp'&&x.status==='approved'))).sort((a,b)=>a.date<b.date?-1:1).forEach(x=>{
+        const cr=x.kind==='pay'?x.amount:0,dr=x.kind==='exp'?x.amount:0;run+=cr-dr;
+        rows.push([tx(p.name),x.date,x.kind==='pay'?[t('clientPay'),tx(x.note)].filter(Boolean).join(' — '):[itemName(x.item),tx(x.note)].filter(Boolean).join(' — '),dr||'',cr||'',run]);
+      });
+      if(showFee(p)){const fee=Math.round(feeP(p));run-=fee;rows.push([tx(p.name),todayISO(),t('feeLine'),fee,'',run])}
+      rows.push([tx(p.name),'',t('runBal'),'','',run],['','','','','','']);
+    });
+    add('sh_statement',cols,rows);
+  }
+  // expenses
+  if(sheets.includes('sh_exp')){
+    let list=D.tx.filter(x=>x.kind==='exp'&&ids.has(x.project)&&inRange(x.date));
+    if(client)list=list.filter(x=>x.status==='approved');
+    if(site)list=list.filter(x=>x.by===ME.site);
+    list.sort((a,b)=>a.date<b.date?-1:1);
+    const cols=client?[t('date'),t('e_project'),t('e_item'),t('desc'),t('e_vendor'),t('c_amount')]:[t('date'),t('e_project'),t('e_item'),t('desc'),t('e_vendor'),t('c_amount'),t('c_status'),t('e_source'),t('c_hasRcpt')];
+    const rows=list.map(x=>{const base=[x.date,pn(x.project),itemName(x.item),tx(x.note),tx(x.vendor),x.amount];
+      return client?base:base.concat([t(x.status),x.by?t('fromCustody',{e:person(x.by)}):t('fromAcc',{a:accName(x.acc)}),x.receipt?t('yes'):t('no')])});
+    const tot=client?totalRow(cols,rows,[5]):cols.map((_,i)=>i===0?`${t('totals')} (${t('approved')})`:i===5?sum(list.filter(x=>x.status==='approved')):'');
+    add('sh_exp',cols,rows,tot);
+  }
+  // client payments
+  if(sheets.includes('sh_pay')){
+    const list=D.tx.filter(x=>x.kind==='pay'&&ids.has(x.project)&&inRange(x.date)).sort((a,b)=>a.date<b.date?-1:1);
+    const cols=client?[t('date'),t('e_project'),t('c_amount'),t('desc')]:[t('date'),t('e_project'),t('c_amount'),t('account'),t('desc')];
+    const rows=list.map(x=>client?[x.date,pn(x.project),x.amount,tx(x.note)]:[x.date,pn(x.project),x.amount,accName(x.acc),tx(x.note)]);
+    add('sh_pay',cols,rows,totalRow(cols,rows,[2]));
+  }
+  // item budgets (all dates)
+  if(sheets.includes('sh_items')){
+    const cols=client?[t('e_project'),t('e_item'),t('spent')]:[t('e_project'),t('e_item'),t('budget'),t('spent'),t('pendingShort'),t('remaining'),t('c_used')];
+    const rows=[];projs.forEach(p=>allItems(p).forEach(([k,b])=>{const sp=itemSpent(p,k),pe=itemSpent(p,k,'pending');
+      if(client){if(sp>0)rows.push([tx(p.name),itemName(k),sp])}else rows.push([tx(p.name),itemName(k),b,sp,pe,b-sp,b>0?Math.round(sp/b*100):''])}));
+    add('sh_items',cols,rows,client?totalRow(cols,rows,[2]):totalRow(cols,rows,[2,3,4,5]));
+  }
+  // custody
+  const engs=site?[ME.site]:siteEngs();
+  if(sheets.includes('sh_cust')){
+    const cols=[t('engineer'),t('given'),t('spentApproved'),t('returned'),t('pendingShort'),t('available'),t('afterPending')];
+    const rows=engs.map(e=>{const s=engStats(e);return [person(e),s.given,s.spent,s.ret,s.pend,s.bal,s.after]});
+    add('sh_cust',cols,rows,totalRow(cols,rows,[1,2,3,4,5,6]));
+  }
+  if(sheets.includes('sh_custmov')){
+    const cols=[t('date'),t('engineer'),t('c_type'),t('c_details'),t('c_in'),t('c_out')];const rows=[];
+    D.tx.filter(x=>inRange(x.date)).forEach(x=>{
+      if(x.kind==='give'&&engs.includes(x.eng))rows.push([x.date,person(x.eng),t('k_give'),accName(x.acc),x.amount,'']);
+      if(x.kind==='ret'&&engs.includes(x.eng))rows.push([x.date,person(x.eng),t('k_ret'),accName(x.acc),'',x.amount]);
+      if(x.kind==='xfer'){if(engs.includes(x.from))rows.push([x.date,person(x.from),t('k_xfer'),`${t('toEng')} ${person(x.to)}`,'',x.amount]);if(engs.includes(x.to))rows.push([x.date,person(x.to),t('k_xfer'),`${t('fromEng')} ${person(x.from)}`,x.amount,''])}
+      if(x.kind==='exp'&&x.status==='approved'&&x.by&&engs.includes(x.by))rows.push([x.date,person(x.by),t('k_exp'),[pn(x.project),itemName(x.item),tx(x.note)].filter(Boolean).join(' — '),'',x.amount]);
+    });
+    rows.sort((a,b)=>a[0]<b[0]?-1:1);
+    add('sh_custmov',cols,rows,totalRow(cols,rows,[4,5]));
+  }
+  // treasury
+  if(sheets.includes('sh_tre')){
+    const cols=[t('accName'),t('c_type'),t('opening'),t('c_in'),t('c_out'),t('runBal')];
+    const rows=D.accounts.map(a=>{let i=0,o=0;D.tx.forEach(x=>{if(x.acc!==a.id)return;if(x.kind==='pay'||x.kind==='ret')i+=x.amount;if(x.kind==='give'||(x.kind==='exp'&&x.status==='approved'))o+=x.amount});return [accName(a.id),t('ty_'+a.type),a.open,i,o,accBal(a)]});
+    add('sh_tre',cols,rows,totalRow(cols,rows,[2,3,4,5]));
+  }
+  if(sheets.includes('sh_tremov')){
+    const cols=[t('date'),t('account'),t('c_type'),t('c_details'),t('c_in'),t('c_out')];
+    const list=D.tx.filter(x=>x.acc&&inRange(x.date)&&(x.kind!=='exp'||x.status==='approved')&&(!pid||x.project===pid||(!x.project&&false))).sort((a,b)=>a.date<b.date?-1:1);
+    const rows=list.map(x=>{const inn=x.kind==='pay'||x.kind==='ret';
+      const det=x.kind==='pay'?[pn(x.project),tx(x.note)].filter(Boolean).join(' — '):x.kind==='exp'?[pn(x.project),itemName(x.item),tx(x.note)].filter(Boolean).join(' — '):person(x.eng);
+      return [x.date,accName(x.acc),x.kind==='pay'?t('clientPay'):x.kind==='exp'?t('directExp'):t('k_'+x.kind),det,inn?x.amount:'',inn?'':x.amount]});
+    add('sh_tremov',cols,rows,totalRow(cols,rows,[4,5]));
+  }
+  // tasks & snags
+  if(sheets.includes('sh_tasks')){
+    let list=D.tasks.filter(k=>ids.has(k.project));
+    if(client)list=list.filter(k=>k.type==='snag');
+    const cols=[t('e_project'),t('c_type'),t('e_note'),t('assignee'),t('due'),t('c_status')];
+    const rows=list.sort(taskSort).map(k=>[pn(k.project),t(k.type),tx(k.title),person(k.who),k.due||'',isLate(k)?t('late'):t(k.status)]);
+    add('sh_tasks',cols,rows);
+  }
+  return wb;
+}
+async function runExport(f){
+  const X=window.XLSX;if(!X){toast(t('preparing'));return}
+  const v=Object.fromEntries(new FormData(f));
+  const pid=v.pid||(S.role==='client'?'':null);
+  const wb=buildWorkbook(X,{pid:v.pid||null,from:v.from||'',to:v.to||''});
+  const scopeName=v.pid&&P(v.pid)?tx(P(v.pid).name):(S.role==='client'&&clientProject()?tx(clientProject().name):'');
+  const ascii=scopeName.replace(/[^A-Za-z0-9 _-]+/g,'').trim().replace(/\s+/g,'-');
+  const fname=`Gindi-Studio-${S.role==='client'?'statement':v.pid?(ascii||'project'):S.role==='site'?'my-expenses':'all-projects'}-${todayISO()}.xlsx`;
+  const out=X.write(wb,{bookType:'xlsx',type:'array'});
+  const blob=new Blob([out],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const touch=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+  if(touch&&navigator.canShare){
+    try{const file=new File([blob],fname,{type:blob.type});if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:fname});closeModal();toast(t('exported'));return}}
+    catch(e){if(e&&e.name==='AbortError')return}
+  }
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fname;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);closeModal();toast(t('exported'));
+}
+
 function readImg(file){return new Promise(res=>{if(!file||!file.size)return res(null);const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,1000/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.72))};img.onerror=()=>res(null);img.src=r.result};r.onerror=()=>res(null);r.readAsDataURL(file)})}
 const dataUrlToBlob=u=>fetch(u).then(r=>r.blob());
 const uuid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
@@ -833,6 +1001,7 @@ document.addEventListener('click',async e=>{
     case 'm-member':mMember(id);break;
     case 'm-acc':mAcc(id);break;
     case 'm-items':mItems(id);break;
+    case 'm-export':mExport(id);break;
     case 'add-item-row':{const box=$('customRows');box.insertAdjacentHTML('beforeend',customRow('',''));box.lastElementChild.querySelector('input').focus();break}
     case 'remove-member':
       if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent=t('confirmRemove');break}
@@ -875,6 +1044,7 @@ document.addEventListener('submit',async e=>{
   const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();
   const v=Object.fromEntries(new FormData(f));const kind=f.dataset.form;const amt=+v.amount;
   if(['signin','signup','forgot','newpass','create-co','join-co'].includes(kind)){if(!S.busy)submitAuth(kind,v);return}
+  if(kind==='export'){runExport(f).catch(err=>toast(errMsg(err)));return}
   if(['exp','give','xfer','ret','pay'].includes(kind)&&!(amt>0)){toast(t('needAmount'));return}
   if(kind==='xfer'&&v.from===v.to){toast(t('sameEng'));return}
   if(kind==='task'&&!(v.title||'').trim()){toast(t('needTitle'));return}
