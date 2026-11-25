@@ -17,7 +17,62 @@ tools/plaster-calculator.html Plaster cement & sand calculator (Arabic, self-con
 tools/ceramic-calculator.html Ceramic & tile calculator (Arabic, self-contained page)
 excel/                  Excel versions of the calculators (brick, ceramic, paint, plaster, wire)
 excel/_build/           Python (openpyxl) scripts that generate those Excel files
+app/                    Gindi Studio mobile app (installable web app, see below)
 ```
+
+## Gindi Studio mobile app (`app/`)
+
+A project-management app for finishing work: engineer custody, expense
+approvals, budgets per work item, treasury, tasks and snags, and a client view
+with a statement of account. Arabic first, with an English toggle.
+
+It has two modes:
+
+- **Live** — people sign in, and everything is shared through Supabase. The
+  manager creates the company, sends a join code, and sets each person's role
+  (technical office, site engineer, client) and projects. Site engineers'
+  expenses reach the manager for approval in real time; clients see only their
+  own project.
+- **Demo** — sample data saved on the phone only, with a role switcher. This is
+  what runs while `app/config.js` is empty, and anyone can open it from the
+  sign-in screen.
+
+It is an installable web app (PWA): open `https://<your-site>/app/` in Safari →
+Share → **Add to Home Screen** (iPhone), or in Chrome → **Install** (Android).
+
+```
+app/index.html            Page, styles and install banner
+app/app.js                App logic (screens, live data, demo data)
+app/config.js             Supabase project URL and anon key (public values)
+app/manifest.webmanifest  App name, colours and icons used when installing
+app/sw.js                 Offline support — bump VERSION after editing app files
+app/icons/                Home-screen icons
+supabase/schema.sql       Database tables, security rules and actions
+supabase/migrations/      Database changes added after the first setup (run in order)
+supabase/test/            Local Postgres tests of the security rules
+```
+
+### Connecting Supabase
+
+1. Create a Supabase project (free plan is fine).
+2. Run `supabase/schema.sql` in the SQL editor. It is safe to re-run, but
+   re-running **deletes all app data**.
+   Then run each file in `supabase/migrations/` in order (these are safe to
+   re-run and never delete data). Later database changes always come as new
+   migration files.
+3. In **Authentication → URL Configuration**, set the Site URL to the app's
+   address (for example `https://<your-site>/app/`) and add it to Redirect URLs.
+4. Put the project URL and the **anon** key in `app/config.js`. Never use the
+   `service_role` key in the app.
+
+Who can do what is enforced by the database itself (row-level security), not
+by the app: site engineers can only submit pending expenses on their own
+projects, only the manager can approve or touch the treasury, and clients only
+see their project's payments and approved spending.
+
+To re-run the security tests locally (needs PostgreSQL 16):
+`psql -f supabase/test/stub.sql && psql -f supabase/schema.sql && psql -f supabase/test/tests.sql`
+on an empty database, then `psql -f supabase/migrations/002_invites.sql && psql -f supabase/test/tests_invites.sql`.
 
 ## Editing content
 
