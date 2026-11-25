@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gindi Studio</title>
+<meta name="description" content="Gindi Studio — إدارة مشروعات التشطيب: العُهد، الاعتمادات، ميزانية البنود، الخزينة وكشف حساب العميل.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171A21" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Gindi Studio">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Manrope:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Base reset (matches the hosted-preview skeleton) */
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font-size:14px;font-family:system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+img{max-width:100%}
+[hidden]{display:none!important}
+.tab,.seg button,.chip-btn{-webkit-user-select:none;user-select:none}
+
+/* Layout: app shell — sticky top bar, side rail on wide screens, bottom tab bar on phones; cards only for objects you act on. */
+:root{
+  --bg:#F1F3F8; --surface:#FFFFFF; --surface-2:#F6F7FB; --ink:#0F1B33; --muted:#5B6576; --line:#DFE3EC;
+  --brand:#0B3D91; --brand-ink:#FFFFFF; --brand-text:#0B3D91; --brand-soft:#E5ECF8;
+  --gold:#9A7637; --gold-soft:#F5EDDC;
+  --hero:#0B2E6B; --hero-ink:#FFFFFF; --hero-gold:#E6C88F; --hero-muted:#B9C6E0;
+  --ok:#1C7448; --ok-soft:#E2F2E9; --warn:#9C5B00; --warn-soft:#FBEFD9; --bad:#B42318; --bad-soft:#FCE7E4;
+  --font-ar:'Cairo','Manrope',system-ui,-apple-system,'Segoe UI',Tahoma,sans-serif;
+  --font-en:'Manrope','Cairo',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;
+  --radius:12px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101217; --surface:#171A21; --surface-2:#1D212A; --ink:#F2F2EE; --muted:#A5ABB6; --line:#2A2F3A;
+  --brand:#2F65C8; --brand-ink:#FFFFFF; --brand-text:#8DB0F2; --brand-soft:rgba(47,101,200,.18);
+  --gold:#D2B27A; --gold-soft:rgba(201,168,108,.14);
+  --hero:#0E2A5E; --hero-ink:#FFFFFF; --hero-gold:#E6C88F; --hero-muted:#AFBDD8;
+  --ok:#6FCF97; --ok-soft:rgba(111,207,151,.13); --warn:#F0B867; --warn-soft:rgba(240,184,103,.13); --bad:#FF8A80; --bad-soft:rgba(255,138,128,.13);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101217; --surface:#171A21; --surface-2:#1D212A; --ink:#F2F2EE; --muted:#A5ABB6; --line:#2A2F3A;
+  --brand:#2F65C8; --brand-ink:#FFFFFF; --brand-text:#8DB0F2; --brand-soft:rgba(47,101,200,.18);
+  --gold:#D2B27A; --gold-soft:rgba(201,168,108,.14);
+  --hero:#0E2A5E; --hero-ink:#FFFFFF; --hero-gold:#E6C88F; --hero-muted:#AFBDD8;
+  --ok:#6FCF97; --ok-soft:rgba(111,207,151,.13); --warn:#F0B867; --warn-soft:rgba(240,184,103,.13); --bad:#FF8A80; --bad-soft:rgba(255,138,128,.13);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-ar);font-size:15px;line-height:1.6}
+html[lang="en"] body{font-family:var(--font-en)}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;display:inline-block}
+h1,h2,h3{margin:0;line-height:1.3;text-wrap:balance}
+a{color:var(--brand-text)}
+:focus-visible{outline:2px solid var(--brand-text);outline-offset:2px}
+
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:12px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1280px;margin:0 auto}
+.mark{display:flex;flex-direction:column;line-height:1.05;margin-inline-end:auto;min-width:0}
+.mark b{font-family:var(--font-en);font-weight:800;letter-spacing:.16em;font-size:15px;color:var(--brand-text)}
+.mark span{font-size:11px;color:var(--gold);font-weight:700;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:520px){.role>span{display:none}.mark span{display:none}}
+.role{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.role select{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-weight:700;font-size:16px;color:var(--ink);max-width:46vw}
+.chip-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:6px 12px;font-weight:800;font-size:12px;cursor:pointer}
+
+.shell{max-width:1280px;margin:0 auto;display:flex;gap:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 96px}
+.rail{display:none}
+main{flex:1;min-width:0;display:flex;flex-direction:column;gap:18px}
+.tabs{position:fixed;inset:auto 0 0 0;z-index:20;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;border:0;background:none;padding:6px 2px;border-radius:10px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;position:relative}
+.tab svg{width:22px;height:22px}
+.tab[aria-current="page"]{color:var(--brand-text)}
+.tab .dot{position:absolute;top:2px;inset-inline-end:calc(50% - 20px);min-width:17px;height:17px;border-radius:9px;background:var(--bad);color:#fff;font-size:10px;line-height:17px;padding:0 4px}
+@media (min-width:960px){
+  .tabs{display:none}
+  .shell{padding-block:24px 48px}
+  .rail{display:flex;flex-direction:column;gap:4px;width:220px;flex:none;position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:flex-start}
+  .rail .tab{flex-direction:row;justify-content:flex-start;gap:10px;font-size:14px;padding:10px 12px}
+  .rail .tab[aria-current="page"]{background:var(--brand-soft)}
+  .rail .tab .dot{position:static;margin-inline-start:auto}
+  .rail .foot{margin-top:16px;padding:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:8px}
+}
+
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.head h1{font-size:22px;font-weight:800}
+.head p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.back{border:0;background:none;color:var(--brand-text);font-weight:700;cursor:pointer;padding:0;font-size:13px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid transparent;border-radius:10px;padding:9px 14px;font-weight:800;font-size:14px;cursor:pointer;background:var(--brand);color:var(--brand-ink);white-space:nowrap}
+.btn svg{width:18px;height:18px}
+a.btn{text-decoration:none}
+.btn.ghost{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.btn.ok{background:var(--ok-soft);color:var(--ok)}
+.btn.bad{background:var(--bad-soft);color:var(--bad)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:8px}
+.btn.block{width:100%}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:760px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted);font-weight:700}
+.kpi .v{font-size:21px;font-weight:800}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.warn{border-color:var(--warn);background:var(--warn-soft)}
+.kpi.warn .v,.kpi.warn .l{color:var(--warn)}
+.cur{font-size:12px;font-weight:700;color:var(--muted);margin-inline-start:3px}
+
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec>h2{font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)}
+.rows>*+*{border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;gap:12px;padding:12px 14px;min-width:0}
+.row .grow{flex:1;min-width:0}
+.row .t{font-weight:700;overflow-wrap:anywhere}
+.row .m{font-size:12.5px;color:var(--muted)}
+.row .amt{font-weight:800;white-space:nowrap}
+.row.click{cursor:pointer;width:100%;text-align:start;background:none;border-inline:0;border-bottom:0}
+.row.click:first-child{border-top:0}
+.row.click:hover{background:var(--surface-2)}
+.empty{padding:22px 14px;text-align:center;color:var(--muted);font-size:13.5px}
+
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:800;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-warn{background:var(--warn-soft);color:var(--warn)} .p-bad{background:var(--bad-soft);color:var(--bad)} .p-n{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)} .p-b{background:var(--brand-soft);color:var(--brand-text)}
+
+.alert{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;width:100%;text-align:start;background:none;border:0;cursor:pointer;border-inline-start:4px solid var(--warn)}
+.alert.bad{border-inline-start-color:var(--bad)} .alert.info{border-inline-start-color:var(--brand-text)}
+.alert:hover{background:var(--surface-2)}
+.alert .t{font-weight:700;font-size:14px} .alert .m{font-size:12.5px;color:var(--muted)}
+
+.grid{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:760px){.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:10px;text-align:start;cursor:pointer;min-width:0}
+.pcard:hover{border-color:var(--brand-text)}
+.pcard h3{font-size:16px;font-weight:800}
+.pcard .meta{font-size:12.5px;color:var(--muted)}
+.bar{height:8px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;display:flex}
+.bar i{display:block;height:100%;background:var(--brand)}
+.bar i.ok{background:var(--ok)} .bar i.warn{background:var(--warn)} .bar i.bad{background:var(--bad)}
+.bar i.pend{background:repeating-linear-gradient(45deg,var(--warn) 0 4px,transparent 4px 8px);opacity:.8}
+.split{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+.split b{color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+
+.hero{background:var(--hero);color:var(--hero-ink);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.hero .l{color:var(--hero-muted);font-size:13px;font-weight:700}
+.hero .big{font-size:34px;font-weight:800;color:var(--hero-gold);line-height:1.1}
+.hero .big .cur{color:var(--hero-muted)}
+.hero .sub{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--hero-muted)}
+.hero .sub b{color:var(--hero-ink)}
+.hero .btn.ghost{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}
+.hero .btn{background:var(--hero-gold);color:#1B1305}
+
+.seg{display:flex;gap:4px;overflow-x:auto;padding:3px;background:var(--surface);border:1px solid var(--line);border-radius:12px;scrollbar-width:none}
+.seg button{flex:none;border:0;background:none;padding:7px 12px;border-radius:9px;font-weight:700;font-size:13px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand-text)}
+
+.bal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+@media (min-width:760px){.bal{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.bal>div{background:var(--surface);padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.bal .l{font-size:12px;color:var(--muted);font-weight:700}
+.bal .v{font-size:18px;font-weight:800;white-space:nowrap}
+@media (max-width:520px){.bal .v{font-size:16px}}
+.bal .neg{color:var(--bad)} .bal .pos{color:var(--ok)}
+
+.item{padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.item .top2{display:flex;justify-content:space-between;gap:8px;align-items:center;flex-wrap:wrap}
+.item .top2 b{font-size:14.5px}
+
+.feed{display:flex;flex-direction:column}
+.fi{display:flex;gap:12px;padding:12px 14px}
+.fi .av{flex:none;width:34px;height:34px;border-radius:50%;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-weight:800;font-size:13px}
+.fi .m{font-size:12px;color:var(--muted)}
+
+.stmt{width:100%;border-collapse:collapse;font-size:13.5px;min-width:560px}
+.stmt th{font-size:11.5px;color:var(--muted);text-align:start;font-weight:800;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--surface-2)}
+.stmt td{padding:9px 12px;border-bottom:1px solid var(--line)}
+.stmt td.n{text-align:end;white-space:nowrap}
+.stmt tfoot td{font-weight:800;background:var(--surface-2)}
+.scroll{overflow-x:auto}
+
+.receipt-btn{flex:none;width:42px;height:42px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;cursor:pointer;overflow:hidden;padding:0;color:var(--muted)}
+.receipt-btn img{width:100%;height:100%;object-fit:cover}
+.receipt-btn svg{width:20px;height:20px}
+
+.scrim{position:fixed;inset:0;z-index:50;background:rgba(8,12,20,.55);display:flex;align-items:flex-end;justify-content:center}
+@media (min-width:700px){.scrim{align-items:center}}
+.sheet{background:var(--surface);width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px max(18px,env(safe-area-inset-right,0px)) calc(18px + env(safe-area-inset-bottom,0px)) max(18px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:14px}
+@media (min-width:700px){.sheet{border-radius:18px;padding:22px}}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sheet-h h2{font-size:18px;font-weight:800}
+.x{border:0;background:var(--surface-2);width:34px;height:34px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+.x svg{width:18px;height:18px}
+form{display:flex;flex-direction:column;gap:12px}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.f label{font-size:12.5px;font-weight:800;color:var(--muted)}
+.f input,.f select,.f textarea{width:100%;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:16px}
+.f input[type=number]{font-variant-numeric:tabular-nums}
+.f textarea{min-height:70px;resize:vertical}
+.f2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.hint{font-size:12.5px;color:var(--muted);background:var(--surface-2);border-radius:10px;padding:10px 12px}
+.hint.warn{background:var(--warn-soft);color:var(--warn);font-weight:700}
+.check{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700}
+.check input{width:18px;height:18px}
+.rcpt{background:#FFFDF7;color:#2A2416;border-radius:6px;padding:18px;font-family:'Courier New',monospace;font-size:13px;display:flex;flex-direction:column;gap:6px;border:1px dashed #C9B98E}
+.rcpt .c{text-align:center;font-weight:700}
+.rcpt .ln{display:flex;justify-content:space-between;gap:8px}
+.rcpt hr{border:0;border-top:1px dashed #C9B98E;margin:4px 0;width:100%}
+
+.toast{position:fixed;z-index:60;inset-inline:0;bottom:calc(84px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;pointer-events:none;padding:0 16px}
+.toast div{background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+@media (min-width:960px){.toast{bottom:24px}}
+.demo-note{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease}@keyframes up{from{transform:translateY(16px);opacity:.6}}}
+
+/* Install banner (app only) */
+.install{display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:var(--gold-soft);color:var(--ink);border-bottom:1px solid var(--line);font-size:13.5px}
+.install p{margin:0;flex:1;min-width:0}
+.install b{color:var(--gold)}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in" id="top"></div></header>
+<div class="shell"><nav class="rail" id="rail" aria-label="Sections"></nav><main id="main"></main></div>
+<nav class="tabs" id="tabs" aria-label="Sections"></nav>
+<div id="modal"></div>
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+// ---------- i18n ----------
+const L={
+  tagline:['إدارة مشروعات التشطيب','Finishing project management'],
+  viewAs:['تشاهد كـ','Viewing as'],
+  r_manager:['المدير','Manager'], r_office:['المكتب الفني','Technical office'], r_site:['مهندس الموقع','Site engineer'], r_client:['العميل','Client'],
+  t_home:['الرئيسية','Home'], t_projects:['المشروعات','Projects'], t_approvals:['الاعتمادات','Approvals'], t_custody:['العُهد','Custody'], t_treasury:['الخزينة','Treasury'], t_tasks:['المهام','Tasks'], t_site:['عهدتي','My custody'], t_client:['مشروعي','My project'], t_statement:['كشف الحساب','Statement'],
+  egp:['ج.م','EGP'],
+  demo:['نسخة تجريبية ببيانات افتراضية. تغييراتك تُحفظ على جهازك فقط.','Demo with sample data. Your changes are saved on this device only.'],
+  reset:['إعادة البيانات التجريبية','Reset sample data'], resetDone:['تمت إعادة البيانات التجريبية','Sample data restored'],
+  hello:['صباح الخير','Good morning'],
+  homeSub:['ملخص الشركة اليوم','Company overview for today'],
+  k_treasury:['رصيد الخزينة','Treasury balance'], k_pending:['بانتظار الاعتماد','Waiting for approval'], k_custody:['عُهد مع المهندسين','Custody with engineers'], k_active:['مشروعات جارية','Active projects'],
+  items_n:['{n} مصروف','{n} expenses'], across:['في {n} حسابات','across {n} accounts'], engs_n:['مع {n} مهندسين','with {n} engineers'],
+  attention:['يحتاج انتباهك','Needs your attention'], allGood:['لا شيء يحتاج انتباهك الآن','Nothing needs your attention right now'],
+  a_pending:['{n} مصروفات بانتظار اعتمادك','{n} expenses waiting for your approval'], a_pendingM:['بإجمالي {v}','Totalling {v}'],
+  a_over:['تجاوز ميزانية {i}','{i} is over budget'], a_overM:['{p}: صُرف {s} من {b}','{p}: {s} spent of {b}'],
+  a_owes:['العميل عليه {v}','Client owes {v}'], a_owesM:['{p}: المصروف والأتعاب أكبر من المدفوع','{p}: spending and fees exceed payments'],
+  a_short:['عهدة {e} لا تكفي','{e}\'s custody is short'], a_shortM:['المصروفات المعلقة أكبر من الرصيد بـ {v}','Pending expenses exceed the balance by {v}'],
+  a_late:['{n} مهام متأخرة','{n} overdue tasks'], a_lateM:['أقدمها: {t}','Oldest: {t}'],
+  recent:['آخر تحديثات المواقع','Latest site updates'],
+  projSub:['{n} مشروعات','{n} projects'],
+  progress:['نسبة الإنجاز','Progress'], paid:['المدفوع','Paid'], spent:['المصروف','Spent'], fee:['أتعاب الإشراف','Supervision fee'], balance:['رصيد العميل','Client balance'], remaining:['المتبقي','Remaining'],
+  m2:['م²','m²'], client:['العميل','Client'], team:['فريق العمل','Team'],
+  pt_overview:['نظرة عامة','Overview'], pt_budget:['ميزانية البنود','Item budgets'], pt_tasks:['المهام والملاحظات','Tasks & snags'], pt_statement:['كشف الحساب','Statement'],
+  backTo:['→ كل المشروعات','← All projects'],
+  feeModel:['طريقة حساب الأتعاب','How the fee is worked out'], fee_pct:['نسبة من المصروف','Percentage of spending'], fee_fixed:['مبلغ ثابت (يُستحق حسب الإنجاز)','Fixed amount (earned with progress)'],
+  feeVal:['القيمة','Value'], showFee:['إظهار الأتعاب للعميل','Show the fee to the client'], save:['حفظ','Save'], saved:['تم الحفظ','Saved'],
+  feeExplainPct:['{v}% من المصروف المعتمد','{v}% of approved spending'], feeExplainFixed:['{v} × نسبة الإنجاز','{v} × progress'],
+  budget:['الميزانية','Budget'], pendingShort:['معلّق','Pending'], over:['تجاوز','Over'], near:['قارب','Near limit'], within:['ضمن الميزانية','Within budget'],
+  budgetTotal:['إجمالي الميزانية','Total budget'],
+  legend:['الأخضر معتمد، والمخطط معلّق بانتظار الاعتماد','Solid is approved, striped is waiting for approval'],
+  date:['التاريخ','Date'], desc:['البيان','Description'], debit:['مدين','Debit'], credit:['دائن','Credit'], runBal:['الرصيد','Balance'],
+  clientPay:['دفعة من العميل','Client payment'], feeLine:['أتعاب الإشراف حتى تاريخه','Supervision fee to date'], totals:['الإجمالي','Total'],
+  shareWa:['مشاركة على واتساب','Share on WhatsApp'], copy:['نسخ الملخص','Copy summary'], copied:['تم نسخ الملخص','Summary copied'], copyFail:['لم يتم النسخ. حدّد النص يدويًا.','Copy failed. Select the text manually.'],
+  stmtTitle:['كشف حساب','Statement of account'],
+  approvalsSub:['مصروفات رفعها مهندسو الموقع','Expenses uploaded by site engineers'], approvalsRO:['الاعتماد من صلاحية المدير. يمكنك المتابعة فقط.','Approval is the manager\'s job. You can follow along.'],
+  approve:['اعتماد','Approve'], reject:['رفض','Reject'], approved:['معتمد','Approved'], rejected:['مرفوض','Rejected'], pending:['معلّق','Pending'],
+  didApprove:['تم اعتماد المصروف','Expense approved'], didReject:['تم رفض المصروف','Expense rejected'],
+  noPending:['لا توجد مصروفات بانتظار الاعتماد','No expenses are waiting for approval'],
+  willOver:['سيتجاوز ميزانية البند','Will push the item over budget'], custAfter:['العهدة بعد الاعتماد: {v}','Custody after approval: {v}'],
+  fromCustody:['من عهدة {e}','From {e}\'s custody'], fromAcc:['مدفوع من {a}','Paid from {a}'],
+  history:['السجل','History'], short:['العهدة لا تكفي','Custody short'],
+  custodySub:['السلف النقدية مع مهندسي الموقع','Cash advances held by site engineers'],
+  given:['المُسلَّم','Given'], spentApproved:['مصروف معتمد','Approved spending'], returned:['مُرتجع','Returned'], available:['الرصيد المتاح','Available balance'],
+  giveCustody:['تسليم عهدة','Give custody'], transfer:['تحويل بين المهندسين','Transfer between engineers'], settle:['تسوية وإرجاع','Settle & return'],
+  k_give:['تسليم عهدة','Custody given'], k_xfer:['تحويل عهدة','Custody transfer'], k_ret:['إرجاع عهدة','Custody returned'],
+  treasurySub:['الحسابات البنكية والنقدية والمحافظ','Bank, cash and wallet accounts'],
+  acc_bank:['البنك الأهلي المصري','National Bank of Egypt'], acc_cash:['الخزنة النقدية','Cash safe'], acc_wallet:['إنستاباي / فودافون كاش','InstaPay / Vodafone Cash'],
+  ty_bank:['حساب بنكي','Bank account'], ty_cash:['نقدي','Cash'], ty_wallet:['محفظة إلكترونية','E-wallet'],
+  recordPay:['تسجيل دفعة عميل','Record client payment'], directExp:['مصروف مباشر','Direct expense'],
+  movements:['حركات الخزينة','Treasury movements'], totalBal:['إجمالي الأرصدة','Total balance'],
+  tasksSub:['مهام التنفيذ وملاحظات الاستلام','Work tasks and handover snags'],
+  f_all:['الكل','All'], f_open:['مفتوحة','Open'], f_task:['مهام','Tasks'], f_snag:['ملاحظات','Snags'], f_done:['منتهية','Done'], f_mine:['المسندة لي','Assigned to me'],
+  todo:['لم تبدأ','To do'], doing:['جارية','In progress'], done:['منتهية','Done'], late:['متأخرة','Overdue'],
+  snag:['ملاحظة','Snag'], task:['مهمة','Task'],
+  markDone:['تم','Done'], start:['ابدأ','Start'], addTask:['إضافة مهمة','Add task'], due:['الموعد','Due'], assignee:['المسؤول','Assignee'],
+  didDone:['تم إنهاء المهمة','Task completed'], didStart:['بدأت المهمة','Task started'], didAddTask:['تمت إضافة المهمة','Task added'],
+  noTasks:['لا توجد مهام هنا','No tasks here'],
+  siteSub:['سجّل مصروفاتك من الموقع وتابع رصيدك','Log site expenses and track your balance'],
+  myBal:['رصيد عهدتك','Your custody balance'], afterPending:['بعد المعلّق','After pending'], logExp:['تسجيل مصروف','Log expense'], updProg:['تحديث الإنجاز','Update progress'],
+  myExp:['مصروفاتي','My expenses'], myTasks:['مهامي','My tasks'],
+  e_project:['المشروع','Project'], e_item:['البند','Work item'], e_amount:['المبلغ (ج.م)','Amount (EGP)'], e_note:['البيان','Description'], e_receipt:['صورة الإيصال','Receipt photo'], e_source:['يُدفع من','Paid from'], e_vendor:['المورد','Supplier'],
+  e_custodyOpt:['عهدتي','My custody'],
+  submitExp:['إرسال للاعتماد','Send for approval'], saveExp:['تسجيل المصروف','Record expense'],
+  didLog:['تم إرسال المصروف للاعتماد','Expense sent for approval'], didDirect:['تم تسجيل المصروف','Expense recorded'],
+  needAmount:['اكتب مبلغًا أكبر من صفر','Enter an amount greater than zero'], needTitle:['اكتب عنوان المهمة','Enter a task title'],
+  overWarn:['هذا المصروف سيتجاوز ميزانية البند بـ {v}','This expense will push the item {v} over budget'],
+  receiptHint:['اختياري. صوّر الفاتورة ليراها المكتب.','Optional. Photograph the invoice so the office can see it.'],
+  engineer:['المهندس','Engineer'], fromEng:['من','From'], toEng:['إلى','To'], account:['الحساب','Account'],
+  didGive:['تم تسليم العهدة','Custody given'], didXfer:['تم تحويل العهدة','Custody transferred'], didRet:['تم تسجيل الإرجاع','Return recorded'], didPay:['تم تسجيل الدفعة','Payment recorded'],
+  sameEng:['اختر مهندسين مختلفين','Choose two different engineers'],
+  prog_note:['ماذا تم في الموقع؟','What was done on site?'], didProg:['تم تحديث الإنجاز','Progress updated'],
+  clientHello:['أهلًا {n}','Welcome, {n}'], clientSub:['تابع تنفيذ مشروعك لحظة بلحظة','Follow your project as it happens'],
+  yourPayments:['دفعاتك','Your payments'], openSnags:['ملاحظات قيد الإصلاح','Snags being fixed'], whereMoney:['أين صُرفت دفعاتك','Where your payments went'],
+  contactEng:['تواصل مع المهندس','Message your engineer'], noSnags:['لا توجد ملاحظات مفتوحة','No open snags'],
+  dueNow:['مستحق عليك الآن','Due from you now'], credit_left:['متبقي من دفعاتك','Left from your payments'],
+  receipt:['الإيصال','Receipt'], noReceipt:['لم يُرفق إيصال','No receipt attached'], close:['إغلاق','Close'], cancel:['إلغاء','Cancel'],
+  by:['بواسطة {n}','by {n}'], today:['اليوم','Today'], yesterday:['أمس','Yesterday'],
+  waText:['كشف حساب: {p}\nالمدفوع: {paid}\nالمصروف المعتمد: {spent}\nأتعاب الإشراف: {fee}\nرصيد العميل: {bal}\nنسبة الإنجاز: {prog}%\n— Gindi Studio','Statement: {p}\nPaid: {paid}\nApproved spending: {spent}\nSupervision fee: {fee}\nClient balance: {bal}\nProgress: {prog}%\n— Gindi Studio'],
+  waTextNoFee:['ملخص مشروع: {p}\nالمدفوع: {paid}\nالمصروف: {spent}\nالرصيد: {bal}\nنسبة الإنجاز: {prog}%\n— Gindi Studio','Project summary: {p}\nPaid: {paid}\nSpent: {spent}\nBalance: {bal}\nProgress: {prog}%\n— Gindi Studio'],
+};
+const ITEMS={masonry:['مباني','Masonry'],plumbing:['سباكة','Plumbing'],electrical:['كهرباء','Electrical'],plaster:['محارة','Plastering'],tiles:['سيراميك وبورسلين','Tiles & porcelain'],paint:['دهانات','Paint'],gypsum:['جبس بورد','Gypsum board'],carpentry:['نجارة وأبواب','Carpentry & doors'],ac:['تكييف','Air conditioning'],aluminum:['ألوميتال','Aluminium']};
+
+// ---------- icons ----------
+const I=(p)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const IC={
+  home:I('<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>'),
+  projects:I('<path d="M3 7h6l2 2h10v10H3z"/>'),
+  approvals:I('<path d="M9 12l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/>'),
+  custody:I('<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2"/><path d="M3 10h18"/>'),
+  treasury:I('<path d="M3 10l9-6 9 6"/><path d="M5 10v8M9 10v8M15 10v8M19 10v8"/><path d="M3 20h18"/>'),
+  tasks:I('<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6l1 1 2-2M4 12l1 1 2-2M4 18l1 1 2-2"/>'),
+  site:I('<path d="M2 20h20"/><path d="M5 20V10l7-5 7 5v10"/><path d="M10 20v-5h4v5"/>'),
+  client:I('<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/>'),
+  statement:I('<path d="M6 3h9l4 4v14H6z"/><path d="M9 12h7M9 16h7M9 8h3"/>'),
+  plus:I('<path d="M12 5v14M5 12h14"/>'),
+  x:I('<path d="M6 6l12 12M18 6L6 18"/>'),
+  receipt:I('<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>'),
+  share:I('<path d="M4 12v7h16v-7"/><path d="M12 3v12M7 8l5-5 5 5"/>'),
+  copy:I('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>'),
+  up:I('<path d="M4 17l6-6 4 4 6-7"/>'),
+  swap:I('<path d="M7 7h12l-3-3M17 17H5l3 3"/>'),
+};
+
+// ---------- state ----------
+const KEY='gindi-studio-demo-v1';
+const day=n=>{const x=new Date();x.setDate(x.getDate()-n);return x.toISOString().slice(0,10)};
+const B=(ar,en)=>({ar,en});
+function seed(){
+  return {
+    people:{
+      mgr:{name:B('م. مصطفى الجندي','Eng. Mostafa Elgindi'),role:'manager'},
+      noha:{name:B('م. نهى فؤاد','Eng. Noha Fouad'),role:'office'},
+      karim:{name:B('م. كريم سامي','Eng. Karim Samy'),role:'site'},
+      youssef:{name:B('م. يوسف عادل','Eng. Youssef Adel'),role:'site'},
+      hisham:{name:B('أ. هشام رضا','Mr. Hisham Reda'),role:'client'},
+    },
+    accounts:[{id:'bank',type:'bank',open:900000},{id:'cash',type:'cash',open:260000},{id:'wallet',type:'wallet',open:60000}],
+    projects:[
+      {id:'p1',name:B('شقة التجمع الخامس','New Cairo apartment'),client:B('أ. هشام رضا','Mr. Hisham Reda'),clientId:'hisham',area:180,loc:B('التجمع الخامس، القاهرة الجديدة','Fifth Settlement, New Cairo'),progress:62,fee:{type:'pct',v:12},showFee:true,team:['karim','noha'],
+        items:[['masonry',60000],['plumbing',85000],['electrical',95000],['plaster',70000],['tiles',160000],['gypsum',55000],['paint',90000],['carpentry',120000]]},
+      {id:'p2',name:B('فيلا الشيخ زايد','Sheikh Zayed villa'),client:B('د. منى خليل','Dr. Mona Khalil'),area:420,loc:B('الشيخ زايد، الجيزة','Sheikh Zayed, Giza'),progress:28,fee:{type:'fixed',v:180000},showFee:true,team:['youssef','noha'],
+        items:[['masonry',340000],['plumbing',260000],['electrical',310000],['plaster',240000],['ac',380000],['tiles',450000],['paint',180000],['aluminum',220000]]},
+      {id:'p3',name:B('مكتب إداري — المعادي','Maadi office fit-out'),client:B('شركة نوفا للتجارة','Nova Trading Co.'),area:140,loc:B('المعادي، القاهرة','Maadi, Cairo'),progress:92,fee:{type:'pct',v:10},showFee:true,team:['youssef','karim','noha'],
+        items:[['gypsum',90000],['electrical',110000],['tiles',150000],['carpentry',170000],['paint',95000],['ac',65000]]},
+    ],
+    tx:[
+      {kind:'pay',date:day(60),project:'p1',amount:300000,acc:'bank',note:B('دفعة التعاقد','Contract payment')},
+      {kind:'pay',date:day(30),project:'p1',amount:250000,acc:'bank',note:B('الدفعة الثانية','Second payment')},
+      {kind:'pay',date:day(5),project:'p1',amount:150000,acc:'wallet',note:B('الدفعة الثالثة — إنستاباي','Third payment — InstaPay')},
+      {kind:'pay',date:day(40),project:'p2',amount:500000,acc:'bank',note:B('دفعة التعاقد','Contract payment')},
+      {kind:'pay',date:day(95),project:'p3',amount:450000,acc:'bank',note:B('دفعة التعاقد','Contract payment')},
+      {kind:'pay',date:day(45),project:'p3',amount:150000,acc:'bank',note:B('الدفعة الثانية','Second payment')},
+      {kind:'give',date:day(58),eng:'karim',amount:80000,acc:'cash'},
+      {kind:'give',date:day(35),eng:'karim',amount:100000,acc:'bank'},
+      {kind:'give',date:day(12),eng:'karim',amount:60000,acc:'cash'},
+      {kind:'give',date:day(38),eng:'youssef',amount:70000,acc:'cash'},
+      {kind:'give',date:day(20),eng:'youssef',amount:80000,acc:'bank'},
+      {kind:'exp',date:day(55),project:'p1',item:'masonry',amount:58000,by:'karim',status:'approved',receipt:'sample',vendor:B('مصنع طوب العبور','Obour Brick Works'),note:B('طوب ومونة ومصنعية المباني','Bricks, mortar and masonry labour')},
+      {kind:'exp',date:day(50),project:'p1',item:'plumbing',amount:79500,acc:'bank',status:'approved',receipt:'sample',vendor:B('بي آر للمواسير','BR Pipes'),note:B('مواسير ومحابس ومصنعية تأسيس','Pipes, valves and rough-in labour')},
+      {kind:'exp',date:day(45),project:'p1',item:'electrical',amount:64000,acc:'bank',status:'approved',receipt:'sample',vendor:B('كابلات السويدي','El Sewedy Cables'),note:B('كابلات ولوحة توزيع','Cables and distribution board')},
+      {kind:'exp',date:day(40),project:'p1',item:'electrical',amount:38300,by:'karim',status:'approved',receipt:'sample',vendor:B('المعلم سيد الكهربائي','Sayed, electrician'),note:B('مصنعية تأسيس الكهرباء','Electrical rough-in labour')},
+      {kind:'exp',date:day(28),project:'p1',item:'plaster',amount:64000,by:'karim',status:'approved',receipt:'sample',vendor:B('توريدات النصر','El Nasr Supplies'),note:B('رمل وأسمنت ومصنعية المحارة','Sand, cement and plastering labour')},
+      {kind:'exp',date:day(10),project:'p1',item:'tiles',amount:96000,acc:'bank',status:'approved',receipt:'sample',vendor:B('معرض كليوباترا','Cleopatra showroom'),note:B('بورسلين الريسبشن 60×120','Reception porcelain 60×120')},
+      {kind:'exp',date:day(8),project:'p1',item:'gypsum',amount:21000,by:'karim',status:'approved',receipt:'sample',vendor:B('كناوف مصر','Knauf Egypt'),note:B('ألواح جبس بورد وقطاعات','Gypsum boards and profiles')},
+      {kind:'exp',date:day(6),project:'p1',item:'tiles',amount:55000,acc:'wallet',status:'approved',receipt:'sample',vendor:B('معرض كليوباترا','Cleopatra showroom'),note:B('سيراميك الحمامات والمطبخ','Bathroom and kitchen ceramics')},
+      {kind:'exp',date:day(1),project:'p1',item:'paint',amount:18500,by:'karim',status:'pending',receipt:'sample',vendor:B('جوتن — موزع التجمع','Jotun — New Cairo dealer'),note:B('دفعة أولى خامات دهانات','First batch of paint materials')},
+      {kind:'exp',date:day(0),project:'p1',item:'electrical',amount:7800,by:'karim',status:'pending',receipt:'sample',vendor:B('محل النور للإضاءة','El Nour Lighting'),note:B('كشافات LED للريسبشن','LED downlights for the reception')},
+      {kind:'exp',date:day(36),project:'p2',item:'masonry',amount:120000,acc:'bank',status:'approved',receipt:'sample',vendor:B('مصنع طوب العبور','Obour Brick Works'),note:B('طوب أحمر وأسمنت','Red bricks and cement')},
+      {kind:'exp',date:day(30),project:'p2',item:'masonry',amount:85000,by:'youssef',status:'approved',receipt:'sample',vendor:B('مقاول المباني','Masonry contractor'),note:B('مصنعية مباني الدور الأرضي','Ground floor masonry labour')},
+      {kind:'exp',date:day(18),project:'p2',item:'plumbing',amount:96000,acc:'bank',status:'approved',receipt:'sample',vendor:B('بي آر للمواسير','BR Pipes'),note:B('تأسيس سباكة الدور الأرضي','Ground floor plumbing rough-in')},
+      {kind:'exp',date:day(15),project:'p2',item:'electrical',amount:52000,by:'youssef',status:'approved',receipt:'sample',vendor:B('كابلات السويدي','El Sewedy Cables'),note:B('خراطيم وعلب وأسلاك','Conduits, boxes and wire')},
+      {kind:'exp',date:day(9),project:'p2',item:'electrical',amount:22000,acc:'wallet',status:'approved',receipt:'sample',vendor:B('المعلم سيد الكهربائي','Sayed, electrician'),note:B('مصنعية تأسيس الكهرباء','Electrical rough-in labour')},
+      {kind:'exp',date:day(2),project:'p2',item:'plaster',amount:23400,by:'youssef',status:'pending',receipt:'sample',vendor:B('توريدات النصر','El Nasr Supplies'),note:B('رمل وأسمنت للمحارة','Sand and cement for plastering')},
+      {kind:'exp',date:day(80),project:'p3',item:'gypsum',amount:85000,acc:'bank',status:'approved',receipt:'sample',vendor:B('كناوف مصر','Knauf Egypt'),note:B('أسقف جبس بورد معلقة','Suspended gypsum ceilings')},
+      {kind:'exp',date:day(70),project:'p3',item:'electrical',amount:118000,acc:'bank',status:'approved',receipt:'sample',vendor:B('كابلات السويدي','El Sewedy Cables'),note:B('كهرباء وشبكات وإضاءة','Power, data and lighting')},
+      {kind:'exp',date:day(60),project:'p3',item:'tiles',amount:140000,acc:'bank',status:'approved',receipt:'sample',vendor:B('معرض كليوباترا','Cleopatra showroom'),note:B('بورسلين المكاتب والممرات','Office and corridor porcelain')},
+      {kind:'exp',date:day(30),project:'p3',item:'carpentry',amount:165000,acc:'bank',status:'approved',receipt:'sample',vendor:B('ورشة الأمانة للنجارة','El Amana Joinery'),note:B('أبواب ومكاتب خشبية','Doors and timber desks')},
+      {kind:'exp',date:day(20),project:'p3',item:'paint',amount:96000,acc:'bank',status:'approved',receipt:'sample',vendor:B('جوتن — موزع المعادي','Jotun — Maadi dealer'),note:B('دهانات نهائية','Final paint coats')},
+      {kind:'exp',date:day(14),project:'p3',item:'ac',amount:62000,acc:'bank',status:'approved',receipt:'sample',vendor:B('شارب للتكييف','Sharp AC'),note:B('تكييف غرفة الاجتماعات','Meeting room air conditioning')},
+      {kind:'exp',date:day(0),project:'p3',item:'carpentry',amount:4200,by:'karim',status:'pending',receipt:'sample',vendor:B('محل الأمل للإكسسوار','El Amal Hardware'),note:B('مقابض أبواب','Door handles')},
+    ],
+    tasks:[
+      {project:'p1',type:'task',title:B('توريد بورسلين المطبخ','Deliver kitchen porcelain'),who:'karim',due:day(2),status:'todo'},
+      {project:'p1',type:'task',title:B('تأسيس تكييفات الريسبشن','AC rough-in for the reception'),who:'karim',due:day(-4),status:'doing'},
+      {project:'p1',type:'task',title:B('اعتماد عينة الرخام مع العميل','Approve marble sample with client'),who:'noha',due:day(-6),status:'todo'},
+      {project:'p1',type:'snag',title:B('ميول أرضية الحمام الرئيسي','Master bathroom floor slope'),who:'karim',due:day(-2),status:'todo'},
+      {project:'p1',type:'task',title:B('استلام أعمال السباكة مع العميل','Plumbing handover with client'),who:'karim',due:day(20),status:'done'},
+      {project:'p2',type:'task',title:B('صب سقف الملحق','Pour the annex roof slab'),who:'youssef',due:day(-3),status:'doing'},
+      {project:'p2',type:'task',title:B('اعتماد مخطط الكهرباء للدور الأول','Approve first floor electrical plan'),who:'noha',due:day(1),status:'todo'},
+      {project:'p3',type:'snag',title:B('تسريب بسيط في تكييف غرفة الاجتماعات','Small leak in meeting room AC'),who:'youssef',due:day(-1),status:'doing'},
+      {project:'p3',type:'snag',title:B('تعديل لون باب الإدارة','Repaint the manager\'s door'),who:'karim',due:day(-3),status:'todo'},
+      {project:'p3',type:'task',title:B('تنظيف نهائي قبل التسليم','Final clean before handover'),who:'youssef',due:day(-5),status:'todo'},
+      {project:'p3',type:'task',title:B('إعداد تقرير التسليم','Prepare the handover report'),who:'noha',due:day(-5),status:'todo'},
+    ],
+    updates:[
+      {project:'p1',by:'karim',date:day(0),progress:62,note:B('تم الانتهاء من محارة الريسبشن وبدء تركيب الجبس بورد','Reception plastering finished, gypsum board installation started')},
+      {project:'p3',by:'youssef',date:day(1),progress:92,note:B('تركيب الأبواب والإكسسوارات، ومتبقي ملاحظات الاستلام','Doors and hardware installed, handover snags remaining')},
+      {project:'p2',by:'youssef',date:day(2),progress:28,note:B('انتهاء مباني الدور الأرضي وبدء تأسيس الكهرباء','Ground floor masonry done, electrical rough-in started')},
+      {project:'p1',by:'karim',date:day(6),progress:55,note:B('توريد البورسلين وبدء التركيب في المطبخ','Porcelain delivered, kitchen installation started')},
+    ],
+  };
+}
+function load(){try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);if(d&&d.projects)return d}}catch(e){}return seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+function pref(k,v){try{if(v===undefined)return localStorage.getItem('gindi-studio-'+k);localStorage.setItem('gindi-studio-'+k,v)}catch(e){return null}}
+let D=load();
+D.tx.forEach((t,i)=>{if(!t.id)t.id='t'+i});D.tasks.forEach((t,i)=>{if(!t.id)t.id='k'+i});
+const S={lang:pref('lang')||'ar',role:pref('role')||'manager',view:null,pid:null,ptab:'overview',taskF:'open'};
+const ME={manager:'mgr',office:'noha',site:'karim',client:'hisham'};
+const ROLE_TABS={manager:['home','projects','approvals','custody','treasury'],office:['home','projects','tasks','approvals'],site:['site','tasks','projects'],client:['client','statement']};
+
+// ---------- helpers ----------
+const t=(k,vars)=>{let s=(L[k]||[k,k])[S.lang==='ar'?0:1];if(vars)for(const v in vars)s=s.split('{'+v+'}').join(vars[v]);return s};
+const tx=v=>v==null?'':typeof v==='string'?v:(v[S.lang]||v.ar);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const X=v=>esc(tx(v));
+const nf=new Intl.NumberFormat('en-US',{maximumFractionDigits:0});
+const n=v=>`<span class="num">${nf.format(Math.round(v))}</span>`;
+const money=v=>`${n(v)}<span class="cur">${t('egp')}</span>`;
+const plain=v=>`${nf.format(Math.round(v))} ${t('egp')}`;
+const itemName=k=>ITEMS[k]?ITEMS[k][S.lang==='ar'?0:1]:k;
+const person=id=>D.people[id]?tx(D.people[id].name):id;
+const initial=id=>{const nm=tx(D.people[id]?.name||'');const parts=nm.replace(/^(م\.|أ\.|د\.|Eng\.|Mr\.|Dr\.)\s*/,'').split(' ');return (parts[0]||'?').slice(0,1)};
+const accName=id=>t('acc_'+id);
+const P=id=>D.projects.find(p=>p.id===id);
+const todayISO=new Date().toISOString().slice(0,10);
+function fdate(iso){if(iso===todayISO)return t('today');if(iso===day(1))return t('yesterday');const d=new Date(iso+'T00:00:00');return d.toLocaleDateString(S.lang==='ar'?'ar-EG-u-nu-latn':'en-GB',{day:'numeric',month:'short'})}
+const exps=(f={})=>D.tx.filter(x=>x.kind==='exp'&&(!f.project||x.project===f.project)&&(!f.status||x.status===f.status)&&(!f.by||x.by===f.by));
+const sum=a=>a.reduce((s,x)=>s+x.amount,0);
+const spent=p=>sum(exps({project:p.id,status:'approved'}));
+const pendingP=p=>sum(exps({project:p.id,status:'pending'}));
+const paidP=p=>sum(D.tx.filter(x=>x.kind==='pay'&&x.project===p.id));
+const feeP=p=>p.fee.type==='pct'?spent(p)*p.fee.v/100:p.fee.v*p.progress/100;
+const balP=p=>paidP(p)-spent(p)-feeP(p);
+const itemSpent=(p,k,st='approved')=>sum(exps({project:p.id,status:st}).filter(x=>x.item===k));
+const budgetP=p=>p.items.reduce((s,i)=>s+i[1],0);
+function engStats(id){
+  const give=sum(D.tx.filter(x=>x.kind==='give'&&x.eng===id));
+  const xin=sum(D.tx.filter(x=>x.kind==='xfer'&&x.to===id)), xout=sum(D.tx.filter(x=>x.kind==='xfer'&&x.from===id));
+  const ret=sum(D.tx.filter(x=>x.kind==='ret'&&x.eng===id));
+  const sp=sum(exps({by:id,status:'approved'})), pend=sum(exps({by:id,status:'pending'}));
+  const bal=give+xin-xout-ret-sp;
+  return {given:give+xin-xout,ret,spent:sp,pend,bal,after:bal-pend};
+}
+function accBal(a){
+  let b=a.open;
+  D.tx.forEach(x=>{
+    if(x.kind==='pay'&&x.acc===a.id)b+=x.amount;
+    if(x.kind==='give'&&x.acc===a.id)b-=x.amount;
+    if(x.kind==='ret'&&x.acc===a.id)b+=x.amount;
+    if(x.kind==='exp'&&x.acc===a.id&&x.status==='approved')b-=x.amount;
+  });
+  return b;
+}
+const siteEngs=()=>Object.keys(D.people).filter(k=>D.people[k].role==='site');
+const staff=()=>Object.keys(D.people).filter(k=>['site','office'].includes(D.people[k].role));
+const isLate=k=>k.status!=='done'&&k.due<todayISO;
+const pctClass=(s,b)=>s>b?'bad':s>=b*.85?'warn':'ok';
+
+function alerts(){
+  const out=[];
+  const pend=exps({status:'pending'});
+  if(pend.length&&S.role!=='site')out.push({lvl:'info',t:t('a_pending',{n:pend.length}),m:t('a_pendingM',{v:plain(sum(pend))}),go:{view:'approvals'}});
+  D.projects.forEach(p=>{
+    if(balP(p)<0)out.push({lvl:'bad',t:t('a_owes',{v:plain(-balP(p))}),m:t('a_owesM',{p:tx(p.name)}),go:{view:'project',pid:p.id,ptab:'statement'}});
+    p.items.forEach(([k,b])=>{const s=itemSpent(p,k);if(s>b)out.push({lvl:'warn',t:t('a_over',{i:itemName(k)}),m:t('a_overM',{p:tx(p.name),s:plain(s),b:plain(b)}),go:{view:'project',pid:p.id,ptab:'budget'}})});
+  });
+  siteEngs().forEach(e=>{const s=engStats(e);if(s.after<0)out.push({lvl:'warn',t:t('a_short',{e:person(e)}),m:t('a_shortM',{v:plain(-s.after)}),go:{view:'custody'}})});
+  const late=D.tasks.filter(isLate).sort((a,b)=>a.due<b.due?-1:1);
+  if(late.length)out.push({lvl:'warn',t:t('a_late',{n:late.length}),m:t('a_lateM',{t:tx(late[0].title)}),go:{view:'tasks',taskF:'open'}});
+  return out;
+}
+
+// ---------- render ----------
+const $=id=>document.getElementById(id);
+function go(o){Object.assign(S,o);render();window.scrollTo({top:0});}
+function render(){
+  document.documentElement.lang=S.lang;document.documentElement.dir=S.lang==='ar'?'rtl':'ltr';
+  const tabs=ROLE_TABS[S.role];
+  if(!S.view||(!tabs.includes(S.view)&&S.view!=='project'))S.view=tabs[0];
+  if(S.view==='project'&&S.role==='client')S.view='client';
+  renderTop();renderNav(tabs);
+  const V={home:vHome,projects:vProjects,project:vProject,approvals:vApprovals,custody:vCustody,treasury:vTreasury,tasks:vTasks,site:vSite,client:vClient,statement:vClientStatement};
+  $('main').innerHTML=V[S.view]();
+}
+function renderTop(){
+  $('top').innerHTML=`<div class="mark"><b>GINDI STUDIO</b><span>${t('tagline')}</span></div>
+  <label class="role"><span>${t('viewAs')}</span><select id="roleSel" data-change="role">${['manager','office','site','client'].map(r=>`<option value="${r}"${r===S.role?' selected':''}>${t('r_'+r)}</option>`).join('')}</select></label>
+  <button class="chip-btn" data-act="lang" aria-label="Language">${S.lang==='ar'?'EN':'ع'}</button>`;
+}
+function renderNav(tabs){
+  const pc=exps({status:'pending'}).length;
+  const html=tabs.map(k=>`<button class="tab" data-act="nav" data-view="${k}"${(S.view===k||(S.view==='project'&&k==='projects'))?' aria-current="page"':''}>${IC[k]}<span>${t('t_'+k)}</span>${k==='approvals'&&pc?`<span class="dot num">${pc}</span>`:''}</button>`).join('');
+  $('tabs').innerHTML=html;
+  $('rail').innerHTML=html+`<div class="foot"><span>${t('demo')}</span><button class="btn ghost sm" data-act="reset">${t('reset')}</button></div>`;
+}
+const head=(title,sub,actions='')=>`<div class="head"><div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div>${actions?`<div class="btns">${actions}</div>`:''}</div>`;
+const demoNote=()=>`<div class="demo-note">${t('demo')} <button class="btn ghost sm" data-act="reset">${t('reset')}</button></div>`;
+const statusPill=s=>s==='approved'?`<span class="pill p-ok">${t('approved')}</span>`:s==='rejected'?`<span class="pill p-bad">${t('rejected')}</span>`:`<span class="pill p-warn">${t('pending')}</span>`;
+const rcptBtn=x=>`<button class="receipt-btn" data-act="receipt" data-id="${x.id}" aria-label="${t('receipt')}">${x.receipt&&x.receipt!=='sample'?`<img src="${x.receipt}" alt="">`:IC.receipt}</button>`;
+
+function alertList(){
+  const a=alerts();
+  if(!a.length)return `<div class="panel empty">${t('allGood')}</div>`;
+  return `<div class="panel rows">${a.map((x,i)=>`<button class="alert ${x.lvl==='bad'?'bad':x.lvl==='info'?'info':''}" data-act="alert" data-i="${i}"><div><div class="t">${esc(x.t)}</div><div class="m">${esc(x.m)}</div></div></button>`).join('')}</div>`;
+}
+function projCard(p){
+  const s=spent(p),b=budgetP(p),bal=balP(p);
+  const over=p.items.filter(([k,bb])=>itemSpent(p,k)>bb).length;
+  const open=D.tasks.filter(k=>k.project===p.id&&k.status!=='done'&&k.type==='snag').length;
+  return `<button class="pcard" data-act="open" data-id="${p.id}">
+    <div><h3>${X(p.name)}</h3><div class="meta">${X(p.client)} · ${n(p.area)} ${t('m2')}</div></div>
+    <div class="split"><span>${t('progress')}</span><b class="num">${p.progress}%</b></div>
+    <div class="bar"><i style="width:${p.progress}%"></i></div>
+    <div class="split"><span>${t('spent')} <b>${money(s)}</b></span><span>${t('budget')} <b>${money(b)}</b></span></div>
+    <div class="chips">${bal<0?`<span class="pill p-bad">${t('a_owes',{v:plain(-bal)})}</span>`:`<span class="pill p-ok">${t('balance')}: ${plain(bal)}</span>`}${over?`<span class="pill p-warn">${t('over')}: ${over}</span>`:''}${open?`<span class="pill p-n">${t('snag')}: ${open}</span>`:''}</div>
+  </button>`;
+}
+function feedList(list){
+  if(!list.length)return `<div class="panel empty">—</div>`;
+  return `<div class="panel feed rows">${list.map(u=>`<div class="fi"><div class="av">${esc(initial(u.by))}</div><div class="grow"><div>${X(u.note)}</div><div class="m">${esc(person(u.by))} · ${X(P(u.project).name)} · ${fdate(u.date)} · <span class="num">${u.progress}%</span></div></div></div>`).join('')}</div>`;
+}
+
+function vHome(){
+  const pend=exps({status:'pending'});
+  const totT=D.accounts.reduce((s,a)=>s+accBal(a),0);
+  const cust=siteEngs().reduce((s,e)=>s+engStats(e).bal,0);
+  const mgr=S.role==='manager';
+  return `${head(`${t('hello')}، ${esc(person(ME[S.role]))}`.replace('، ',S.lang==='ar'?'، ':', '),t('homeSub'),mgr?`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button>`:`<button class="btn" data-act="m-task">${IC.plus}${t('addTask')}</button>`)}
+  <div class="kpis">
+    ${mgr?`<div class="kpi"><span class="l">${t('k_treasury')}</span><span class="v">${money(totT)}</span><span class="s">${t('across',{n:D.accounts.length})}</span></div>`:''}
+    <div class="kpi${pend.length?' warn':''}"><span class="l">${t('k_pending')}</span><span class="v">${money(sum(pend))}</span><span class="s">${t('items_n',{n:pend.length})}</span></div>
+    ${mgr?`<div class="kpi"><span class="l">${t('k_custody')}</span><span class="v">${money(cust)}</span><span class="s">${t('engs_n',{n:siteEngs().length})}</span></div>`:''}
+    <div class="kpi"><span class="l">${t('k_active')}</span><span class="v num">${D.projects.length}</span><span class="s">${t('projSub',{n:D.projects.length})}</span></div>
+    ${!mgr?`<div class="kpi"><span class="l">${t('late')}</span><span class="v num">${D.tasks.filter(isLate).length}</span><span class="s">${t('t_tasks')}</span></div>`:''}
+  </div>
+  <section class="sec"><h2>${t('attention')}</h2>${alertList()}</section>
+  <section class="sec"><h2>${t('t_projects')}</h2><div class="grid three">${D.projects.map(projCard).join('')}</div></section>
+  <section class="sec"><h2>${t('recent')}</h2>${feedList(D.updates.slice().sort((a,b)=>a.date<b.date?1:-1).slice(0,4))}</section>
+  ${demoNote()}`;
+}
+
+function vProjects(){
+  const list=S.role==='site'?D.projects.filter(p=>p.team.includes(ME.site)):D.projects;
+  return `${head(t('t_projects'),t('projSub',{n:list.length}))}<div class="grid three">${list.map(projCard).join('')}</div>`;
+}
+
+function vProject(){
+  const p=P(S.pid);if(!p){S.view='projects';return vProjects()}
+  const tabs=['overview','budget','tasks','statement'];
+  return `<div><button class="back" data-act="nav" data-view="projects">${t('backTo')}</button></div>
+  ${head(X(p.name),`${X(p.client)} · ${X(p.loc)} · ${n(p.area)} ${t('m2')}`,(S.role==='site'||S.role==='office'||S.role==='manager')?`<button class="btn ghost" data-act="m-prog" data-id="${p.id}">${IC.up}${t('updProg')}</button>`:'')}
+  <div class="seg" role="group">${tabs.map(k=>`<button data-act="ptab" data-tab="${k}" aria-pressed="${S.ptab===k}">${t('pt_'+k)}</button>`).join('')}</div>
+  ${({overview:pOverview,budget:pBudget,tasks:pTasks,statement:pStatement})[S.ptab](p)}`;
+}
+function balGrid(p,forClient){
+  const bal=balP(p),showFee=!forClient||p.showFee;
+  const balOut=forClient&&!p.showFee?paidP(p)-spent(p):bal;
+  return `<div class="bal">
+    <div><span class="l">${t('paid')}</span><span class="v">${money(paidP(p))}</span></div>
+    <div><span class="l">${t('spent')}</span><span class="v">${money(spent(p))}</span></div>
+    ${showFee?`<div><span class="l">${t('fee')}</span><span class="v">${money(feeP(p))}</span></div>`:''}
+    <div><span class="l">${forClient?(balOut<0?t('dueNow'):t('credit_left')):t('balance')}</span><span class="v ${balOut<0?'neg':'pos'}">${money(Math.abs(balOut))}</span></div>
+  </div>`;
+}
+function pOverview(p){
+  const mgr=S.role==='manager';
+  return `<div class="grid two">
+    <section class="sec"><h2>${t('progress')} <span class="num">${p.progress}%</span></h2><div class="bar" style="height:12px"><i style="width:${p.progress}%"></i></div>
+      ${balGrid(p,false)}
+    </section>
+    <section class="sec"><h2>${t('team')}</h2><div class="panel rows">${p.team.map(id=>`<div class="row"><div class="fi" style="padding:0"><div class="av">${esc(initial(id))}</div></div><div class="grow"><div class="t">${esc(person(id))}</div><div class="m">${t('r_'+D.people[id].role)}</div></div></div>`).join('')}<div class="row"><div class="grow"><div class="t">${X(p.client)}</div><div class="m">${t('client')}</div></div></div></div></section>
+  </div>
+  <section class="sec"><h2>${t('feeModel')}</h2>
+    ${mgr?`<form class="panel" style="padding:14px" data-form="fee" data-id="${p.id}">
+      <div class="f2"><div class="f"><label for="feeType">${t('feeModel')}</label><select id="feeType" name="type"><option value="pct"${p.fee.type==='pct'?' selected':''}>${t('fee_pct')}</option><option value="fixed"${p.fee.type==='fixed'?' selected':''}>${t('fee_fixed')}</option></select></div>
+      <div class="f"><label for="feeV">${t('feeVal')}</label><input id="feeV" name="v" type="number" min="0" step="any" inputmode="decimal" value="${p.fee.v}"></div></div>
+      <label class="check"><input type="checkbox" name="show"${p.showFee?' checked':''}> ${t('showFee')}</label>
+      <div><button class="btn sm">${t('save')}</button></div></form>`
+    :`<div class="panel row"><div class="grow">${p.fee.type==='pct'?t('feeExplainPct',{v:p.fee.v}):t('feeExplainFixed',{v:plain(p.fee.v)})}</div><b>${money(feeP(p))}</b></div>`}
+  </section>
+  <section class="sec"><h2>${t('recent')}</h2>${feedList(D.updates.filter(u=>u.project===p.id).sort((a,b)=>a.date<b.date?1:-1))}</section>`;
+}
+function pBudget(p){
+  const tb=budgetP(p);
+  return `<div class="bal" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><span class="l">${t('budgetTotal')}</span><span class="v">${money(tb)}</span></div><div><span class="l">${t('spent')}</span><span class="v">${money(spent(p))}</span></div><div><span class="l">${t('pendingShort')}</span><span class="v">${money(pendingP(p))}</span></div></div>
+  <p class="demo-note" style="margin:0">${t('legend')}</p>
+  <div class="panel rows">${p.items.map(([k,b])=>{const s=itemSpent(p,k),pe=itemSpent(p,k,'pending'),c=pctClass(s,b),w=Math.min(100,s/b*100),pw=Math.max(0,Math.min(100-w,pe/b*100));
+    return `<div class="item"><div class="top2"><b>${itemName(k)}</b><span>${c==='bad'?`<span class="pill p-bad">${t('over')} ${plain(s-b)}</span>`:c==='warn'?`<span class="pill p-warn">${t('near')}</span>`:`<span class="pill p-ok">${t('within')}</span>`}</span></div>
+    <div class="bar"><i class="${c}" style="width:${w}%"></i>${pw?`<i class="pend" style="width:${pw}%"></i>`:''}</div>
+    <div class="split"><span>${t('spent')} <b>${money(s)}</b>${pe?` · ${t('pendingShort')} <b>${money(pe)}</b>`:''}</span><span>${t('budget')} <b>${money(b)}</b> · <b class="num">${Math.round(s/b*100)}%</b></span></div></div>`}).join('')}</div>
+  <section class="sec"><h2>${t('history')}</h2>${expList(exps({project:p.id}).sort((a,b)=>a.date<b.date?1:-1),false)}</section>`;
+}
+function expList(list,withActions){
+  if(!list.length)return `<div class="panel empty">${t('noPending')}</div>`;
+  return `<div class="panel rows">${list.map(x=>{const p=P(x.project);
+    let extra='';
+    if(withActions){const ib=(p.items.find(i=>i[0]===x.item)||[0,0])[1];const willOver=itemSpent(p,x.item)+x.amount>ib;
+      extra=`<div class="chips" style="margin-top:6px">${willOver?`<span class="pill p-warn">${t('willOver')}</span>`:''}${x.by?`<span class="pill p-n">${t('custAfter',{v:plain(engStats(x.by).bal-x.amount)})}</span>`:''}</div>`;}
+    return `<div class="row" style="align-items:flex-start">${rcptBtn(x)}<div class="grow"><div class="t">${X(x.note)}</div><div class="m">${itemName(x.item)} · ${X(p.name)} · ${fdate(x.date)}</div><div class="m">${x.by?t('fromCustody',{e:person(x.by)}):t('fromAcc',{a:accName(x.acc)})}${x.vendor?' · '+X(x.vendor):''}</div>${extra}
+      ${withActions&&S.role==='manager'?`<div class="btns" style="margin-top:8px"><button class="btn ok sm" data-act="approve" data-id="${x.id}">${t('approve')}</button><button class="btn bad sm" data-act="reject" data-id="${x.id}">${t('reject')}</button></div>`:''}</div>
+      <div style="text-align:end;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="amt">${money(x.amount)}</span>${statusPill(x.status)}</div></div>`}).join('')}</div>`;
+}
+function taskRows(list){
+  if(!list.length)return `<div class="panel empty">${t('noTasks')}</div>`;
+  return `<div class="panel rows">${list.map(k=>{const late=isLate(k);const can=S.role!=='client'&&(S.role!=='site'||k.who===ME.site);
+    return `<div class="row"><div class="grow"><div class="t">${X(k.title)}</div><div class="m">${X(P(k.project).name)} · ${esc(person(k.who))} · ${t('due')}: ${fdate(k.due)}</div>
+      <div class="chips" style="margin-top:4px"><span class="pill ${k.type==='snag'?'p-b':'p-n'}">${t(k.type)}</span>${k.status==='done'?`<span class="pill p-ok">${t('done')}</span>`:late?`<span class="pill p-bad">${t('late')}</span>`:k.status==='doing'?`<span class="pill p-warn">${t('doing')}</span>`:`<span class="pill p-n">${t('todo')}</span>`}</div></div>
+      ${can&&k.status!=='done'?`<div class="btns">${k.status==='todo'?`<button class="btn ghost sm" data-act="tstart" data-id="${k.id}">${t('start')}</button>`:''}<button class="btn ok sm" data-act="tdone" data-id="${k.id}">${t('markDone')}</button></div>`:''}</div>`}).join('')}</div>`;
+}
+function pTasks(p){
+  const list=D.tasks.filter(k=>k.project===p.id).sort(taskSort);
+  return `<div class="head"><div></div>${S.role!=='client'?`<button class="btn" data-act="m-task" data-id="${p.id}">${IC.plus}${t('addTask')}</button>`:''}</div>${taskRows(list)}`;
+}
+const taskSort=(a,b)=>(a.status==='done')-(b.status==='done')||(a.due<b.due?-1:1);
+function stmtRows(p,forClient){
+  const rows=[];
+  D.tx.filter(x=>x.project===p.id&&(x.kind==='pay'||(x.kind==='exp'&&x.status==='approved'))).sort((a,b)=>a.date<b.date?-1:1).forEach(x=>rows.push(x));
+  let run=0;
+  const body=rows.map(x=>{const cr=x.kind==='pay'?x.amount:0,dr=x.kind==='exp'?x.amount:0;run+=cr-dr;
+    return `<tr><td>${fdate(x.date)}</td><td>${x.kind==='pay'?`${t('clientPay')} — ${X(x.note)}`:`${itemName(x.item)} — ${X(x.note)}`}</td><td class="n">${dr?n(dr):''}</td><td class="n">${cr?n(cr):''}</td><td class="n">${n(run)}</td></tr>`}).join('');
+  const showFee=!forClient||p.showFee;const fee=feeP(p);
+  const feeRow=showFee?`<tr><td>${t('today')}</td><td>${t('feeLine')} (${p.fee.type==='pct'?t('feeExplainPct',{v:p.fee.v}):t('feeExplainFixed',{v:plain(p.fee.v)})})</td><td class="n">${n(fee)}</td><td class="n"></td><td class="n">${n(run-fee)}</td></tr>`:'';
+  const endBal=showFee?run-fee:run;
+  return `<div class="panel scroll"><table class="stmt"><thead><tr><th>${t('date')}</th><th>${t('desc')}</th><th style="text-align:end">${t('debit')}</th><th style="text-align:end">${t('credit')}</th><th style="text-align:end">${t('runBal')}</th></tr></thead><tbody>${body}${feeRow}</tbody>
+  <tfoot><tr><td></td><td>${t('totals')}</td><td class="n">${n(spent(p)+(showFee?fee:0))}</td><td class="n">${n(paidP(p))}</td><td class="n" style="color:var(--${endBal<0?'bad':'ok'})">${n(endBal)}</td></tr></tfoot></table></div>`;
+}
+function summaryText(p,forClient){
+  const withFee=!forClient||p.showFee;
+  return t(withFee?'waText':'waTextNoFee',{p:tx(p.name),paid:plain(paidP(p)),spent:plain(spent(p)),fee:plain(feeP(p)),bal:plain(withFee?balP(p):paidP(p)-spent(p)),prog:p.progress});
+}
+function shareBtns(p,forClient){
+  return `<div class="btns"><a class="btn" href="https://wa.me/?text=${encodeURIComponent(summaryText(p,forClient))}" target="_blank" rel="noopener">${IC.share}${t('shareWa')}</a><button class="btn ghost" data-act="copy" data-id="${p.id}" data-client="${forClient?1:0}">${IC.copy}${t('copy')}</button></div>`;
+}
+function pStatement(p){
+  return `${balGrid(p,false)}<div class="head"><h2 style="font-size:16px;font-weight:800">${t('stmtTitle')} — ${X(p.client)}</h2>${shareBtns(p,false)}</div>${stmtRows(p,false)}`;
+}
+
+function vApprovals(){
+  const pend=exps({status:'pending'}).sort((a,b)=>a.date<b.date?1:-1);
+  const recent=D.tx.filter(x=>x.kind==='exp'&&x.status!=='pending'&&x.by).sort((a,b)=>a.date<b.date?1:-1).slice(0,6);
+  return `${head(t('t_approvals'),t('approvalsSub'))}
+  ${S.role!=='manager'?`<div class="hint">${t('approvalsRO')}</div>`:''}
+  <section class="sec"><h2>${t('k_pending')} <span class="pill p-warn num">${pend.length}</span></h2>${expList(pend,true)}</section>
+  <section class="sec"><h2>${t('history')}</h2>${expList(recent,false)}</section>`;
+}
+
+function vCustody(){
+  const movs=D.tx.filter(x=>['give','xfer','ret'].includes(x.kind)).sort((a,b)=>a.date<b.date?1:-1);
+  return `${head(t('t_custody'),t('custodySub'),`<button class="btn" data-act="m-give">${IC.plus}${t('giveCustody')}</button><button class="btn ghost" data-act="m-xfer">${IC.swap}${t('transfer')}</button>`)}
+  <div class="grid two">${siteEngs().map(e=>{const s=engStats(e);return `<div class="panel" style="padding:14px;display:flex;flex-direction:column;gap:10px">
+    <div class="row" style="padding:0"><div class="fi" style="padding:0"><div class="av">${esc(initial(e))}</div></div><div class="grow"><div class="t">${esc(person(e))}</div><div class="m">${t('r_site')}</div></div>${s.after<0?`<span class="pill p-bad">${t('short')}</span>`:''}</div>
+    <div class="split"><span>${t('available')}</span><b style="font-size:20px">${money(s.bal)}</b></div>
+    <div class="bar">${s.given?`<i class="ok" style="width:${Math.max(0,Math.min(100,s.spent/s.given*100))}%"></i><i class="pend" style="width:${Math.max(0,Math.min(100,s.pend/s.given*100))}%"></i>`:''}</div>
+    <div class="split"><span>${t('given')} <b>${money(s.given)}</b></span><span>${t('spentApproved')} <b>${money(s.spent)}</b></span></div>
+    <div class="split"><span>${t('pendingShort')} <b>${money(s.pend)}</b></span><span>${t('afterPending')} <b style="color:var(--${s.after<0?'bad':'ink'})">${money(s.after)}</b></span></div>
+    <div class="btns"><button class="btn ghost sm" data-act="m-give" data-id="${e}">${t('giveCustody')}</button><button class="btn ghost sm" data-act="m-ret" data-id="${e}">${t('settle')}</button></div></div>`}).join('')}</div>
+  <section class="sec"><h2>${t('history')}</h2><div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${t('k_'+x.kind)}</div><div class="m">${x.kind==='xfer'?`${esc(person(x.from))} ← ${esc(person(x.to))}`.replace('←',S.lang==='ar'?'←':'→'):`${esc(person(x.eng))} · ${accName(x.acc)}`} · ${fdate(x.date)}</div></div><span class="amt">${money(x.amount)}</span></div>`).join('')}</div></section>`;
+}
+
+function vTreasury(){
+  const tot=D.accounts.reduce((s,a)=>s+accBal(a),0);
+  const movs=D.tx.filter(x=>x.acc&&(x.kind!=='exp'||x.status==='approved')).sort((a,b)=>a.date<b.date?1:-1).slice(0,14);
+  const sign=x=>x.kind==='pay'||x.kind==='ret'?1:-1;
+  const label=x=>x.kind==='pay'?`${t('clientPay')} · ${X(P(x.project).name)}`:x.kind==='exp'?`${itemName(x.item)} · ${X(P(x.project).name)}`:x.kind==='give'?`${t('k_give')} · ${esc(person(x.eng))}`:`${t('k_ret')} · ${esc(person(x.eng))}`;
+  return `${head(t('t_treasury'),t('treasurySub'),`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button><button class="btn ghost" data-act="m-exp">${t('directExp')}</button>`)}
+  <div class="hero"><span class="l">${t('totalBal')}</span><span class="big">${money(tot)}</span></div>
+  <div class="grid three">${D.accounts.map(a=>`<div class="kpi"><span class="l">${t('ty_'+a.type)}</span><span class="t" style="font-weight:800">${accName(a.id)}</span><span class="v">${money(accBal(a))}</span></div>`).join('')}</div>
+  <section class="sec"><h2>${t('movements')}</h2><div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${label(x)}</div><div class="m">${accName(x.acc)} · ${fdate(x.date)}</div></div><span class="amt" style="color:var(--${sign(x)>0?'ok':'ink'})">${sign(x)>0?'+':'−'}${money(x.amount)}</span></div>`).join('')}</div></section>`;
+}
+
+function vTasks(){
+  const F=S.role==='site'?['mine','open','snag','done']:['open','task','snag','done','all'];
+  if(!F.includes(S.taskF))S.taskF=F[0];
+  let list=D.tasks.slice();
+  if(S.role==='site')list=list.filter(k=>P(k.project).team.includes(ME.site));
+  const f=S.taskF;
+  list=list.filter(k=>f==='all'?true:f==='open'?k.status!=='done':f==='done'?k.status==='done':f==='mine'?k.who===ME.site&&k.status!=='done':k.type===f&&k.status!=='done').sort(taskSort);
+  return `${head(t('t_tasks'),t('tasksSub'),`<button class="btn" data-act="m-task">${IC.plus}${t('addTask')}</button>`)}
+  <div class="seg" role="group">${F.map(k=>`<button data-act="taskF" data-f="${k}" aria-pressed="${S.taskF===k}">${t('f_'+k)}</button>`).join('')}</div>${taskRows(list)}`;
+}
+
+function vSite(){
+  const me=ME.site,s=engStats(me);
+  const mine=exps({by:me}).sort((a,b)=>a.date<b.date?1:-1);
+  const tasks=D.tasks.filter(k=>k.who===me&&k.status!=='done').sort(taskSort);
+  return `${head(`${t('hello')}${S.lang==='ar'?'، ':', '}${esc(person(me))}`,t('siteSub'))}
+  <div class="hero"><span class="l">${t('myBal')}</span><span class="big">${money(s.bal)}</span>
+    <div class="sub"><span>${t('pendingShort')}: <b>${plain(s.pend)}</b></span><span>${t('afterPending')}: <b>${plain(s.after)}</b></span><span>${t('given')}: <b>${plain(s.given)}</b></span></div>
+    <div class="btns"><button class="btn" data-act="m-exp">${IC.plus}${t('logExp')}</button><button class="btn ghost" data-act="m-prog">${IC.up}${t('updProg')}</button></div></div>
+  <section class="sec"><h2>${t('myTasks')}</h2>${taskRows(tasks)}</section>
+  <section class="sec"><h2>${t('myExp')}</h2>${expList(mine,false)}</section>
+  ${demoNote()}`;
+}
+
+function clientProject(){return D.projects.find(p=>p.clientId===ME.client)||D.projects[0]}
+function vClient(){
+  const p=clientProject();
+  const pays=D.tx.filter(x=>x.kind==='pay'&&x.project===p.id).sort((a,b)=>a.date<b.date?1:-1);
+  const snags=D.tasks.filter(k=>k.project===p.id&&k.type==='snag'&&k.status!=='done');
+  const used=p.items.map(([k])=>[k,itemSpent(p,k)]).filter(i=>i[1]>0).sort((a,b)=>b[1]-a[1]);const max=Math.max(...used.map(i=>i[1]),1);
+  return `${head(t('clientHello',{n:esc(person(ME.client))}),t('clientSub'))}
+  <div class="hero"><span class="l">${X(p.name)} · ${X(p.loc)}</span><span class="big num">${p.progress}%</span>
+    <div class="bar" style="background:rgba(255,255,255,.15);border-color:transparent"><i style="width:${p.progress}%;background:var(--hero-gold)"></i></div>
+    <div class="btns"><a class="btn" href="https://wa.me/?text=${encodeURIComponent(tx(p.name)+' — ')}" target="_blank" rel="noopener">${t('contactEng')}</a></div></div>
+  ${balGrid(p,true)}
+  <section class="sec"><h2>${t('recent')}</h2>${feedList(D.updates.filter(u=>u.project===p.id).sort((a,b)=>a.date<b.date?1:-1))}</section>
+  <div class="grid two">
+  <section class="sec"><h2>${t('whereMoney')}</h2><div class="panel rows">${used.map(([k,v])=>`<div class="item"><div class="top2"><b>${itemName(k)}</b><span class="amt">${money(v)}</span></div><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`).join('')}</div></section>
+  <section class="sec"><h2>${t('openSnags')}</h2>${snags.length?taskRows(snags):`<div class="panel empty">${t('noSnags')}</div>`}
+    <h2 style="font-size:16px;font-weight:800;margin-top:8px">${t('yourPayments')}</h2><div class="panel rows">${pays.map(x=>`<div class="row"><div class="grow"><div class="t">${X(x.note)}</div><div class="m">${fdate(x.date)}</div></div><span class="amt">${money(x.amount)}</span></div>`).join('')}</div></section>
+  </div>`;
+}
+function vClientStatement(){
+  const p=clientProject();
+  return `${head(t('stmtTitle'),X(p.name),'')}${balGrid(p,true)}<div class="head"><div></div>${shareBtns(p,true)}</div>${stmtRows(p,true)}`;
+}
+
+// ---------- modals ----------
+function modal(title,body){
+  $('modal').innerHTML=`<div class="scrim" data-act="close-scrim"><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="mh"><div class="sheet-h"><h2 id="mh">${title}</h2><button class="x" data-act="close" aria-label="${t('close')}">${IC.x}</button></div>${body}</div></div>`;
+  const f=$('modal').querySelector('input:not([type=hidden]),select');if(f)setTimeout(()=>f.focus(),30);
+}
+function closeModal(){$('modal').innerHTML=''}
+const opt=(v,l,sel)=>`<option value="${v}"${sel?' selected':''}>${esc(l)}</option>`;
+const projOpts=(list,sel)=>list.map(p=>opt(p.id,tx(p.name),p.id===sel)).join('');
+const accOpts=sel=>D.accounts.map(a=>opt(a.id,`${accName(a.id)} — ${plain(accBal(a))}`,a.id===sel)).join('');
+const engOpts=(sel,list=siteEngs())=>list.map(e=>opt(e,person(e),e===sel)).join('');
+const itemOpts=pid=>P(pid).items.map(([k])=>opt(k,itemName(k))).join('');
+const actions=label=>`<div class="btns"><button class="btn" type="submit">${label}</button><button class="btn ghost" type="button" data-act="close">${t('cancel')}</button></div>`;
+
+function mExp(){
+  const site=S.role==='site';
+  const list=site?D.projects.filter(p=>p.team.includes(ME.site)):D.projects;
+  const pid=(S.view==='project'&&list.find(p=>p.id===S.pid))?S.pid:list[0].id;
+  modal(site?t('logExp'):t('directExp'),`<form data-form="exp">
+    <div class="f2"><div class="f"><label for="ePrj">${t('e_project')}</label><select id="ePrj" name="project" data-change="expProject">${projOpts(list,pid)}</select></div>
+    <div class="f"><label for="eItem">${t('e_item')}</label><select id="eItem" name="item" data-change="expCheck">${itemOpts(pid)}</select></div></div>
+    <div class="f"><label for="eAmt">${t('e_amount')}</label><input id="eAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required data-input="expCheck"></div>
+    <div id="expWarn"></div>
+    <div class="f"><label for="eNote">${t('e_note')}</label><input id="eNote" name="note" type="text" maxlength="120"></div>
+    <div class="f"><label for="eVendor">${t('e_vendor')}</label><input id="eVendor" name="vendor" type="text" maxlength="80"></div>
+    ${site?'':`<div class="f"><label for="eAcc">${t('e_source')}</label><select id="eAcc" name="acc">${accOpts('bank')}</select></div>`}
+    <div class="f"><label for="eRc">${t('e_receipt')}</label><input id="eRc" name="receipt" type="file" accept="image/*"><span class="m" style="font-size:12px;color:var(--muted)">${t('receiptHint')}</span></div>
+    ${site?`<div class="hint">${t('myBal')}: <b>${plain(engStats(ME.site).bal)}</b></div>`:''}
+    ${actions(site?t('submitExp'):t('saveExp'))}</form>`);
+}
+function expCheck(){
+  const f=$('modal').querySelector('form[data-form="exp"]');if(!f)return;
+  const p=P(f.project.value),k=f.item.value,a=+f.amount.value||0;const b=(p.items.find(i=>i[0]===k)||[0,0])[1];
+  const after=itemSpent(p,k)+itemSpent(p,k,'pending')+a;
+  $('expWarn').innerHTML=a&&after>b?`<div class="hint warn">${t('overWarn',{v:plain(after-b)})}</div>`:'';
+}
+function mGive(eng){modal(t('giveCustody'),`<form data-form="give"><div class="f"><label for="gEng">${t('engineer')}</label><select id="gEng" name="eng">${engOpts(eng)}</select></div><div class="f"><label for="gAmt">${t('e_amount')}</label><input id="gAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required></div><div class="f"><label for="gAcc">${t('account')}</label><select id="gAcc" name="acc">${accOpts('cash')}</select></div>${actions(t('giveCustody'))}</form>`)}
+function mXfer(){const e=siteEngs();modal(t('transfer'),`<form data-form="xfer"><div class="f2"><div class="f"><label for="xFrom">${t('fromEng')}</label><select id="xFrom" name="from">${engOpts(e[0])}</select></div><div class="f"><label for="xTo">${t('toEng')}</label><select id="xTo" name="to">${engOpts(e[1])}</select></div></div><div class="f"><label for="xAmt">${t('e_amount')}</label><input id="xAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required></div>${actions(t('transfer'))}</form>`)}
+function mRet(eng){const s=engStats(eng||siteEngs()[0]);modal(t('settle'),`<form data-form="ret"><div class="f"><label for="rEng">${t('engineer')}</label><select id="rEng" name="eng">${engOpts(eng)}</select></div><div class="hint">${t('available')}: <b>${plain(s.bal)}</b> · ${t('pendingShort')}: <b>${plain(s.pend)}</b></div><div class="f"><label for="rAmt">${t('e_amount')}</label><input id="rAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required value="${Math.max(0,Math.round(s.after))||''}"></div><div class="f"><label for="rAcc">${t('account')}</label><select id="rAcc" name="acc">${accOpts('cash')}</select></div>${actions(t('settle'))}</form>`)}
+function mPay(){const pid=S.view==='project'?S.pid:D.projects[0].id;modal(t('recordPay'),`<form data-form="pay"><div class="f"><label for="pPrj">${t('e_project')}</label><select id="pPrj" name="project">${projOpts(D.projects,pid)}</select></div><div class="f"><label for="pAmt">${t('e_amount')}</label><input id="pAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required></div><div class="f"><label for="pAcc">${t('account')}</label><select id="pAcc" name="acc">${accOpts('bank')}</select></div><div class="f"><label for="pNote">${t('e_note')}</label><input id="pNote" name="note" type="text" maxlength="120"></div>${actions(t('recordPay'))}</form>`)}
+function mTask(pid){const list=S.role==='site'?D.projects.filter(p=>p.team.includes(ME.site)):D.projects;pid=pid||(S.view==='project'?S.pid:list[0].id);
+  modal(t('addTask'),`<form data-form="task"><div class="f"><label for="kTitle">${t('e_note')}</label><input id="kTitle" name="title" type="text" maxlength="120" required></div>
+  <div class="f2"><div class="f"><label for="kPrj">${t('e_project')}</label><select id="kPrj" name="project">${projOpts(list,pid)}</select></div><div class="f"><label for="kType">${t('task')} / ${t('snag')}</label><select id="kType" name="type">${opt('task',t('task'))}${opt('snag',t('snag'))}</select></div></div>
+  <div class="f2"><div class="f"><label for="kWho">${t('assignee')}</label><select id="kWho" name="who">${engOpts(S.role==='site'?ME.site:'karim',staff())}</select></div><div class="f"><label for="kDue">${t('due')}</label><input id="kDue" name="due" type="date" value="${day(-3)}" required></div></div>${actions(t('addTask'))}</form>`)}
+function mProg(pid){const list=S.role==='site'?D.projects.filter(p=>p.team.includes(ME.site)):D.projects;pid=pid||list[0].id;const p=P(pid);
+  modal(t('updProg'),`<form data-form="prog"><div class="f"><label for="gPrj">${t('e_project')}</label><select id="gPrj" name="project" data-change="progProject">${projOpts(list,pid)}</select></div>
+  <div class="f"><label for="gVal">${t('progress')}: <span id="gOut" class="num">${p.progress}%</span></label><input id="gVal" name="progress" type="range" min="0" max="100" value="${p.progress}" data-input="progOut"></div>
+  <div class="f"><label for="gNote">${t('prog_note')}</label><textarea id="gNote" name="note" maxlength="200"></textarea></div>${actions(t('updProg'))}</form>`)}
+function mReceipt(id){const x=D.tx.find(y=>y.id===id);if(!x)return;const p=P(x.project);
+  const body=x.receipt&&x.receipt!=='sample'?`<img src="${x.receipt}" alt="${t('receipt')}" style="border-radius:8px">`:x.receipt==='sample'?`<div class="rcpt"><div class="c">${X(x.vendor||'')}</div><div class="c" style="font-size:11px">${fdate(x.date)}</div><hr><div class="ln"><span>${X(x.note)}</span></div><div class="ln"><span>${itemName(x.item)}</span><span>${X(p.name)}</span></div><hr><div class="ln"><b>${t('totals')}</b><b>${plain(x.amount)}</b></div><div class="c" style="font-size:11px;margin-top:6px">— sample receipt —</div></div>`:`<div class="empty">${t('noReceipt')}</div>`;
+  modal(t('receipt'),body+`<div class="split"><span>${x.by?t('fromCustody',{e:person(x.by)}):t('fromAcc',{a:accName(x.acc)})}</span>${statusPill(x.status)}</div>`)}
+
+function readImg(file){return new Promise(res=>{if(!file||!file.size)return res(null);const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const s=Math.min(1,700/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.7))};img.onerror=()=>res(null);img.src=r.result};r.onerror=()=>res(null);r.readAsDataURL(file)})}
+
+let toastT;function toast(m){$('toast').innerHTML=`<div>${esc(m)}</div>`;clearTimeout(toastT);toastT=setTimeout(()=>$('toast').innerHTML='',2600)}
+const nid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+
+// ---------- events ----------
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act,id=el.dataset.id;
+  if(a==='close-scrim'&&e.target!==el)return;
+  switch(a){
+    case 'nav':go({view:el.dataset.view});break;
+    case 'open':go({view:'project',pid:id,ptab:'overview'});break;
+    case 'ptab':S.ptab=el.dataset.tab;render();break;
+    case 'taskF':S.taskF=el.dataset.f;render();break;
+    case 'alert':{const al=alerts()[+el.dataset.i];if(al)go(al.go);break}
+    case 'lang':S.lang=S.lang==='ar'?'en':'ar';pref('lang',S.lang);closeModal();render();break;
+    case 'reset':D=seed();D.tx.forEach((x,i)=>x.id='t'+i);D.tasks.forEach((x,i)=>x.id='k'+i);save();render();toast(t('resetDone'));break;
+    case 'approve':case 'reject':{const x=D.tx.find(y=>y.id===id);if(x){x.status=a==='approve'?'approved':'rejected';save();render();toast(t(a==='approve'?'didApprove':'didReject'))}break}
+    case 'tdone':case 'tstart':{const k=D.tasks.find(y=>y.id===id);if(k){k.status=a==='tdone'?'done':'doing';save();render();toast(t(a==='tdone'?'didDone':'didStart'))}break}
+    case 'receipt':mReceipt(id);break;
+    case 'm-exp':mExp();break;
+    case 'm-give':mGive(id);break;
+    case 'm-xfer':mXfer();break;
+    case 'm-ret':mRet(id);break;
+    case 'm-pay':mPay();break;
+    case 'm-task':mTask(id);break;
+    case 'm-prog':mProg(id);break;
+    case 'close':case 'close-scrim':closeModal();break;
+    case 'copy':{const p=P(id),txt=summaryText(p,el.dataset.client==='1');try{await navigator.clipboard.writeText(txt);toast(t('copied'))}catch(err){modal(t('copy'),`<textarea readonly style="width:100%;min-height:160px;background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px">${esc(txt)}</textarea>`);const ta=$('modal').querySelector('textarea');ta.focus();ta.select();toast(t('copyFail'))}break}
+  }
+});
+document.addEventListener('change',e=>{
+  const c=e.target.dataset.change;if(!c)return;
+  if(c==='role'){S.role=e.target.value;pref('role',S.role);S.view=null;closeModal();render();window.scrollTo({top:0})}
+  if(c==='expProject'){$('eItem').innerHTML=itemOpts(e.target.value);expCheck()}
+  if(c==='expCheck')expCheck();
+  if(c==='progProject'){const p=P(e.target.value);$('gVal').value=p.progress;$('gOut').textContent=p.progress+'%'}
+});
+document.addEventListener('input',e=>{const c=e.target.dataset.input;if(c==='expCheck')expCheck();if(c==='progOut')$('gOut').textContent=e.target.value+'%'});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modal').innerHTML)closeModal()});
+document.addEventListener('submit',async e=>{
+  const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();
+  const v=Object.fromEntries(new FormData(f));const kind=f.dataset.form;const amt=+v.amount;
+  const needAmt=['exp','give','xfer','ret','pay'].includes(kind);
+  if(needAmt&&!(amt>0)){toast(t('needAmount'));return}
+  const date=todayISO;
+  if(kind==='exp'){
+    const site=S.role==='site';const rc=await readImg(f.receipt.files[0]);
+    D.tx.push({id:nid('t'),kind:'exp',date,project:v.project,item:v.item,amount:amt,by:site?ME.site:undefined,acc:site?undefined:v.acc,status:site?'pending':'approved',receipt:rc,vendor:v.vendor||'',note:v.note||itemName(v.item)});
+    toast(t(site?'didLog':'didDirect'));
+  }
+  if(kind==='give'){D.tx.push({id:nid('t'),kind:'give',date,eng:v.eng,amount:amt,acc:v.acc});toast(t('didGive'))}
+  if(kind==='xfer'){if(v.from===v.to){toast(t('sameEng'));return}D.tx.push({id:nid('t'),kind:'xfer',date,from:v.from,to:v.to,amount:amt});toast(t('didXfer'))}
+  if(kind==='ret'){D.tx.push({id:nid('t'),kind:'ret',date,eng:v.eng,amount:amt,acc:v.acc});toast(t('didRet'))}
+  if(kind==='pay'){D.tx.push({id:nid('t'),kind:'pay',date,project:v.project,amount:amt,acc:v.acc,note:v.note||t('clientPay')});toast(t('didPay'))}
+  if(kind==='task'){if(!v.title.trim()){toast(t('needTitle'));return}D.tasks.push({id:nid('k'),project:v.project,type:v.type,title:v.title.trim(),who:v.who,due:v.due,status:'todo'});toast(t('didAddTask'))}
+  if(kind==='prog'){const p=P(v.project);p.progress=+v.progress;D.updates.push({project:p.id,by:ME[S.role]==='hisham'?'karim':ME[S.role],date,progress:p.progress,note:v.note||`${t('progress')} ${p.progress}%`});toast(t('didProg'))}
+  if(kind==='fee'){const p=P(f.dataset.id);p.fee={type:v.type,v:Math.max(0,+v.v||0)};p.showFee=!!v.show;toast(t('saved'))}
+  save();closeModal();render();
+});
+render();
+})();
+</script>
+
+<script>
+// App shell: offline support + "add to home screen" prompt.
+(function(){
+  if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+  var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+  var dismissed=false;try{dismissed=localStorage.getItem('gindi-studio-install-dismissed')==='1'}catch(e){}
+  if(standalone||dismissed)return;
+  var ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  var deferred=null,bar=null;
+  var T={
+    ios:['ثبّت التطبيق: اضغط زر <b>مشاركة</b> في سفاري ثم <b>إضافة إلى الشاشة الرئيسية</b>.','Install the app: tap <b>Share</b> in Safari, then <b>Add to Home Screen</b>.'],
+    android:['ثبّت Gindi Studio على موبايلك ليفتح كتطبيق.','Install Gindi Studio on your phone so it opens like an app.'],
+    install:['تثبيت','Install'],close:['إخفاء','Dismiss']
+  };
+  function tr(k){return T[k][document.documentElement.lang==='en'?1:0]}
+  function show(kind){
+    if(bar)bar.remove();
+    bar=document.createElement('div');bar.className='install';bar.setAttribute('role','region');
+    bar.innerHTML='<p>'+tr(kind)+'</p>'+(kind==='android'?'<button class="btn sm" data-i="go">'+tr('install')+'</button>':'')+'<button class="btn ghost sm" data-i="x">'+tr('close')+'</button>';
+    var top=document.querySelector('.top');top.appendChild(bar);
+    bar.addEventListener('click',function(e){var b=e.target.closest('[data-i]');if(!b)return;
+      if(b.dataset.i==='go'&&deferred){deferred.prompt();deferred.userChoice.finally(function(){deferred=null;bar.remove()})}
+      if(b.dataset.i==='x'){bar.remove();try{localStorage.setItem('gindi-studio-install-dismissed','1')}catch(e){}}
+    });
+    shown=kind;
+  }
+  var shown=null;
+  new MutationObserver(function(){if(bar&&bar.isConnected&&shown)show(shown)}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e;show('android')});
+  if(ios)show('ios');
+})();
+</script>
+</body>
+</html>

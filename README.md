@@ -17,6 +17,30 @@ tools/plaster-calculator.html Plaster cement & sand calculator (Arabic, self-con
 tools/ceramic-calculator.html Ceramic & tile calculator (Arabic, self-contained page)
 excel/                  Excel versions of the calculators (brick, ceramic, paint, plaster, wire)
 excel/_build/           Python (openpyxl) scripts that generate those Excel files
+app/                    Gindi Studio mobile app (installable web app, see below)
+```
+
+## Gindi Studio mobile app (`app/`)
+
+A demo project-management app for finishing work: engineer custody, expense
+approvals, budgets per work item, treasury, tasks and snags, and a client view
+with a statement of account. Arabic first, with an English toggle. It runs on
+sample data saved on each phone (no server or logins yet).
+
+It is an installable web app (PWA), so once the site is online at an `https://`
+address it installs like a normal app:
+
+- **iPhone:** open `https://<your-site>/app/` in Safari → Share → **Add to Home Screen**.
+- **Android:** open the same link in Chrome → **Install** (the app also shows an
+  install button).
+
+After installing, it opens full screen with its own icon and works offline.
+
+```
+app/index.html            The whole app (styles, data and logic in one file)
+app/manifest.webmanifest  App name, colours and icons used when installing
+app/sw.js                 Offline support — bump VERSION after editing app files
+app/icons/                Home-screen icons (192, 512, maskable 512, Apple 180)
 ```
 
 ## Editing content
