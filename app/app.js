@@ -115,6 +115,21 @@ const L={
   err_code:['الكود غير صحيح','That code is not valid'], err_login:['البريد أو كلمة المرور غير صحيحة','Wrong email or password'], err_exists:['هذا البريد مسجل بالفعل. سجّل الدخول.','This email is already registered. Sign in instead.'], err_confirm:['أكّد بريدك أولًا من الرابط الذي أرسلناه','Confirm your email first using the link we sent'],
   err_generic:['حدث خطأ: {m}','Something went wrong: {m}'], err_denied:['ليست لديك صلاحية لهذا الإجراء','You don\'t have permission to do that'], passShort:['كلمة المرور 6 أحرف على الأقل','Password must be at least 6 characters'],
   wait:['لحظة…','One moment…'],
+  loginId:['البريد الإلكتروني أو رقم الموبايل','Email or mobile number'], mobile:['رقم الموبايل','Mobile number'], badMobile:['اكتب رقم موبايل صحيح، مثل 01012345678','Enter a valid mobile number, like 01012345678'],
+  addPerson:['إضافة شخص','Add person'], addPersonHint:['أضف الشخص بنفسك وابعتله رابط دعوة خاص على واتساب. يدخل برقم موبايله وكلمة مرور يختارها، من غير بريد إلكتروني.','Add the person yourself and send them a personal invite link on WhatsApp. They sign in with their mobile number and a password they choose. No email needed.'],
+  createInvite:['إنشاء رابط الدعوة','Create invite link'], inviteReady:['رابط الدعوة جاهز','Invite link ready'], inviteReadyM:['ابعت الرابط لـ {n}. يُستخدم مرة واحدة وصالح لمدة 30 يومًا.','Send this link to {n}. It works once and stays valid for 30 days.'],
+  sendWa:['إرسال على واتساب','Send on WhatsApp'], copyLink:['نسخ الرسالة','Copy message'],
+  personalInvite:['أهلًا {n} 👋\n{c} أضافك على تطبيق Gindi Studio لمتابعة {what}.\n\n1) افتح الرابط ده واختار كلمة مرور:\n{u}\n2) بعد كده هتدخل برقم موبايلك {p} وكلمة المرور.\n3) لتثبيت التطبيق: آيفون ← سفاري ← مشاركة ← «إضافة إلى الشاشة الرئيسية» / أندرويد ← كروم ← «تثبيت التطبيق».','Hello {n} 👋\n{c} added you to the Gindi Studio app to follow {what}.\n\n1) Open this link and choose a password:\n{u}\n2) After that, sign in with your mobile number {p} and your password.\n3) To install the app: iPhone → Safari → Share → "Add to Home Screen" / Android → Chrome → "Install app".'],
+  whatClient:['مشروعك','your project'], whatTeam:['المشروعات','the projects'],
+  invitesT:['الدعوات المرسلة','Sent invites'], inv_waiting:['لم يستخدمها بعد','Not used yet'], inv_used:['انضم','Joined'], inv_expired:['منتهية','Expired'], cancelInvite:['إلغاء الدعوة','Cancel invite'], confirmCancel:['اضغط مرة أخرى للتأكيد','Tap again to confirm'], didCancelInvite:['تم إلغاء الدعوة','Invite cancelled'], resend:['إرسال مرة أخرى','Send again'],
+  invWelcome:['أهلًا {n}','Welcome, {n}'], invM:['{c} أضافك على Gindi Studio. اختار كلمة مرور للدخول.','{c} added you to Gindi Studio. Choose a password to get in.'], invYourLogin:['بعد كده هتدخل برقم الموبايل ده وكلمة المرور','From now on you sign in with this mobile number and your password'],
+  confirmPass:['تأكيد كلمة المرور','Confirm password'], passMismatch:['كلمتا المرور غير متطابقتين','The passwords don\'t match'], joinNow:['دخول','Join'],
+  invUsed:['تم استخدام هذه الدعوة بالفعل. سجّل الدخول برقم موبايلك.','This invite was already used. Sign in with your mobile number.'], invExpired:['انتهت صلاحية هذه الدعوة. اطلب رابطًا جديدًا من المدير.','This invite has expired. Ask your manager for a new link.'], invInvalid:['رابط الدعوة غير صحيح.','This invite link is not valid.'],
+  invHaveAccount:['عندك حساب بالرقم ده بالفعل؟ اكتب كلمة المرور بتاعته.','Already have an account with this number? Enter its password.'], invHaveLink:['عندي حساب بالفعل','I already have an account'], invNewLink:['حساب جديد','New account'],
+  invOtherAccount:['أنت مسجل دخول بحساب في شركة تانية. سجّل الخروج ثم افتح الرابط مرة أخرى.','You are signed in with an account in another company. Sign out, then open the link again.'], invJoined:['أهلًا بك! تم إضافتك.','Welcome! You\'ve been added.'],
+  resetPass:['تعيين كلمة مرور جديدة','Set a new password'], resetHint:['للأشخاص اللي بيدخلوا برقم الموبايل. ابعتله كلمة المرور الجديدة على واتساب.','For people who sign in with a mobile number. Send them the new password on WhatsApp.'], didReset:['تم تعيين كلمة المرور الجديدة','New password set'],
+  resetMsg:['كلمة المرور الجديدة لتطبيق Gindi Studio: {pw}\nادخل برقم موبايلك {p}\n{u}','Your new Gindi Studio password: {pw}\nSign in with your mobile number {p}\n{u}'], err_emailAcc:['الشخص ده بيدخل بالبريد الإلكتروني. يقدر يستخدم «نسيت كلمة المرور».','This person signs in with email. They can use "Forgot password".'],
+  forgotPhone:['لو بتدخل برقم الموبايل، اطلب من المدير يعيّن لك كلمة مرور جديدة.','If you sign in with a mobile number, ask your manager to set a new password for you.'],
   exportX:['تصدير Excel','Export to Excel'], exportT:['تصدير البيانات','Export data'], allProjects:['كل المشروعات','All projects'], fromD:['من تاريخ','From'], toD:['إلى تاريخ','To'],
   periodHint:['اترك التاريخين فارغين لتصدير كل الفترات. الملخص وكشوف الحساب وميزانية البنود تشمل كل الفترات دائمًا.','Leave both dates empty to export everything. The summary, statements and item budgets always cover all dates.'],
   exportBtn:['تصدير الملف','Export file'], preparing:['جارٍ تجهيز أداة التصدير…','Getting the export ready…'], exported:['تم تجهيز الملف','File ready'], exportFail:['تعذّر تحميل أداة التصدير. تحقق من الإنترنت وحاول مرة أخرى.','Couldn\'t load the export tool. Check your internet and try again.'],
@@ -154,6 +169,17 @@ const IC={
 
 // ---------- backend ----------
 const RECOVERY=/type=recovery/.test(location.hash);
+const INVITE=(location.hash.match(/invite=([A-Za-z0-9]{16,64})/)||[])[1]||null;
+if(INVITE)try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}
+// Mobile-number accounts use an internal address; nothing is ever emailed to it.
+const PHONE_DOMAIN='phone.gindi-studio.com';
+const toLatin=s=>String(s||'').replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c)).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c));
+function normPhone(s){let d=toLatin(s).replace(/[^0-9+]/g,'').replace(/^\+/,'');if(d.startsWith('00'))d=d.slice(2);if(/^201[0-9]{9}$/.test(d))d='0'+d.slice(2);if(/^1[0125][0-9]{8}$/.test(d))d='0'+d;return /^[0-9]{8,15}$/.test(d)?d:''}
+const looksPhone=s=>!/@/.test(s)&&!!normPhone(s);
+const loginEmail=s=>{s=toLatin(s).trim();return looksPhone(s)?`m${normPhone(s)}@${PHONE_DOMAIN}`:s};
+const isPhoneAcc=e=>String(e||'').endsWith('@'+PHONE_DOMAIN);
+const intlPhone=p=>/^0[0-9]{10}$/.test(p)?'20'+p.slice(1):p;
+const appUrl=()=>location.origin+location.pathname;
 const CFG=window.GINDI_APP_CONFIG||{};
 const sb=(CFG.supabaseUrl&&CFG.supabaseAnonKey&&window.supabase&&window.supabase.createClient)
   ? window.supabase.createClient(CFG.supabaseUrl,CFG.supabaseAnonKey,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}})
@@ -357,10 +383,11 @@ async function loadLive(){
   const {data:co,error:ce}=await sb.from('companies').select('*').eq('id',prof.company_id).maybeSingle();if(ce)throw ce;
   LV.company=co;
   if(prof.role==='pending'){S.mode='auth';S.authScreen='pending';return}
-  const [people,accounts,projects,members,txr,tasks,updates]=await Promise.all([
+  const [people,accounts,projects,members,txr,tasks,updates,invites]=await Promise.all([
     q('profiles'),prof.role==='manager'?q('accounts',{col:'created_at',asc:true}):Promise.resolve([]),q('projects',{col:'created_at',asc:true}),q('project_members'),
-    q('transactions',{col:'tx_date',asc:true}),q('tasks',{col:'created_at',asc:true}),q('updates',{col:'created_at',asc:false,limit:300})]);
-  D=mapLive({people,accounts,projects,members,tx:txr,tasks,updates});
+    q('transactions',{col:'tx_date',asc:true}),q('tasks',{col:'created_at',asc:true}),q('updates',{col:'created_at',asc:false,limit:300}),
+    prof.role==='manager'?q('invites',{col:'created_at',asc:false}).catch(()=>[]):Promise.resolve([])]);
+  D=mapLive({people,accounts,projects,members,tx:txr,tasks,updates});D.invites=invites;
   S.mode='live';S.role=prof.role;ME={manager:uid,office:uid,site:uid,client:uid};LV.offline=false;
   store.set(CACHE_KEY,JSON.stringify({uid,profile:prof,company:co,D}));
 }
@@ -390,6 +417,11 @@ function errMsg(e){
   if(/already registered|already been registered|User already/i.test(m))return t('err_exists');
   if(/Email not confirmed/i.test(m))return t('err_confirm');
   if(/invalid code/i.test(m))return t('err_code');
+  if(/invite already used/i.test(m))return t('invUsed');
+  if(/invite expired/i.test(m))return t('invExpired');
+  if(/invalid invite/i.test(m))return t('invInvalid');
+  if(/already in a company/i.test(m))return t('invOtherAccount');
+  if(/email account/i.test(m))return t('err_emailAcc');
   if(/row-level security|permission denied|manager only|not allowed/i.test(m))return t('err_denied');
   if(/Password should be/i.test(m))return t('passShort');
   return t('err_generic',{m});
@@ -664,13 +696,17 @@ function vAccount(){
     <form class="panel" style="padding:14px" data-form="profile">
       <div class="f2"><div class="f"><label for="pfName">${t('fullName')}</label><input id="pfName" name="full_name" type="text" maxlength="80" value="${esc(LV.profile?.full_name||'')}" required></div>
       <div class="f"><label for="pfPhone">${t('phone')}</label><input id="pfPhone" name="phone" type="tel" maxlength="20" value="${esc(LV.profile?.phone||'')}"></div></div>
-      <div class="split"><span>${t('email')}: <b>${esc(LV.user.email||'')}</b></span><span>${t('yourRole')}: <b>${t('r_'+S.role)}</b></span></div>
+      <div class="split"><span>${isPhoneAcc(LV.user.email)?`${t('mobile')}: <b class="num">${esc(LV.profile?.phone||LV.user.email.slice(1).split('@')[0])}</b>`:`${t('email')}: <b>${esc(LV.user.email||'')}</b>`}</span><span>${t('yourRole')}: <b>${t('r_'+S.role)}</b></span></div>
       <div class="btns"><button class="btn sm">${t('save')}</button><button class="btn ghost sm" type="button" data-act="signout">${t('signout')}</button></div>
     </form></section>
   ${mgr?`<section class="sec"><h2>${t('inviteT')}</h2><div class="panel" style="padding:14px;display:flex;flex-direction:column;gap:10px">
       <p style="margin:0;color:var(--muted);font-size:13.5px">${t('inviteM')}</p>
       <div class="split"><span>${t('codeLbl')}</span><b class="num code">${esc(LV.company?.join_code||'')}</b></div>
       <div class="btns"><a class="btn" href="https://wa.me/?text=${encodeURIComponent(inviteText())}" target="_blank" rel="noopener">${IC.share}${t('sendInvite')}</a><button class="btn ghost" data-act="copy" data-text="${esc(inviteText())}">${IC.copy}${t('copyCode')}</button></div></div></section>
+    <section class="sec"><h2>${t('addPerson')}</h2><div class="panel" style="padding:14px;display:flex;flex-direction:column;gap:10px">
+      <p style="margin:0;color:var(--muted);font-size:13.5px">${t('addPersonHint')}</p>
+      <div><button class="btn" data-act="m-invite">${IC.plus}${t('addPerson')}</button></div></div></section>
+    ${(D.invites||[]).length?`<section class="sec"><h2>${t('invitesT')}</h2><div class="panel rows">${D.invites.map(inviteRow).join('')}</div></section>`:''}
     <section class="sec"><h2>${t('requests')} ${pend.length?`<span class="pill p-warn num">${pend.length}</span>`:''}</h2>${pend.length?`<div class="panel rows">${pend.map(mrow).join('')}</div>`:`<div class="panel empty">${t('noRequests')}</div>`}</section>`:''}
   <section class="sec"><h2>${t('members')}</h2><div class="panel rows">${members.map(mrow).join('')}</div></section>
   ${mgr?`<section class="sec"><h2>${t('accountsT')}</h2><div class="panel rows">${D.accounts.map(a=>`<button class="row click" data-act="m-acc" data-id="${a.id}"><div class="grow"><div class="t">${esc(accName(a.id))}</div><div class="m">${t('ty_'+a.type)} · ${t('opening')}: ${plain(a.open)}</div></div><span class="amt">${money(accBal(a))}</span></button>`).join('')}</div></section>`:''}`;
@@ -684,19 +720,27 @@ function renderAuth(){
   const demoBtn=`<button class="btn ghost block" type="button" data-act="demo">${t('tryDemo')}</button>`;
   let body='';
   if(a==='signin')body=`<h1>${t('signin')}</h1><p class="sub">${t('authSub')}</p>${msg}
-    <form data-form="signin"><div class="f"><label for="aEmail">${t('email')}</label><input id="aEmail" name="email" type="email" autocomplete="email" required></div>
+    <form data-form="signin"><div class="f"><label for="aEmail">${t('loginId')}</label><input id="aEmail" name="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
     <div class="f"><label for="aPass">${t('password')}</label><input id="aPass" name="password" type="password" autocomplete="current-password" required minlength="6"></div>
     <button class="btn block"${busy}>${t('signin')}</button></form>
     <div class="links"><button class="link" data-act="auth" data-s="forgot">${t('forgot')}</button><span>${t('noAccount')} <button class="link" data-act="auth" data-s="signup">${t('signup')}</button></span></div>${demoBtn}`;
   if(a==='signup')body=`<h1>${t('signup')}</h1><p class="sub">${t('signupSub')}</p>${msg}
     <form data-form="signup"><div class="f"><label for="aName">${t('fullName')}</label><input id="aName" name="full_name" type="text" autocomplete="name" required maxlength="80"></div>
-    <div class="f"><label for="aEmail">${t('email')}</label><input id="aEmail" name="email" type="email" autocomplete="email" required></div>
+    <div class="f"><label for="aEmail">${t('loginId')}</label><input id="aEmail" name="email" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
     <div class="f"><label for="aPass">${t('password')}</label><input id="aPass" name="password" type="password" autocomplete="new-password" required minlength="6"></div>
     <button class="btn block"${busy}>${t('signup')}</button></form>
     <div class="links"><span>${t('haveAccount')} <button class="link" data-act="auth" data-s="signin">${t('signin')}</button></span></div>${demoBtn}`;
-  if(a==='forgot')body=`<h1>${t('forgot')}</h1>${msg}<form data-form="forgot"><div class="f"><label for="aEmail">${t('email')}</label><input id="aEmail" name="email" type="email" required></div><button class="btn block"${busy}>${t('sendReset')}</button></form>
+  if(a==='forgot')body=`<h1>${t('forgot')}</h1>${msg}<div class="hint">${t('forgotPhone')}</div><form data-form="forgot"><div class="f"><label for="aEmail">${t('email')}</label><input id="aEmail" name="email" type="email" required></div><button class="btn block"${busy}>${t('sendReset')}</button></form>
     <div class="links"><button class="link" data-act="auth" data-s="signin">${t('backSignin')}</button></div>`;
   if(a==='newpass')body=`<h1>${t('newPass')}</h1>${msg}<form data-form="newpass"><div class="f"><label for="aPass">${t('newPass')}</label><input id="aPass" name="password" type="password" autocomplete="new-password" required minlength="6"></div><button class="btn block"${busy}>${t('setPass')}</button></form>`;
+  if(a==='invite'){const i=S.inviteInfo;
+    if(!i||i.status!=='ok')body=`<h1>${t('signin')}</h1><div class="hint warn">${t(!i?'invInvalid':i.status==='used'?'invUsed':'invExpired')}</div><button class="btn block" data-act="auth" data-s="signin">${t('signin')}</button>`;
+    else body=`<h1>${esc(t('invWelcome',{n:i.full_name}))}</h1><p class="sub">${esc(t('invM',{c:i.company_name}))}</p>${msg}
+    <form data-form="invite"><div class="f"><label for="iPhone">${t('mobile')}</label><input id="iPhone" type="text" value="${esc(i.phone)}" readonly class="num" style="direction:ltr;text-align:start"><span style="font-size:12px;color:var(--muted)">${t('invYourLogin')}</span></div>
+    <div class="f"><label for="aPass">${t('password')}</label><input id="aPass" name="password" type="password" autocomplete="${S.invHave?'current-password':'new-password'}" required minlength="6"></div>
+    ${S.invHave?'':`<div class="f"><label for="aPass2">${t('confirmPass')}</label><input id="aPass2" name="password2" type="password" autocomplete="new-password" required minlength="6"></div>`}
+    <button class="btn block"${busy}>${S.invHave?t('signin'):t('joinNow')}</button></form>
+    <div class="links"><button class="link" data-act="inv-toggle">${S.invHave?t('invNewLink'):t('invHaveLink')}</button></div>`;}
   if(a==='check')body=`<h1>${t('checkEmail')}</h1><p class="sub">${esc(t('checkEmailM',{e:S.pendingEmail||''}))}</p><button class="btn block" data-act="auth" data-s="signin">${t('backSignin')}</button>`;
   if(a==='onboard')body=`<h1>${t('onboardT')}</h1><p class="sub">${t('onboardM')}</p>${msg}
     <form data-form="create-co" class="panel" style="padding:14px"><h2>${t('createCo')}</h2><div class="f"><label for="coName">${t('coName')}</label><input id="coName" name="company" type="text" required maxlength="80" placeholder="Gindi Studio"></div><p class="sub" style="margin:0">${t('coHint')}</p><button class="btn block"${busy}>${t('createCoBtn')}</button></form>
@@ -782,6 +826,30 @@ function mProject(){
     ${itemsEditor([])}
     ${actions(t('newProject'))}</form>`);
 }
+const inviteLink=tok=>appUrl()+'#invite='+tok;
+function inviteStatus(i){return i.used_at?'used':(new Date(i.expires_at)<new Date()?'expired':'waiting')}
+function inviteMessage(i){return t('personalInvite',{n:i.full_name,c:LV.company?.name||'',what:t(i.role==='client'?'whatClient':'whatTeam'),u:inviteLink(i.token),p:i.phone})}
+function inviteRow(i){
+  const st=inviteStatus(i),pn=(i.project_ids||[]).map(id=>P(id)?tx(P(id).name):'').filter(Boolean).join('، ');
+  return `<div class="row"><div class="grow"><div class="t">${esc(i.full_name)} <span class="num" style="color:var(--muted);font-weight:600">${esc(i.phone)}</span></div><div class="m">${t('r_'+i.role)}${pn?' · '+esc(pn):''}</div>
+    <div class="chips" style="margin-top:4px"><span class="pill ${st==='used'?'p-ok':st==='expired'?'p-bad':'p-warn'}">${t('inv_'+st)}</span></div></div>
+    ${st==='waiting'?`<div class="btns"><button class="btn ghost sm" data-act="inv-send" data-id="${esc(i.token)}">${t('resend')}</button><button class="btn bad sm" data-act="inv-cancel" data-id="${esc(i.token)}">${t('cancelInvite')}</button></div>`:''}</div>`;
+}
+function mInvite(){
+  modal(t('addPerson'),`<form data-form="invite-new">
+    <div class="f"><label for="ivName">${t('fullName')}</label><input id="ivName" name="full_name" type="text" maxlength="80" required></div>
+    <div class="f"><label for="ivPhone">${t('mobile')}</label><input id="ivPhone" name="phone" type="tel" inputmode="tel" maxlength="20" placeholder="01012345678" required style="direction:ltr;text-align:start"></div>
+    <div class="f"><label for="ivRole">${t('role')}</label><select id="ivRole" name="role">${['client','site','office','manager'].map(r=>opt(r,t('r_'+r),r==='client')).join('')}</select></div>
+    <div class="f"><label>${t('projectsAccess')}</label>${D.projects.length?`<div class="panel rows">${D.projects.map(p=>`<label class="check row"><input type="checkbox" name="p" value="${p.id}"> ${X(p.name)}</label>`).join('')}</div>`:`<div class="hint">${t('noProjects')}</div>`}</div>
+    ${actions(t('createInvite'))}</form>`);
+}
+function mInviteReady(i){
+  const msg=inviteMessage(i);
+  modal(t('inviteReady'),`<p style="margin:0;color:var(--muted)">${esc(t('inviteReadyM',{n:i.full_name}))}</p>
+    <div class="hint" style="white-space:pre-wrap;direction:${S.lang==='ar'?'rtl':'ltr'}">${esc(msg)}</div>
+    <div class="btns"><a class="btn" href="https://wa.me/${intlPhone(i.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.share}${t('sendWa')}</a><button class="btn ghost" data-act="copy" data-text="${esc(msg)}">${IC.copy}${t('copyLink')}</button></div>`);
+}
+const randPass=()=>{const a='abcdefghjkmnpqrstuvwxyz23456789';let s='';const r=crypto.getRandomValues(new Uint32Array(8));r.forEach(x=>s+=a[x%a.length]);return s};
 function mMember(id){
   const pr=D.people[id];if(!pr)return;const role=pr.role==='pending'?'site':pr.role;
   const inP=p=>p.team.includes(id)||(p.clients||[]).includes(id);
@@ -790,7 +858,11 @@ function mMember(id){
     <div class="f"><label for="mRole">${t('role')}</label><select id="mRole" name="role">${['site','office','client','manager'].map(r=>opt(r,t('r_'+r),r===role)).join('')}</select></div>
     <div class="f"><label>${t('projectsAccess')}</label>${D.projects.length?`<div class="panel rows">${D.projects.map(p=>`<label class="check row"><input type="checkbox" name="p" value="${p.id}"${inP(p)?' checked':''}> ${X(p.name)}</label>`).join('')}</div>`:`<div class="hint">${t('noProjects')}</div>`}</div>
     ${actions(t('save'))}
-    <button class="btn bad sm" type="button" data-act="remove-member" data-id="${id}">${t('remove')}</button></form>`);
+    <button class="btn bad sm" type="button" data-act="remove-member" data-id="${id}">${t('remove')}</button></form>
+    ${live()?`<form data-form="reset-pass" data-id="${id}" class="panel" style="padding:14px"><h2 style="font-size:15px;font-weight:800;margin:0">${t('resetPass')}</h2>
+      <p style="margin:0;color:var(--muted);font-size:13px">${t('resetHint')}</p>
+      <div class="f"><label for="rpPass">${t('newPass')}</label><input id="rpPass" name="password" type="text" minlength="6" maxlength="40" required value="${randPass()}" style="direction:ltr;text-align:start" class="num"></div>
+      <div><button class="btn ghost sm" type="submit">${t('resetPass')}</button></div></form>`:''}`);
 }
 function mAcc(id){const a=D.accounts.find(x=>x.id===id);if(!a)return;
   modal(t('editAcc'),`<form data-form="acc" data-id="${id}"><div class="f"><label for="acName">${t('accName')}</label><input id="acName" name="name" type="text" maxlength="60" required value="${esc(a.name||accName(id))}"></div><div class="f"><label for="acOpen">${t('opening')}</label><input id="acOpen" name="opening" type="number" step="any" inputmode="decimal" value="${a.open}"></div>${actions(t('save'))}</form>`)}
@@ -1003,6 +1075,13 @@ document.addEventListener('click',async e=>{
     case 'm-items':mItems(id);break;
     case 'm-export':mExport(id);break;
     case 'add-item-row':{const box=$('customRows');box.insertAdjacentHTML('beforeend',customRow('',''));box.lastElementChild.querySelector('input').focus();break}
+    case 'm-invite':mInvite();break;
+    case 'inv-send':{const i=(D.invites||[]).find(x=>x.token===id);if(i)mInviteReady(i);break}
+    case 'inv-cancel':
+      if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent=t('confirmCancel');break}
+      try{await must(sb.from('invites').delete().eq('token',id));toast(t('didCancelInvite'));await refresh(true)}catch(err){toast(errMsg(err))}
+      break;
+    case 'inv-toggle':S.invHave=!S.invHave;S.authMsg='';render();break;
     case 'remove-member':
       if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent=t('confirmRemove');break}
       try{await must(sb.rpc('remove_member',{member:id}));toast(t('didRemove'));closeModal();await refresh(true)}catch(err){toast(errMsg(err))}
@@ -1024,13 +1103,33 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modal').innerHTM
 async function submitAuth(kind,v){
   const busyRender=()=>{S.busy=true;render()};
   try{
-    if(kind==='signin'){busyRender();const d=await must(sb.auth.signInWithPassword({email:v.email.trim(),password:v.password}));LV.user=d.user;S.authMsg='';S.view=null;await refresh();subscribe()}
+    if(kind==='signin'){busyRender();const d=await must(sb.auth.signInWithPassword({email:loginEmail(v.email),password:v.password}));LV.user=d.user;S.authMsg='';S.view=null;await refresh();subscribe()}
     if(kind==='signup'){
       if((v.password||'').length<6)throw new Error('Password should be at least 6 characters');
       busyRender();
-      const d=await must(sb.auth.signUp({email:v.email.trim(),password:v.password,options:{data:{full_name:v.full_name.trim()},emailRedirectTo:location.origin+location.pathname}}));
+      const ph=looksPhone(v.email)?normPhone(v.email):null;
+      const d=await must(sb.auth.signUp({email:loginEmail(v.email),password:v.password,options:{data:{full_name:v.full_name.trim(),...(ph?{phone:ph}:{})},emailRedirectTo:appUrl()}}));
       if(d.user&&Array.isArray(d.user.identities)&&d.user.identities.length===0)throw new Error('User already registered');
       if(d.session){LV.user=d.user;S.authMsg='';await refresh();subscribe()}else{S.pendingEmail=v.email.trim();toAuth('check')}
+    }
+    if(kind==='forgot'&&looksPhone(v.email)){S.authMsg=t('forgotPhone');return}
+    if(kind==='invite'){
+      const i=S.inviteInfo,email=`m${i.phone}@${PHONE_DOMAIN}`;
+      if(!S.invHave&&v.password!==v.password2){S.authMsg=t('passMismatch');return}
+      if((v.password||'').length<6)throw new Error('Password should be at least 6 characters');
+      busyRender();
+      let d;
+      if(S.invHave)d=await must(sb.auth.signInWithPassword({email,password:v.password}));
+      else{
+        const r=await sb.auth.signUp({email,password:v.password,options:{data:{full_name:i.full_name,phone:i.phone}}});
+        if(r.error&&/already registered|already been registered|User already/i.test(r.error.message||'')){S.invHave=true;S.authMsg=t('invHaveAccount');return}
+        if(r.error)throw r.error;d=r.data;
+        if(d.user&&Array.isArray(d.user.identities)&&d.user.identities.length===0){S.invHave=true;S.authMsg=t('invHaveAccount');return}
+        if(!d.session)d=await must(sb.auth.signInWithPassword({email,password:v.password}));
+      }
+      LV.user=d.user||d.session?.user;
+      await must(sb.rpc('accept_invite',{tok:S.inviteToken}));
+      S.inviteToken=null;S.authMsg='';S.view=null;await refresh();subscribe();toast(t('invJoined'));
     }
     if(kind==='forgot'){busyRender();await must(sb.auth.resetPasswordForEmail(v.email.trim(),{redirectTo:location.origin+location.pathname}));toAuth('signin',t('resetSent'))}
     if(kind==='newpass'){busyRender();await must(sb.auth.updateUser({password:v.password}));toast(t('passSaved'));const {data:{session}}=await sb.auth.getSession();if(session){LV.user=session.user;await refresh();subscribe()}else toAuth('signin')}
@@ -1043,7 +1142,7 @@ async function submitAuth(kind,v){
 document.addEventListener('submit',async e=>{
   const f=e.target.closest('form[data-form]');if(!f)return;e.preventDefault();
   const v=Object.fromEntries(new FormData(f));const kind=f.dataset.form;const amt=+v.amount;
-  if(['signin','signup','forgot','newpass','create-co','join-co'].includes(kind)){if(!S.busy)submitAuth(kind,v);return}
+  if(['signin','signup','forgot','newpass','create-co','join-co','invite'].includes(kind)){if(!S.busy)submitAuth(kind,v);return}
   if(kind==='export'){runExport(f).catch(err=>toast(errMsg(err)));return}
   if(['exp','give','xfer','ret','pay'].includes(kind)&&!(amt>0)){toast(t('needAmount'));return}
   if(kind==='xfer'&&v.from===v.to){toast(t('sameEng'));return}
@@ -1086,6 +1185,21 @@ async function submitLive(kind,v,f){
     await must(sb.rpc('set_member',{member:f.dataset.id,new_role:v.role,project_ids:ps}));msg=t('didSetMember');
   }
   if(kind==='items'){await must(sb.from('projects').update({items:collectItems(new FormData(f)).map(([k,b])=>({k,b}))}).eq('id',f.dataset.id));msg=t('saved')}
+  if(kind==='invite-new'){
+    const ph=normPhone(v.phone),ps=new FormData(f).getAll('p'),b=f.querySelector('button[type=submit]');
+    if(!(v.full_name||'').trim()){toast(t('needName'));if(b)b.disabled=false;return}
+    if(!ph){toast(t('badMobile'));if(b)b.disabled=false;return}
+    if(v.role==='client'&&!ps.length){toast(t('clientNeedsProject'));if(b)b.disabled=false;return}
+    const row=await must(sb.from('invites').insert({company_id:co,full_name:v.full_name.trim(),phone:ph,role:v.role,project_ids:ps}).select('*').single());
+    D.invites=[row].concat(D.invites||[]);mInviteReady(row);refresh(true);return;
+  }
+  if(kind==='reset-pass'){
+    const pw=(v.password||'').trim(),pr=D.people[f.dataset.id]||{};
+    await must(sb.rpc('reset_member_password',{member:f.dataset.id,new_password:pw}));
+    const msg=t('resetMsg',{pw,p:pr.phone||'',u:appUrl()});
+    modal(t('didReset'),`<div class="hint" style="white-space:pre-wrap">${esc(msg)}</div><div class="btns">${pr.phone?`<a class="btn" href="https://wa.me/${intlPhone(pr.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">${IC.share}${t('sendWa')}</a>`:''}<button class="btn ghost" data-act="copy" data-text="${esc(msg)}">${IC.copy}${t('copyLink')}</button></div>`);
+    return;
+  }
   if(kind==='acc'){await must(sb.from('accounts').update({name:(v.name||'').trim()||'—',opening:+v.opening||0}).eq('id',f.dataset.id));msg=t('saved')}
   if(kind==='profile'){await must(sb.from('profiles').update({full_name:(v.full_name||'').trim(),phone:(v.phone||'').trim()||null}).eq('id',LV.user.id));msg=t('saved')}
   closeModal();toast(msg);await refresh(true);
@@ -1125,6 +1239,16 @@ async function boot(){
   let session=null;
   try{session=(await sb.auth.getSession()).data.session}catch(e){}
   if(RECOVERY&&session){LV.user=session.user;toAuth('newpass');return}
+  if(INVITE){
+    S.inviteToken=INVITE;
+    if(session){
+      LV.user=session.user;
+      try{await must(sb.rpc('accept_invite',{tok:INVITE}));S.inviteToken=null;await refresh();if(live()){subscribe();toast(t('invJoined'))}return}
+      catch(e){await refresh();if(live())subscribe();toast(errMsg(e));return}
+    }
+    try{const rows=await must(sb.rpc('invite_info',{tok:INVITE}));S.inviteInfo=rows&&rows[0]||null}catch(e){S.inviteInfo=null;S.authMsg=errMsg(e)}
+    S.invHave=false;toAuth('invite');return;
+  }
   if(session){LV.user=session.user;await refresh();if(live())subscribe()}
   else if(pref('mode')==='demo')startDemo();
   else toAuth('signin');
