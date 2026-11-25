@@ -114,7 +114,9 @@ const L={
   offline:['لا يوجد اتصال، تعرض آخر بيانات محفوظة','Offline, showing the last saved data'], netErr:['تعذّر الاتصال. تحقق من الإنترنت وحاول مرة أخرى.','Couldn\'t connect. Check your internet and try again.'],
   err_code:['الكود غير صحيح','That code is not valid'], err_login:['البريد أو كلمة المرور غير صحيحة','Wrong email or password'], err_exists:['هذا البريد مسجل بالفعل. سجّل الدخول.','This email is already registered. Sign in instead.'], err_confirm:['أكّد بريدك أولًا من الرابط الذي أرسلناه','Confirm your email first using the link we sent'],
   err_generic:['حدث خطأ: {m}','Something went wrong: {m}'], err_denied:['ليست لديك صلاحية لهذا الإجراء','You don\'t have permission to do that'], passShort:['كلمة المرور 6 أحرف على الأقل','Password must be at least 6 characters'],
-  wait:['لحظة…','One moment…'], demoBadge:['تجريبي','Demo'],
+  wait:['لحظة…','One moment…'],
+  otherItem:['+ بند آخر (اكتب اسمه)','+ Other item (type its name)'], itemNameLbl:['اسم البند','Item name'], needItemName:['اكتب اسم البند','Enter the item name'],
+  addItemRow:['+ إضافة بند آخر','+ Add another item'], customItems:['بنود أخرى من اختيارك','Your own items'], editItems:['تعديل البنود والميزانيات','Edit items & budgets'], noBudget:['بدون ميزانية','No budget'], demoBadge:['تجريبي','Demo'],
 };
 const ITEMS={masonry:['مباني','Masonry'],plumbing:['سباكة','Plumbing'],electrical:['كهرباء','Electrical'],plaster:['محارة','Plastering'],tiles:['سيراميك وبورسلين','Tiles & porcelain'],paint:['دهانات','Paint'],gypsum:['جبس بورد','Gypsum board'],carpentry:['نجارة وأبواب','Carpentry & doors'],ac:['تكييف','Air conditioning'],aluminum:['ألوميتال','Aluminium']};
 
@@ -267,6 +269,16 @@ const feeP=p=>p.fee.type==='pct'?spent(p)*p.fee.v/100:p.fee.v*p.progress/100;
 const balP=p=>paidP(p)-spent(p)-feeP(p);
 const itemSpent=(p,k,st='approved')=>sum(exps({project:p.id,status:st}).filter(x=>x.item===k));
 const budgetP=p=>p.items.reduce((s,i)=>s+i[1],0);
+// Project items plus any item used in an expense that isn't in the list yet (budget 0).
+const allItems=p=>{const ks=new Set(p.items.map(i=>i[0]));const extra=[...new Set(exps({project:p.id}).filter(x=>x.status!=='rejected'&&x.item&&!ks.has(x.item)).map(x=>x.item))];return p.items.concat(extra.map(k=>[k,0]))};
+// A typed item name becomes a standard key when it matches one, otherwise the name itself is the key.
+function itemKey(name){const s=(name||'').trim().replace(/\s+/g,' ');if(!s)return '';const hit=Object.keys(ITEMS).find(k=>k===s||ITEMS[k][0]===s||ITEMS[k][1].toLowerCase()===s.toLowerCase());return hit||s.slice(0,60)}
+function collectItems(fd){
+  const out=[];Object.keys(ITEMS).forEach(k=>{const b=+fd.get('b_'+k);if(b>0)out.push([k,b])});
+  const names=fd.getAll('cn'),bs=fd.getAll('cb');
+  names.forEach((nm,i)=>{const k=itemKey(nm);if(!k||out.some(o=>o[0]===k))return;out.push([k,Math.max(0,+bs[i]||0)])});
+  return out;
+}
 function engStats(id){
   const give=sum(D.tx.filter(x=>x.kind==='give'&&x.eng===id));
   const xin=sum(D.tx.filter(x=>x.kind==='xfer'&&x.to===id)), xout=sum(D.tx.filter(x=>x.kind==='xfer'&&x.from===id));
@@ -498,9 +510,9 @@ function pOverview(p){
 function pBudget(p){
   const tb=budgetP(p);
   return `<div class="bal" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><span class="l">${t('budgetTotal')}</span><span class="v">${money(tb)}</span></div><div><span class="l">${t('spent')}</span><span class="v">${money(spent(p))}</span></div><div><span class="l">${t('pendingShort')}</span><span class="v">${money(pendingP(p))}</span></div></div>
-  <p class="demo-note" style="margin:0">${t('legend')}</p>
-  ${p.items.length?`<div class="panel rows">${p.items.map(([k,b])=>{const s=itemSpent(p,k),pe=itemSpent(p,k,'pending'),c=b>0?pctClass(s,b):'ok',w=b>0?Math.min(100,s/b*100):0,pw=b>0?Math.max(0,Math.min(100-w,pe/b*100)):0;
-    return `<div class="item"><div class="top2"><b>${itemName(k)}</b><span>${c==='bad'?`<span class="pill p-bad">${t('over')} ${plain(s-b)}</span>`:c==='warn'?`<span class="pill p-warn">${t('near')}</span>`:`<span class="pill p-ok">${t('within')}</span>`}</span></div>
+  <div class="head"><p class="demo-note" style="margin:0">${t('legend')}</p>${S.role==='manager'?`<button class="btn ghost sm" data-act="m-items" data-id="${p.id}">${t('editItems')}</button>`:''}</div>
+  ${allItems(p).length?`<div class="panel rows">${allItems(p).map(([k,b])=>{const s=itemSpent(p,k),pe=itemSpent(p,k,'pending'),c=b>0?pctClass(s,b):'ok',w=b>0?Math.min(100,s/b*100):0,pw=b>0?Math.max(0,Math.min(100-w,pe/b*100)):0;
+    return `<div class="item"><div class="top2"><b>${esc(itemName(k))}</b><span>${b<=0?`<span class="pill p-n">${t('noBudget')}</span>`:c==='bad'?`<span class="pill p-bad">${t('over')} ${plain(s-b)}</span>`:c==='warn'?`<span class="pill p-warn">${t('near')}</span>`:`<span class="pill p-ok">${t('within')}</span>`}</span></div>
     <div class="bar"><i class="${c}" style="width:${w}%"></i>${pw?`<i class="pend" style="width:${pw}%"></i>`:''}</div>
     <div class="split"><span>${t('spent')} <b>${money(s)}</b>${pe?` · ${t('pendingShort')} <b>${money(pe)}</b>`:''}</span><span>${t('budget')} <b>${money(b)}</b>${b>0?` · <b class="num">${Math.round(s/b*100)}%</b>`:''}</span></div></div>`}).join('')}</div>`:''}
   <section class="sec"><h2>${t('history')}</h2>${expList(exps({project:p.id}).sort((a,b)=>a.date<b.date?1:-1),false)}</section>`;
@@ -511,7 +523,7 @@ function expList(list,withActions){
     let extra='';
     if(withActions&&p){const ib=(p.items.find(i=>i[0]===x.item)||[0,0])[1];const willOver=ib>0&&itemSpent(p,x.item)+x.amount>ib;
       extra=`<div class="chips" style="margin-top:6px">${willOver?`<span class="pill p-warn">${t('willOver')}</span>`:''}${x.by&&S.role==='manager'?`<span class="pill p-n">${t('custAfter',{v:plain(engStats(x.by).bal-x.amount)})}</span>`:''}</div>`;}
-    return `<div class="row" style="align-items:flex-start">${rcptBtn(x)}<div class="grow"><div class="t">${X(x.note)||itemName(x.item)}</div><div class="m">${itemName(x.item)} · ${p?X(p.name):''} · ${fdate(x.date)}</div><div class="m">${x.by?t('fromCustody',{e:person(x.by)}):t('fromAcc',{a:accName(x.acc)})}${x.vendor?' · '+X(x.vendor):''}</div>${extra}
+    return `<div class="row" style="align-items:flex-start">${rcptBtn(x)}<div class="grow"><div class="t">${X(x.note)||esc(itemName(x.item))}</div><div class="m">${esc(itemName(x.item))} · ${p?X(p.name):''} · ${fdate(x.date)}</div><div class="m">${x.by?t('fromCustody',{e:person(x.by)}):t('fromAcc',{a:accName(x.acc)})}${x.vendor?' · '+X(x.vendor):''}</div>${extra}
       ${withActions&&S.role==='manager'?`<div class="btns" style="margin-top:8px"><button class="btn ok sm" data-act="approve" data-id="${x.id}">${t('approve')}</button><button class="btn bad sm" data-act="reject" data-id="${x.id}">${t('reject')}</button></div>`:''}</div>
       <div style="text-align:end;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="amt">${money(x.amount)}</span>${statusPill(x.status)}</div></div>`}).join('')}</div>`;
 }
@@ -531,7 +543,7 @@ function stmtRows(p,forClient){
   const rows=D.tx.filter(x=>x.project===p.id&&(x.kind==='pay'||(x.kind==='exp'&&x.status==='approved'))).sort((a,b)=>a.date<b.date?-1:1);
   let run=0;
   const body=rows.map(x=>{const cr=x.kind==='pay'?x.amount:0,dr=x.kind==='exp'?x.amount:0;run+=cr-dr;
-    return `<tr><td>${fdate(x.date)}</td><td>${x.kind==='pay'?`${t('clientPay')}${tx(x.note)?' — '+X(x.note):''}`:`${itemName(x.item)}${tx(x.note)?' — '+X(x.note):''}`}</td><td class="n">${dr?n(dr):''}</td><td class="n">${cr?n(cr):''}</td><td class="n">${n(run)}</td></tr>`}).join('');
+    return `<tr><td>${fdate(x.date)}</td><td>${x.kind==='pay'?`${t('clientPay')}${tx(x.note)?' — '+X(x.note):''}`:`${esc(itemName(x.item))}${tx(x.note)?' — '+X(x.note):''}`}</td><td class="n">${dr?n(dr):''}</td><td class="n">${cr?n(cr):''}</td><td class="n">${n(run)}</td></tr>`}).join('');
   const showFee=!forClient||p.showFee;const fee=feeP(p);
   const feeRow=showFee?`<tr><td>${t('today')}</td><td>${t('feeLine')} (${p.fee.type==='pct'?t('feeExplainPct',{v:p.fee.v}):t('feeExplainFixed',{v:plain(p.fee.v)})})</td><td class="n">${n(fee)}</td><td class="n"></td><td class="n">${n(run-fee)}</td></tr>`:'';
   const endBal=showFee?run-fee:run;
@@ -573,7 +585,7 @@ function vTreasury(){
   const tot=D.accounts.reduce((s,a)=>s+accBal(a),0);
   const movs=D.tx.filter(x=>x.acc&&(x.kind!=='exp'||x.status==='approved')).sort((a,b)=>a.date<b.date?1:-1).slice(0,20);
   const sign=x=>x.kind==='pay'||x.kind==='ret'?1:-1;
-  const label=x=>x.kind==='pay'?`${t('clientPay')} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='exp'?`${itemName(x.item)} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='give'?`${t('k_give')} · ${esc(person(x.eng))}`:`${t('k_ret')} · ${esc(person(x.eng))}`;
+  const label=x=>x.kind==='pay'?`${t('clientPay')} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='exp'?`${esc(itemName(x.item))} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='give'?`${t('k_give')} · ${esc(person(x.eng))}`:`${t('k_ret')} · ${esc(person(x.eng))}`;
   return `${head(t('t_treasury'),t('treasurySub'),`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button><button class="btn ghost" data-act="m-exp">${t('directExp')}</button>`)}
   <div class="hero"><span class="l">${t('totalBal')}</span><span class="big">${money(tot)}</span></div>
   <div class="grid three">${D.accounts.map(a=>`<button class="kpi" style="text-align:start;cursor:${live()?'pointer':'default'}" ${live()?`data-act="m-acc" data-id="${a.id}"`:''}><span class="l">${t('ty_'+a.type)}</span><span class="t" style="font-weight:800">${esc(accName(a.id))}</span><span class="v">${money(accBal(a))}</span></button>`).join('')}</div>
@@ -608,7 +620,7 @@ function vClient(){
   if(!p)return `${head(t('clientHello',{n:esc(person(ME.client))}),t('clientSub'))}${noProjects()}`;
   const pays=D.tx.filter(x=>x.kind==='pay'&&x.project===p.id).sort((a,b)=>a.date<b.date?1:-1);
   const snags=D.tasks.filter(k=>k.project===p.id&&k.type==='snag'&&k.status!=='done');
-  const used=p.items.map(([k])=>[k,itemSpent(p,k)]).filter(i=>i[1]>0).sort((a,b)=>b[1]-a[1]);const max=Math.max(...used.map(i=>i[1]),1);
+  const used=allItems(p).map(([k])=>[k,itemSpent(p,k)]).filter(i=>i[1]>0).sort((a,b)=>b[1]-a[1]);const max=Math.max(...used.map(i=>i[1]),1);
   return `${head(t('clientHello',{n:esc(person(ME.client))}),t('clientSub'))}
   <div class="hero"><span class="l">${X(p.name)}${tx(p.loc)?' · '+X(p.loc):''}</span><span class="big num">${p.progress}%</span>
     <div class="bar" style="background:rgba(255,255,255,.15);border-color:transparent"><i style="width:${p.progress}%;background:var(--hero-gold)"></i></div>
@@ -616,7 +628,7 @@ function vClient(){
   ${balGrid(p,true)}
   <section class="sec"><h2>${t('recent')}</h2>${feedList(D.updates.filter(u=>u.project===p.id).sort((a,b)=>a.date<b.date?1:-1))}</section>
   <div class="grid two">
-  <section class="sec"><h2>${t('whereMoney')}</h2>${used.length?`<div class="panel rows">${used.map(([k,v])=>`<div class="item"><div class="top2"><b>${itemName(k)}</b><span class="amt">${money(v)}</span></div><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`).join('')}</div>`:`<div class="panel empty">—</div>`}</section>
+  <section class="sec"><h2>${t('whereMoney')}</h2>${used.length?`<div class="panel rows">${used.map(([k,v])=>`<div class="item"><div class="top2"><b>${esc(itemName(k))}</b><span class="amt">${money(v)}</span></div><div class="bar"><i style="width:${v/max*100}%"></i></div></div>`).join('')}</div>`:`<div class="panel empty">—</div>`}</section>
   <section class="sec"><h2>${t('openSnags')}</h2>${snags.length?taskRows(snags):`<div class="panel empty">${t('noSnags')}</div>`}
     <h2 style="font-size:16px;font-weight:800;margin-top:8px">${t('yourPayments')}</h2>${pays.length?`<div class="panel rows">${pays.map(x=>`<div class="row"><div class="grow"><div class="t">${X(x.note)||t('clientPay')}</div><div class="m">${fdate(x.date)}</div></div><span class="amt">${money(x.amount)}</span></div>`).join('')}</div>`:`<div class="panel empty">—</div>`}</section>
   </div>`;
@@ -694,7 +706,14 @@ const opt=(v,l,sel)=>`<option value="${v}"${sel?' selected':''}>${esc(l)}</optio
 const projOpts=(list,sel)=>list.map(p=>opt(p.id,tx(p.name),p.id===sel)).join('');
 const accOpts=sel=>D.accounts.map((a,i)=>opt(a.id,`${accName(a.id)} — ${plain(accBal(a))}`,sel?a.id===sel||a.type===sel:i===0)).join('');
 const engOpts=(sel,list=siteEngs())=>list.map(e=>opt(e,person(e),e===sel)).join('');
-const itemOpts=pid=>{const p=P(pid);const ks=p&&p.items.length?p.items.map(i=>i[0]):Object.keys(ITEMS);return ks.map(k=>opt(k,itemName(k))).join('')};
+const itemOpts=pid=>{const p=P(pid);const own=p?allItems(p).map(i=>i[0]):[];const ks=p&&p.items.length?own:[...new Set(Object.keys(ITEMS).concat(own))];return ks.map(k=>opt(k,itemName(k))).join('')+opt('__other',t('otherItem'))};
+const customRow=(nm,b)=>`<div class="f2"><input name="cn" type="text" maxlength="60" placeholder="${t('itemNameLbl')}" aria-label="${t('itemNameLbl')}" value="${esc(nm)}"><input name="cb" type="number" min="0" step="any" inputmode="decimal" placeholder="${t('budget')}" aria-label="${t('budget')}" value="${b>0?b:''}"></div>`;
+function itemsEditor(items){
+  const m=new Map(items),custom=items.filter(([k])=>!ITEMS[k]);
+  return `<div class="f"><label>${t('itemsBudget')}</label><div class="f2">${Object.keys(ITEMS).map(k=>`<div class="f"><label for="nb_${k}" style="font-weight:700">${esc(itemName(k))}</label><input id="nb_${k}" name="b_${k}" type="number" min="0" step="any" inputmode="decimal" placeholder="—" value="${m.get(k)>0?m.get(k):''}"></div>`).join('')}</div></div>
+  <div class="f"><label>${t('customItems')}</label><div id="customRows" class="custom-rows">${custom.map(([k,b])=>customRow(k,b)).join('')}${customRow('','')}</div><div><button class="btn ghost sm" type="button" data-act="add-item-row">${t('addItemRow')}</button></div></div>`;
+}
+function mItems(pid){const p=P(pid);if(!p)return;modal(t('editItems'),`<form data-form="items" data-id="${pid}">${itemsEditor(allItems(p))}${actions(t('save'))}</form>`)}
 const actions=label=>`<div class="btns"><button class="btn" type="submit">${label}</button><button class="btn ghost" type="button" data-act="close">${t('cancel')}</button></div>`;
 
 function mExp(){
@@ -704,6 +723,7 @@ function mExp(){
   modal(site?t('logExp'):t('directExp'),`<form data-form="exp">
     <div class="f2"><div class="f"><label for="ePrj">${t('e_project')}</label><select id="ePrj" name="project" data-change="expProject">${projOpts(list,pid)}</select></div>
     <div class="f"><label for="eItem">${t('e_item')}</label><select id="eItem" name="item" data-change="expCheck">${itemOpts(pid)}</select></div></div>
+    <div class="f" id="eOtherBox" hidden><label for="eOther">${t('itemNameLbl')}</label><input id="eOther" name="item_other" type="text" maxlength="60" data-input="expCheck"></div>
     <div class="f"><label for="eAmt">${t('e_amount')}</label><input id="eAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required data-input="expCheck"></div>
     <div id="expWarn"></div>
     <div class="f"><label for="eNote">${t('e_note')}</label><input id="eNote" name="note" type="text" maxlength="120"></div>
@@ -715,7 +735,8 @@ function mExp(){
 }
 function expCheck(){
   const f=$('modal').querySelector('form[data-form="exp"]');if(!f)return;
-  const p=P(f.project.value),k=f.item.value,a=+f.amount.value||0;const b=(p.items.find(i=>i[0]===k)||[0,0])[1];
+  const other=f.item.value==='__other';$('eOtherBox').hidden=!other;
+  const p=P(f.project.value),k=other?itemKey(f.item_other.value):f.item.value,a=+f.amount.value||0;const b=(p.items.find(i=>i[0]===k)||[0,0])[1];
   const after=itemSpent(p,k)+itemSpent(p,k,'pending')+a;
   $('expWarn').innerHTML=a&&b>0&&after>b?`<div class="hint warn">${t('overWarn',{v:plain(after-b)})}</div>`:'';
 }
@@ -740,7 +761,7 @@ async function mReceipt(id){const x=D.tx.find(y=>y.id===id);if(!x)return;const p
     catch(e){const box=$('modal').querySelector('.empty');if(box)box.textContent=errMsg(e)}
     return;
   }
-  const body=x.receipt&&x.receipt.startsWith('data:')?`<img src="${x.receipt}" alt="${t('receipt')}" style="border-radius:8px">`:x.receipt==='sample'?`<div class="rcpt"><div class="c">${X(x.vendor||'')}</div><div class="c" style="font-size:11px">${fdate(x.date)}</div><hr><div class="ln"><span>${X(x.note)}</span></div><div class="ln"><span>${itemName(x.item)}</span><span>${p?X(p.name):''}</span></div><hr><div class="ln"><b>${t('totals')}</b><b>${plain(x.amount)}</b></div><div class="c" style="font-size:11px;margin-top:6px">— sample receipt —</div></div>`:`<div class="empty">${t('noReceipt')}</div>`;
+  const body=x.receipt&&x.receipt.startsWith('data:')?`<img src="${x.receipt}" alt="${t('receipt')}" style="border-radius:8px">`:x.receipt==='sample'?`<div class="rcpt"><div class="c">${X(x.vendor||'')}</div><div class="c" style="font-size:11px">${fdate(x.date)}</div><hr><div class="ln"><span>${X(x.note)}</span></div><div class="ln"><span>${esc(itemName(x.item))}</span><span>${p?X(p.name):''}</span></div><hr><div class="ln"><b>${t('totals')}</b><b>${plain(x.amount)}</b></div><div class="c" style="font-size:11px;margin-top:6px">— sample receipt —</div></div>`:`<div class="empty">${t('noReceipt')}</div>`;
   modal(t('receipt'),body+foot)}
 function mProject(){
   modal(t('newProject'),`<form data-form="project">
@@ -748,7 +769,7 @@ function mProject(){
     <div class="f2"><div class="f"><label for="npClient">${t('pClient')}</label><input id="npClient" name="client" type="text" maxlength="80"></div><div class="f"><label for="npArea">${t('pArea')}</label><input id="npArea" name="area" type="number" min="0" step="any" inputmode="decimal"></div></div>
     <div class="f"><label for="npLoc">${t('pLoc')}</label><input id="npLoc" name="loc" type="text" maxlength="120"></div>
     <div class="f2"><div class="f"><label for="npFeeT">${t('feeModel')}</label><select id="npFeeT" name="fee_type"><option value="pct">${t('fee_pct')}</option><option value="fixed">${t('fee_fixed')}</option></select></div><div class="f"><label for="npFeeV">${t('feeVal')}</label><input id="npFeeV" name="fee_value" type="number" min="0" step="any" inputmode="decimal" value="10"></div></div>
-    <div class="f"><label>${t('itemsBudget')}</label><div class="f2">${Object.keys(ITEMS).map(k=>`<div class="f"><label for="nb_${k}" style="font-weight:700">${itemName(k)}</label><input id="nb_${k}" name="b_${k}" type="number" min="0" step="any" inputmode="decimal" placeholder="—"></div>`).join('')}</div></div>
+    ${itemsEditor([])}
     ${actions(t('newProject'))}</form>`);
 }
 function mMember(id){
@@ -811,6 +832,8 @@ document.addEventListener('click',async e=>{
     case 'm-project':mProject();break;
     case 'm-member':mMember(id);break;
     case 'm-acc':mAcc(id);break;
+    case 'm-items':mItems(id);break;
+    case 'add-item-row':{const box=$('customRows');box.insertAdjacentHTML('beforeend',customRow('',''));box.lastElementChild.querySelector('input').focus();break}
     case 'remove-member':
       if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent=t('confirmRemove');break}
       try{await must(sb.rpc('remove_member',{member:id}));toast(t('didRemove'));closeModal();await refresh(true)}catch(err){toast(errMsg(err))}
@@ -855,6 +878,7 @@ document.addEventListener('submit',async e=>{
   if(['exp','give','xfer','ret','pay'].includes(kind)&&!(amt>0)){toast(t('needAmount'));return}
   if(kind==='xfer'&&v.from===v.to){toast(t('sameEng'));return}
   if(kind==='task'&&!(v.title||'').trim()){toast(t('needTitle'));return}
+  if(kind==='exp'&&v.item==='__other'){v.item=itemKey(v.item_other);if(!v.item){toast(t('needItemName'));return}}
   const btn=f.querySelector('button[type=submit],button:not([type])');if(btn){if(btn.disabled)return;btn.disabled=true}
   const done=msg=>{toast(msg);closeModal();};
   try{
@@ -882,7 +906,7 @@ async function submitLive(kind,v,f){
   if(kind==='fee'){await must(sb.from('projects').update({fee_type:v.type,fee_value:Math.max(0,+v.v||0),show_fee:!!v.show}).eq('id',f.dataset.id));msg=t('saved')}
   if(kind==='project'){
     if(!(v.name||'').trim()){toast(t('needName'));const b=f.querySelector('button[type=submit]');if(b)b.disabled=false;return}
-    const items=Object.keys(ITEMS).filter(k=>+v['b_'+k]>0).map(k=>({k,b:+v['b_'+k]}));
+    const items=collectItems(new FormData(f)).map(([k,b])=>({k,b}));
     const row=await must(sb.from('projects').insert({company_id:co,name:v.name.trim(),client_name:(v.client||'').trim(),location:(v.loc||'').trim(),area:+v.area||0,fee_type:v.fee_type,fee_value:+v.fee_value||0,items}).select('id').single());
     msg=t('didProject');closeModal();toast(msg);await refresh(true);go({view:'project',pid:row.id,ptab:'overview'});return;
   }
@@ -891,6 +915,7 @@ async function submitLive(kind,v,f){
     if(v.role==='client'&&!ps.length){toast(t('clientNeedsProject'));const b=f.querySelector('button[type=submit]');if(b)b.disabled=false;return}
     await must(sb.rpc('set_member',{member:f.dataset.id,new_role:v.role,project_ids:ps}));msg=t('didSetMember');
   }
+  if(kind==='items'){await must(sb.from('projects').update({items:collectItems(new FormData(f)).map(([k,b])=>({k,b}))}).eq('id',f.dataset.id));msg=t('saved')}
   if(kind==='acc'){await must(sb.from('accounts').update({name:(v.name||'').trim()||'—',opening:+v.opening||0}).eq('id',f.dataset.id));msg=t('saved')}
   if(kind==='profile'){await must(sb.from('profiles').update({full_name:(v.full_name||'').trim(),phone:(v.phone||'').trim()||null}).eq('id',LV.user.id));msg=t('saved')}
   closeModal();toast(msg);await refresh(true);
@@ -911,9 +936,10 @@ function submitDemo(kind,v,f){
   if(kind==='pay'){D.tx.push({id:nid('t'),kind:'pay',date,project:v.project,amount:amt,acc:v.acc,note:v.note||t('clientPay')});return finish(t('didPay'))}
   if(kind==='task'){D.tasks.push({id:nid('k'),project:v.project,type:v.type,title:v.title.trim(),who:v.who,due:v.due,status:'todo'});return finish(t('didAddTask'))}
   if(kind==='prog'){const p=P(v.project);p.progress=+v.progress;D.updates.push({project:p.id,by:ME[S.role]==='hisham'?'karim':ME[S.role],date,progress:p.progress,note:v.note||`${t('progress')} ${p.progress}%`});return finish(t('didProg'))}
+  if(kind==='items'){P(f.dataset.id).items=collectItems(new FormData(f));return finish(t('saved'))}
   if(kind==='fee'){const p=P(f.dataset.id);p.fee={type:v.type,v:Math.max(0,+v.v||0)};p.showFee=!!v.show;return finish(t('saved'))}
   if(kind==='project'){if(!(v.name||'').trim()){toast(t('needName'));const b=f.querySelector('button[type=submit]');if(b)b.disabled=false;return}
-    const items=Object.keys(ITEMS).filter(k=>+v['b_'+k]>0).map(k=>[k,+v['b_'+k]]);const id=nid('p');
+    const items=collectItems(new FormData(f));const id=nid('p');
     D.projects.push({id,name:v.name.trim(),client:(v.client||'').trim(),area:+v.area||0,loc:(v.loc||'').trim(),progress:0,fee:{type:v.fee_type,v:+v.fee_value||0},showFee:true,team:[],items});
     saveDemo();closeModal();toast(t('didProject'));go({view:'project',pid:id,ptab:'overview'});return}
 }
