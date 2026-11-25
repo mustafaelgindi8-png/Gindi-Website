@@ -7,6 +7,6 @@
  * While these are empty the app runs in demo mode only.
  */
 window.GINDI_APP_CONFIG = {
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  supabaseUrl: 'https://pfnazuoobcjgabwngegl.supabase.co',
+  supabaseAnonKey: 'sb_publishable_3Xw5d4NRxb9pJDX82Opt2Q_JS6C8n12',
 };

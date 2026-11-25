@@ -1,6 +1,6 @@
 // Gindi Studio service worker: keeps the app working offline.
 // Bump VERSION whenever you change files in app/ so phones pick up the update.
-const VERSION = 'gindi-studio-v2';
+const VERSION = 'gindi-studio-v3';
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
 const SHELL = [
   './',
