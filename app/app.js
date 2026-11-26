@@ -115,6 +115,8 @@ const L={
   err_code:['الكود غير صحيح','That code is not valid'], err_login:['البريد أو كلمة المرور غير صحيحة','Wrong email or password'], err_exists:['هذا البريد مسجل بالفعل. سجّل الدخول.','This email is already registered. Sign in instead.'], err_confirm:['أكّد بريدك أولًا من الرابط الذي أرسلناه','Confirm your email first using the link we sent'],
   err_generic:['حدث خطأ: {m}','Something went wrong: {m}'], err_denied:['ليست لديك صلاحية لهذا الإجراء','You don\'t have permission to do that'], passShort:['كلمة المرور 6 أحرف على الأقل','Password must be at least 6 characters'],
   wait:['لحظة…','One moment…'],
+  editTx:['تعديل الحركة','Edit entry'], editBtn:['تعديل','Edit'], deleteTx:['حذف الحركة','Delete entry'], confirmDelete:['اضغط مرة أخرى لتأكيد الحذف','Tap again to confirm deletion'],
+  didDelete:['تم حذف الحركة','Entry deleted'], didUpdate:['تم تعديل الحركة','Entry updated'], editHint:['التعديل والحذف يغيّروا الأرصدة والكشوف فورًا.','Editing or deleting updates balances and statements straight away.'],
   exportX:['تصدير Excel','Export to Excel'], exportT:['تصدير البيانات','Export data'], allProjects:['كل المشروعات','All projects'], fromD:['من تاريخ','From'], toD:['إلى تاريخ','To'],
   periodHint:['اترك التاريخين فارغين لتصدير كل الفترات. الملخص وكشوف الحساب وميزانية البنود تشمل كل الفترات دائمًا.','Leave both dates empty to export everything. The summary, statements and item budgets always cover all dates.'],
   exportBtn:['تصدير الملف','Export file'], preparing:['جارٍ تجهيز أداة التصدير…','Getting the export ready…'], exported:['تم تجهيز الملف','File ready'], exportFail:['تعذّر تحميل أداة التصدير. تحقق من الإنترنت وحاول مرة أخرى.','Couldn\'t load the export tool. Check your internet and try again.'],
@@ -432,6 +434,7 @@ function renderNav(tabs){
 const head=(title,sub,actions='')=>`<div class="head"><div><h1>${title}</h1>${sub?`<p>${sub}</p>`:''}</div>${actions?`<div class="btns">${actions}</div>`:''}</div>`;
 const demoNote=()=>live()?'':`<div class="demo-note">${t('demo')} <button class="btn ghost sm" data-act="reset">${t('reset')}</button>${sb?`<button class="btn sm" data-act="leave-demo">${t('signin')}</button>`:''}</div>`;
 const statusPill=s=>s==='approved'?`<span class="pill p-ok">${t('approved')}</span>`:s==='rejected'?`<span class="pill p-bad">${t('rejected')}</span>`:`<span class="pill p-warn">${t('pending')}</span>`;
+const editBtn=x=>S.role==='manager'?`<button class="btn ghost sm" data-act="m-tx" data-id="${x.id}">${t('editBtn')}</button>`:'';
 const rcptBtn=x=>`<button class="receipt-btn" data-act="receipt" data-id="${x.id}" aria-label="${t('receipt')}">${x.receipt&&x.receipt.startsWith('data:')?`<img src="${x.receipt}" alt="">`:IC.receipt}</button>`;
 const greet=()=>`${t('hello')}${S.lang==='ar'?'، ':', '}${esc(person(ME[S.role]))}`;
 
@@ -535,7 +538,7 @@ function expList(list,withActions){
       extra=`<div class="chips" style="margin-top:6px">${willOver?`<span class="pill p-warn">${t('willOver')}</span>`:''}${x.by&&S.role==='manager'?`<span class="pill p-n">${t('custAfter',{v:plain(engStats(x.by).bal-x.amount)})}</span>`:''}</div>`;}
     return `<div class="row" style="align-items:flex-start">${rcptBtn(x)}<div class="grow"><div class="t">${X(x.note)||esc(itemName(x.item))}</div><div class="m">${esc(itemName(x.item))} · ${p?X(p.name):''} · ${fdate(x.date)}</div><div class="m">${x.by?t('fromCustody',{e:person(x.by)}):t('fromAcc',{a:accName(x.acc)})}${x.vendor?' · '+X(x.vendor):''}</div>${extra}
       ${withActions&&S.role==='manager'?`<div class="btns" style="margin-top:8px"><button class="btn ok sm" data-act="approve" data-id="${x.id}">${t('approve')}</button><button class="btn bad sm" data-act="reject" data-id="${x.id}">${t('reject')}</button></div>`:''}</div>
-      <div style="text-align:end;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="amt">${money(x.amount)}</span>${statusPill(x.status)}</div></div>`}).join('')}</div>`;
+      <div style="text-align:end;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="amt">${money(x.amount)}</span>${statusPill(x.status)}${editBtn(x)}</div></div>`}).join('')}</div>`;
 }
 function taskRows(list){
   if(!list.length)return `<div class="panel empty">${t('noTasks')}</div>`;
@@ -589,7 +592,7 @@ function vCustody(){
     <div class="split"><span>${t('given')} <b>${money(s.given)}</b></span><span>${t('spentApproved')} <b>${money(s.spent)}</b></span></div>
     <div class="split"><span>${t('pendingShort')} <b>${money(s.pend)}</b></span><span>${t('afterPending')} <b style="color:var(--${s.after<0?'bad':'ink'})">${money(s.after)}</b></span></div>
     <div class="btns"><button class="btn ghost sm" data-act="m-give" data-id="${e}">${t('giveCustody')}</button><button class="btn ghost sm" data-act="m-ret" data-id="${e}">${t('settle')}</button></div></div>`}).join('')}</div>`:`<div class="panel empty">${t('noEngineers')}</div>`}
-  <section class="sec"><h2>${t('history')}</h2>${movs.length?`<div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${t('k_'+x.kind)}</div><div class="m">${x.kind==='xfer'?`${esc(person(x.from))} ${S.lang==='ar'?'←':'→'} ${esc(person(x.to))}`:`${esc(person(x.eng))} · ${esc(accName(x.acc))}`} · ${fdate(x.date)}</div></div><span class="amt">${money(x.amount)}</span></div>`).join('')}</div>`:`<div class="panel empty">${t('noMoves')}</div>`}</section>`;
+  <section class="sec"><h2>${t('history')}</h2>${movs.length?`<div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${t('k_'+x.kind)}</div><div class="m">${x.kind==='xfer'?`${esc(person(x.from))} ${S.lang==='ar'?'←':'→'} ${esc(person(x.to))}`:`${esc(person(x.eng))} · ${esc(accName(x.acc))}`} · ${fdate(x.date)}</div></div><span class="amt">${money(x.amount)}</span>${editBtn(x)}</div>`).join('')}</div>`:`<div class="panel empty">${t('noMoves')}</div>`}</section>`;
 }
 function vTreasury(){
   const tot=D.accounts.reduce((s,a)=>s+accBal(a),0);
@@ -599,7 +602,7 @@ function vTreasury(){
   return `${head(t('t_treasury'),t('treasurySub'),`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button><button class="btn ghost" data-act="m-exp">${t('directExp')}</button><button class="btn ghost" data-act="m-export">${IC.download}${t('exportX')}</button>`)}
   <div class="hero"><span class="l">${t('totalBal')}</span><span class="big">${money(tot)}</span></div>
   <div class="grid three">${D.accounts.map(a=>`<button class="kpi" style="text-align:start;cursor:${live()?'pointer':'default'}" ${live()?`data-act="m-acc" data-id="${a.id}"`:''}><span class="l">${t('ty_'+a.type)}</span><span class="t" style="font-weight:800">${esc(accName(a.id))}</span><span class="v">${money(accBal(a))}</span></button>`).join('')}</div>
-  <section class="sec"><h2>${t('movements')}</h2>${movs.length?`<div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${label(x)}</div><div class="m">${esc(accName(x.acc))} · ${fdate(x.date)}</div></div><span class="amt" style="color:var(--${sign(x)>0?'ok':'ink'})">${sign(x)>0?'+':'−'}${money(x.amount)}</span></div>`).join('')}</div>`:`<div class="panel empty">${t('noMoves')}</div>`}</section>`;
+  <section class="sec"><h2>${t('movements')}</h2>${movs.length?`<div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${label(x)}</div><div class="m">${esc(accName(x.acc))} · ${fdate(x.date)}</div></div><span class="amt" style="color:var(--${sign(x)>0?'ok':'ink'})">${sign(x)>0?'+':'−'}${money(x.amount)}</span>${editBtn(x)}</div>`).join('')}</div>`:`<div class="panel empty">${t('noMoves')}</div>`}</section>`;
 }
 function vTasks(){
   const F=S.role==='site'?['mine','open','snag','done']:['open','task','snag','done','all'];
@@ -781,6 +784,28 @@ function mProject(){
     <div class="f2"><div class="f"><label for="npFeeT">${t('feeModel')}</label><select id="npFeeT" name="fee_type"><option value="pct">${t('fee_pct')}</option><option value="fixed">${t('fee_fixed')}</option></select></div><div class="f"><label for="npFeeV">${t('feeVal')}</label><input id="npFeeV" name="fee_value" type="number" min="0" step="any" inputmode="decimal" value="10"></div></div>
     ${itemsEditor([])}
     ${actions(t('newProject'))}</form>`);
+}
+function mTx(id){
+  const x=D.tx.find(y=>y.id===id);if(!x)return;
+  const dateF=`<div class="f"><label for="txDate">${t('date')}</label><input id="txDate" name="date" type="date" value="${esc(x.date||'')}" required></div>`;
+  const amtF=`<div class="f"><label for="txAmt">${t('e_amount')}</label><input id="txAmt" name="amount" type="number" min="1" step="any" inputmode="decimal" required value="${x.amount}"></div>`;
+  const noteF=`<div class="f"><label for="txNote">${t('e_note')}</label><input id="txNote" name="note" type="text" maxlength="120" value="${esc(tx(x.note)||'')}"></div>`;
+  let body='';
+  if(x.kind==='exp'){const p=P(x.project);const ks=p?allItems(p).map(i=>i[0]):Object.keys(ITEMS);if(x.item&&!ks.includes(x.item))ks.push(x.item);
+    body=`<div class="f2"><div class="f"><label for="txPrj">${t('e_project')}</label><select id="txPrj" name="project">${projOpts(D.projects,x.project)}</select></div>
+      <div class="f"><label for="eItem">${t('e_item')}</label><select id="eItem" name="item" data-change="txItem">${ks.map(k=>opt(k,itemName(k),k===x.item)).join('')}${opt('__other',t('otherItem'))}</select></div></div>
+      <div class="f" id="eOtherBox" hidden><label for="eOther">${t('itemNameLbl')}</label><input id="eOther" name="item_other" type="text" maxlength="60"></div>
+      <div class="f2">${amtF}${dateF}</div>${noteF}
+      <div class="f"><label for="txVendor">${t('e_vendor')}</label><input id="txVendor" name="vendor" type="text" maxlength="80" value="${esc(tx(x.vendor)||'')}"></div>
+      ${x.acc?`<div class="f"><label for="txAcc">${t('e_source')}</label><select id="txAcc" name="acc">${accOpts(x.acc)}</select></div>`:`<div class="hint">${t('fromCustody',{e:person(x.by)})} · ${t(x.status)}</div>`}`;}
+  if(x.kind==='pay')body=`<div class="f"><label for="txPrj">${t('e_project')}</label><select id="txPrj" name="project">${projOpts(D.projects,x.project)}</select></div>
+      <div class="f2">${amtF}${dateF}</div><div class="f"><label for="txAcc">${t('account')}</label><select id="txAcc" name="acc">${accOpts(x.acc)}</select></div>${noteF}`;
+  if(x.kind==='give'||x.kind==='ret')body=`<div class="f"><label for="txEng">${t('engineer')}</label><select id="txEng" name="eng">${engOpts(x.eng)}</select></div>
+      <div class="f2">${amtF}${dateF}</div><div class="f"><label for="txAcc">${t('account')}</label><select id="txAcc" name="acc">${accOpts(x.acc)}</select></div>`;
+  if(x.kind==='xfer')body=`<div class="f2"><div class="f"><label for="txFrom">${t('fromEng')}</label><select id="txFrom" name="from">${engOpts(x.from)}</select></div><div class="f"><label for="txTo">${t('toEng')}</label><select id="txTo" name="to">${engOpts(x.to)}</select></div></div><div class="f2">${amtF}${dateF}</div>`;
+  const title={exp:t('k_exp'),pay:t('clientPay'),give:t('k_give'),ret:t('k_ret'),xfer:t('k_xfer')}[x.kind]||'';
+  modal(`${t('editTx')} · ${title}`,`<form data-form="tx" data-id="${x.id}">${body}<div class="hint">${t('editHint')}</div>${actions(t('save'))}
+    <button class="btn bad sm" type="button" data-act="del-tx" data-id="${x.id}">${t('deleteTx')}</button></form>`);
 }
 function mMember(id){
   const pr=D.people[id];if(!pr)return;const role=pr.role==='pending'?'site':pr.role;
@@ -1001,6 +1026,14 @@ document.addEventListener('click',async e=>{
     case 'm-member':mMember(id);break;
     case 'm-acc':mAcc(id);break;
     case 'm-items':mItems(id);break;
+    case 'm-tx':mTx(id);break;
+    case 'del-tx':
+      if(el.dataset.confirm!=='1'){el.dataset.confirm='1';el.textContent=t('confirmDelete');break}
+      try{
+        if(live()){await must(sb.from('transactions').delete().eq('id',id));closeModal();toast(t('didDelete'));await refresh(true)}
+        else{D.tx=D.tx.filter(y=>y.id!==id);saveDemo();closeModal();render();toast(t('didDelete'))}
+      }catch(err){toast(errMsg(err))}
+      break;
     case 'm-export':mExport(id);break;
     case 'add-item-row':{const box=$('customRows');box.insertAdjacentHTML('beforeend',customRow('',''));box.lastElementChild.querySelector('input').focus();break}
     case 'remove-member':
@@ -1016,6 +1049,7 @@ document.addEventListener('change',e=>{
   if(c==='role'){S.role=e.target.value;pref('role',S.role);S.view=null;closeModal();render();window.scrollTo({top:0})}
   if(c==='expProject'){$('eItem').innerHTML=itemOpts(e.target.value);expCheck()}
   if(c==='expCheck')expCheck();
+  if(c==='txItem'){const b=$('eOtherBox');if(b)b.hidden=e.target.value!=='__other'}
   if(c==='progProject'){const p=P(e.target.value);$('gVal').value=p.progress;$('gOut').textContent=p.progress+'%'}
 });
 document.addEventListener('input',e=>{const c=e.target.dataset.input;if(c==='expCheck')expCheck();if(c==='progOut')$('gOut').textContent=e.target.value+'%'});
@@ -1048,6 +1082,9 @@ document.addEventListener('submit',async e=>{
   if(['exp','give','xfer','ret','pay'].includes(kind)&&!(amt>0)){toast(t('needAmount'));return}
   if(kind==='xfer'&&v.from===v.to){toast(t('sameEng'));return}
   if(kind==='task'&&!(v.title||'').trim()){toast(t('needTitle'));return}
+  if(kind==='tx'&&v.item==='__other'){v.item=itemKey(v.item_other);if(!v.item){toast(t('needItemName'));return}}
+  if(kind==='tx'&&!(+v.amount>0)){toast(t('needAmount'));return}
+  if(kind==='tx'&&v.from&&v.from===v.to){toast(t('sameEng'));return}
   if(kind==='exp'&&v.item==='__other'){v.item=itemKey(v.item_other);if(!v.item){toast(t('needItemName'));return}}
   const btn=f.querySelector('button[type=submit],button:not([type])');if(btn){if(btn.disabled)return;btn.disabled=true}
   const done=msg=>{toast(msg);closeModal();};
@@ -1085,6 +1122,14 @@ async function submitLive(kind,v,f){
     if(v.role==='client'&&!ps.length){toast(t('clientNeedsProject'));const b=f.querySelector('button[type=submit]');if(b)b.disabled=false;return}
     await must(sb.rpc('set_member',{member:f.dataset.id,new_role:v.role,project_ids:ps}));msg=t('didSetMember');
   }
+  if(kind==='tx'){
+    const x=D.tx.find(y=>y.id===f.dataset.id),up={tx_date:v.date,amount:+v.amount};
+    if(x.kind==='exp'){Object.assign(up,{project_id:v.project,item:v.item,note:v.note||null,vendor:v.vendor||null});if(x.acc&&v.acc)up.account_id=v.acc}
+    if(x.kind==='pay')Object.assign(up,{project_id:v.project,account_id:v.acc,note:v.note||null});
+    if(x.kind==='give'||x.kind==='ret')Object.assign(up,{engineer_id:v.eng,account_id:v.acc});
+    if(x.kind==='xfer')Object.assign(up,{engineer_id:v.from,to_engineer_id:v.to});
+    await must(sb.from('transactions').update(up).eq('id',x.id));msg=t('didUpdate');
+  }
   if(kind==='items'){await must(sb.from('projects').update({items:collectItems(new FormData(f)).map(([k,b])=>({k,b}))}).eq('id',f.dataset.id));msg=t('saved')}
   if(kind==='acc'){await must(sb.from('accounts').update({name:(v.name||'').trim()||'—',opening:+v.opening||0}).eq('id',f.dataset.id));msg=t('saved')}
   if(kind==='profile'){await must(sb.from('profiles').update({full_name:(v.full_name||'').trim(),phone:(v.phone||'').trim()||null}).eq('id',LV.user.id));msg=t('saved')}
@@ -1106,6 +1151,12 @@ function submitDemo(kind,v,f){
   if(kind==='pay'){D.tx.push({id:nid('t'),kind:'pay',date,project:v.project,amount:amt,acc:v.acc,note:v.note||t('clientPay')});return finish(t('didPay'))}
   if(kind==='task'){D.tasks.push({id:nid('k'),project:v.project,type:v.type,title:v.title.trim(),who:v.who,due:v.due,status:'todo'});return finish(t('didAddTask'))}
   if(kind==='prog'){const p=P(v.project);p.progress=+v.progress;D.updates.push({project:p.id,by:ME[S.role]==='hisham'?'karim':ME[S.role],date,progress:p.progress,note:v.note||`${t('progress')} ${p.progress}%`});return finish(t('didProg'))}
+  if(kind==='tx'){const x=D.tx.find(y=>y.id===f.dataset.id);x.date=v.date;x.amount=+v.amount;
+    if(x.kind==='exp'){x.project=v.project;x.item=v.item;x.note=v.note;x.vendor=v.vendor;if(x.acc&&v.acc)x.acc=v.acc}
+    if(x.kind==='pay'){x.project=v.project;x.acc=v.acc;x.note=v.note}
+    if(x.kind==='give'||x.kind==='ret'){x.eng=v.eng;x.acc=v.acc}
+    if(x.kind==='xfer'){x.from=v.from;x.to=v.to}
+    return finish(t('didUpdate'))}
   if(kind==='items'){P(f.dataset.id).items=collectItems(new FormData(f));return finish(t('saved'))}
   if(kind==='fee'){const p=P(f.dataset.id);p.fee={type:v.type,v:Math.max(0,+v.v||0)};p.showFee=!!v.show;return finish(t('saved'))}
   if(kind==='project'){if(!(v.name||'').trim()){toast(t('needName'));const b=f.querySelector('button[type=submit]');if(b)b.disabled=false;return}
