@@ -117,6 +117,7 @@ const L={
   wait:['لحظة…','One moment…'],
   editTx:['تعديل الحركة','Edit entry'], editBtn:['تعديل','Edit'], deleteTx:['حذف الحركة','Delete entry'], confirmDelete:['اضغط مرة أخرى لتأكيد الحذف','Tap again to confirm deletion'],
   didDelete:['تم حذف الحركة','Entry deleted'], didUpdate:['تم تعديل الحركة','Entry updated'], editHint:['التعديل والحذف يغيّروا الأرصدة والكشوف فورًا.','Editing or deleting updates balances and statements straight away.'],
+  generalMoves:['حركات عامة (عُهد المهندسين)','General (engineer custody)'], net:['الصافي','Net'],
   exportX:['تصدير Excel','Export to Excel'], exportT:['تصدير البيانات','Export data'], allProjects:['كل المشروعات','All projects'], fromD:['من تاريخ','From'], toD:['إلى تاريخ','To'],
   periodHint:['اترك التاريخين فارغين لتصدير كل الفترات. الملخص وكشوف الحساب وميزانية البنود تشمل كل الفترات دائمًا.','Leave both dates empty to export everything. The summary, statements and item budgets always cover all dates.'],
   exportBtn:['تصدير الملف','Export file'], preparing:['جارٍ تجهيز أداة التصدير…','Getting the export ready…'], exported:['تم تجهيز الملف','File ready'], exportFail:['تعذّر تحميل أداة التصدير. تحقق من الإنترنت وحاول مرة أخرى.','Couldn\'t load the export tool. Check your internet and try again.'],
@@ -596,13 +597,28 @@ function vCustody(){
 }
 function vTreasury(){
   const tot=D.accounts.reduce((s,a)=>s+accBal(a),0);
-  const movs=D.tx.filter(x=>x.acc&&(x.kind!=='exp'||x.status==='approved')).sort((a,b)=>a.date<b.date?1:-1).slice(0,20);
+  const all=D.tx.filter(x=>x.acc&&(x.kind!=='exp'||x.status==='approved')).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:0);
   const sign=x=>x.kind==='pay'||x.kind==='ret'?1:-1;
-  const label=x=>x.kind==='pay'?`${t('clientPay')} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='exp'?`${esc(itemName(x.item))} · ${P(x.project)?X(P(x.project).name):''}`:x.kind==='give'?`${t('k_give')} · ${esc(person(x.eng))}`:`${t('k_ret')} · ${esc(person(x.eng))}`;
+  const label=x=>x.kind==='pay'?[t('clientPay'),X(x.note)].filter(Boolean).join(' · '):x.kind==='exp'?[esc(itemName(x.item)),X(x.note)].filter(Boolean).join(' · '):x.kind==='give'?`${t('k_give')} · ${esc(person(x.eng))}`:`${t('k_ret')} · ${esc(person(x.eng))}`;
+  // One group per project, plus engineer custody movements that belong to no project.
+  const groups=D.projects.map(p=>({id:p.id,name:X(p.name),list:all.filter(x=>x.project===p.id)}))
+    .concat([{id:'general',name:t('generalMoves'),list:all.filter(x=>!x.project||!P(x.project))}]).filter(g=>g.list.length);
+  if(S.treF&&S.treF!=='all'&&!groups.some(g=>g.id===S.treF))S.treF='all';
+  const f=S.treF||'all',shown=f==='all'?groups:groups.filter(g=>g.id===f);
+  const sums=list=>{let i=0,o=0;list.forEach(x=>sign(x)>0?i+=x.amount:o+=x.amount);return {i,o}};
+  const row=x=>`<div class="row"><div class="grow"><div class="t">${label(x)}</div><div class="m">${esc(accName(x.acc))} · ${fdate(x.date)}</div></div><span class="amt" style="color:var(--${sign(x)>0?'ok':'ink'})">${sign(x)>0?'+':'−'}${money(x.amount)}</span>${editBtn(x)}</div>`;
+  const group=g=>{const {i,o}=sums(g.list);
+    return `<section class="sec"><h2>${g.name}</h2>
+      <div class="bal" style="grid-template-columns:repeat(3,minmax(0,1fr))"><div><span class="l">${t('c_in')}</span><span class="v pos">${money(i)}</span></div><div><span class="l">${t('c_out')}</span><span class="v">${money(o)}</span></div><div><span class="l">${t('net')}</span><span class="v ${i-o<0?'neg':'pos'}">${money(i-o)}</span></div></div>
+      <div class="panel rows">${g.list.map(row).join('')}</div></section>`};
   return `${head(t('t_treasury'),t('treasurySub'),`<button class="btn" data-act="m-pay">${IC.plus}${t('recordPay')}</button><button class="btn ghost" data-act="m-exp">${t('directExp')}</button><button class="btn ghost" data-act="m-export">${IC.download}${t('exportX')}</button>`)}
   <div class="hero"><span class="l">${t('totalBal')}</span><span class="big">${money(tot)}</span></div>
   <div class="grid three">${D.accounts.map(a=>`<button class="kpi" style="text-align:start;cursor:${live()?'pointer':'default'}" ${live()?`data-act="m-acc" data-id="${a.id}"`:''}><span class="l">${t('ty_'+a.type)}</span><span class="t" style="font-weight:800">${esc(accName(a.id))}</span><span class="v">${money(accBal(a))}</span></button>`).join('')}</div>
-  <section class="sec"><h2>${t('movements')}</h2>${movs.length?`<div class="panel rows">${movs.map(x=>`<div class="row"><div class="grow"><div class="t">${label(x)}</div><div class="m">${esc(accName(x.acc))} · ${fdate(x.date)}</div></div><span class="amt" style="color:var(--${sign(x)>0?'ok':'ink'})">${sign(x)>0?'+':'−'}${money(x.amount)}</span>${editBtn(x)}</div>`).join('')}</div>`:`<div class="panel empty">${t('noMoves')}</div>`}</section>`;
+  <section class="sec"><h2>${t('movements')}</h2>
+    ${groups.length>1?`<div class="seg" role="group">${[{id:'all',name:t('allProjects')}].concat(groups).map(g=>`<button data-act="treF" data-f="${g.id}" aria-pressed="${f===g.id}">${g.name}</button>`).join('')}</div>`:''}
+    ${groups.length?'':`<div class="panel empty">${t('noMoves')}</div>`}
+  </section>
+  ${shown.map(group).join('')}`;
 }
 function vTasks(){
   const F=S.role==='site'?['mine','open','snag','done']:['open','task','snag','done','all'];
@@ -998,6 +1014,7 @@ document.addEventListener('click',async e=>{
     case 'open':go({view:'project',pid:id,ptab:'overview'});break;
     case 'ptab':S.ptab=el.dataset.tab;render();break;
     case 'taskF':S.taskF=el.dataset.f;render();break;
+    case 'treF':S.treF=el.dataset.f;render();break;
     case 'alert':{const al=alerts()[+el.dataset.i];if(al)go(al.go);break}
     case 'lang':S.lang=S.lang==='ar'?'en':'ar';pref('lang',S.lang);closeModal();render();break;
     case 'reset':D=seed();saveDemo();render();toast(t('resetDone'));break;
