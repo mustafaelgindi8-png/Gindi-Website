@@ -261,7 +261,12 @@ label.check.row{font-weight:600}
 <script>
 // App shell: offline support + "add to home screen" prompt.
 (function(){
-  if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}
+  if('serviceWorker' in navigator){
+    // When a new version takes over, reload once so the latest screens show (not on the very first install).
+    var hadController=!!navigator.serviceWorker.controller,reloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',function(){if(hadController&&!reloaded&&!document.querySelector('#modal .sheet')){reloaded=true;location.reload()}});
+    window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').then(function(r){r.update&&r.update()}).catch(function(){})});
+  }
   var standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
   var dismissed=false;try{dismissed=localStorage.getItem('gindi-studio-install-dismissed')==='1'}catch(e){}
   if(standalone||dismissed)return;

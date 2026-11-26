@@ -1,6 +1,6 @@
 // Gindi Studio service worker: keeps the app working offline.
 // Bump VERSION whenever you change files in app/ so phones pick up the update.
-const VERSION = 'gindi-studio-v10';
+const VERSION = 'gindi-studio-v11';
 const XLSX_JS = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js';
 const SHELL = [
@@ -36,7 +36,8 @@ self.addEventListener('fetch', (event) => {
   // The app's own files: network first so updates arrive, cached copy when offline.
   if (url.origin === self.location.origin) {
     event.respondWith(
-      fetch(req)
+      // Always ask the server for the latest copy (cheap 304 when unchanged), so updates show on the next open.
+      fetch(req.mode === 'navigate' ? req.url : req, { cache: 'no-cache', credentials: 'same-origin' })
         .then((res) => {
           if (res.ok) { const copy = res.clone(); caches.open(VERSION).then((c) => c.put(req.mode === 'navigate' ? './index.html' : req, copy)); }
           return res;
